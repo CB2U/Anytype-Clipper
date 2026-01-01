@@ -1,0 +1,27 @@
+# Tasks: Popup UI Polish
+
+- [x] T1: Setup Base Styles & Variables <!-- id: 0 -->
+    - Define CSS variables for Anytype-like theme (Dark mode).
+    - Add modern reset (box-sizing).
+    - Set base typography (Inter/System).
+- [x] T2: Refactor Layout & Container <!-- id: 1 -->
+    - Update `.container` max-width and padding.
+    - Implement flexbox/grid for main sections.
+- [x] T3: Style Form Elements <!-- id: 2 -->
+    - Style `input[type="text"]`, `textarea`, and `select`.
+    - Add focus rings and hover states.
+    - Ensure nice spacing between labels and inputs.
+- [x] T4: Style Buttons <!-- id: 3 -->
+    - Create `.btn-primary` (Vivid Blue).
+    - Create `.btn-secondary` (Subtle Gray/Transparent).
+    - Add transition effects.
+- [x] T5: Polish & Animations <!-- id: 4 -->
+    - Add fade-in for view switching.
+    - Style status messages (Success/Error toasts).
+- [x] T6: Manual Verification <!-- id: 5 -->
+    - Verify all states (Auth, Loading, Main).
+- [x] T7: Refine Layout based on Feedback <!-- id: 6 -->
+    - Align dropdowns and textboxes (ensure full width/consistent margins).
+    - Center "Save Bookmark" button.
+    - Move "Disconnect" to bottom right as a text link.
+    - Improve general alignment and spacing.

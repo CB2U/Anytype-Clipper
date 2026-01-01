@@ -12,7 +12,7 @@ It points to the spec folder for the current work and links to the product docs.
 ## Current Focus
 - **Active Spec:** None
 - **Next Up:** [Highlight Capture](specs/032-highlight-capture/spec.md) (Epic 3.1)
-- **Action:** Run `/specify` to start next epic.
+- **Action:** Run `/implement_from_spec` (or `/specify` if refining)
 
 ## Links
 - spec.md: [specs/021-api-key-management/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/021-api-key-management/spec.md)
