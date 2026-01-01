@@ -1,2 +1,5 @@
 // Global type definitions
-// Will be extended with Anytype API types in Epic 1.1
+
+// Re-export Anytype API types for global access
+export * from '../lib/api/types';
+export * from '../lib/api/errors';

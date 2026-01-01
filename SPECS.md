@@ -35,7 +35,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | Roadmap Anchor | Epic Name                    | Spec Folder                  | Breakpoint | Status | Next Task | Evidence | Target ACs                                   |
 | -------------- | ---------------------------- | ---------------------------- | ---------- | ------ | --------- | -------- | -------------------------------------------- |
 | 1.0            | Project Setup & Architecture | `specs/010-project-setup/`   | BP0        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/010-project-setup/spec.md#evidence) | NFR6.1, NFR6.2, NFR6.7, NFR6.8               |
-| 1.1            | API Client Foundation        | `specs/002-api-client/`      | BP0        | Not Started | FR1.2, FR1.3, NFR2.4, NFR5.6, CODE-1, CODE-4 |
+| 1.1            | API Client Foundation        | `specs/011-api-client/`      | BP0        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/011-api-client/spec.md#evidence) | FR1.2, FR1.3, NFR2.4, NFR5.6, CODE-1, CODE-4 |
 | 1.2            | Storage Manager              | `specs/003-storage-manager/` | BP0        | Not Started | NFR3.1, STORE-1, STORE-4, DATA-3, PRIV-4     |
 
 ### BP1: Authentication (Weeks 3-4)
@@ -193,18 +193,18 @@ specs/NNN-slug/
 ### MVP Progress (v1.0)
 
 - **Total Epics:** 32
-- **Not Started:** 31
+- **Not Started:** 30
 - **In Progress:** 0
 - **Approved:** 0
 - **Planning:** 0
 - **Tasks Defined:** 0
 - **Implementing:** 0
 - **Testing:** 0
-- **Done:** 1
-  **Completion:** 3% (1/32 complete)
+- **Done:** 2
+  **Completion:** 6% (2/32 complete)
   
   ### Breakpoint Progress
-- **BP0 (Foundation):** 1/3 complete
+- **BP0 (Foundation):** 2/3 complete
 - **BP1 (Authentication):** 0/3 complete
 - **BP2 (Basic Capture):** 0/3 complete
 - **BP3 (Article Extraction):** 0/5 complete

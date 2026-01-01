@@ -18,6 +18,10 @@ export default [
                 chrome: 'readonly',
                 console: 'readonly',
                 document: 'readonly',
+                setTimeout: 'readonly',
+                clearTimeout: 'readonly',
+                fetch: 'readonly',
+                AbortController: 'readonly',
             },
         },
         plugins: {
