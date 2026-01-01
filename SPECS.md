@@ -36,7 +36,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | -------------- | ---------------------------- | ---------------------------- | ---------- | ------ | --------- | -------- | -------------------------------------------- |
 | 1.0            | Project Setup & Architecture | `specs/010-project-setup/`   | BP0        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/010-project-setup/spec.md#evidence) | NFR6.1, NFR6.2, NFR6.7, NFR6.8               |
 | 1.1            | API Client Foundation        | `specs/011-api-client/`      | BP0        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/011-api-client/spec.md#evidence) | FR1.2, FR1.3, NFR2.4, NFR5.6, CODE-1, CODE-4 |
-| 1.2            | Storage Manager              | `specs/003-storage-manager/` | BP0        | Not Started | NFR3.1, STORE-1, STORE-4, DATA-3, PRIV-4     |
+| 1.2            | Storage Manager              | `specs/013-storage-manager/` | BP0        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/013-storage-manager/spec.md#evidence) | NFR3.1, STORE-1, STORE-4, DATA-3, PRIV-4     |
 
 ### BP1: Authentication (Weeks 3-4)
 
