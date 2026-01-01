@@ -10,13 +10,13 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current focus
-- Roadmap anchor: 2.2
-- Spec folder: specs/022-reauth-flow/
+- Roadmap anchor: 3.0
+- Spec folder: specs/007-bookmark-capture/
 - Type: Feature
 - Priority: P1
 - Status: Not Started
 - Next command:
-  - /specify 2.2
+  - /specify 3.0
 
 ## Links
 - spec.md: [specs/021-api-key-management/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/021-api-key-management/spec.md)

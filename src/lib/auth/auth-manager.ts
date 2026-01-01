@@ -1,4 +1,5 @@
 import { AnytypeApiClient } from '../api/client';
+import { AuthError } from '../api/errors';
 import { StorageManager } from '../storage/storage-manager';
 
 export enum AuthStatus {
@@ -163,22 +164,26 @@ export class AuthManager {
             await this.client.getSpaces();
             return true;
         } catch (error) {
-            // Check if error is 401 Unauthorized
-            // We need to check the error message or type since we don't have exact status codes exposes easily
-            // But classifyHttpError in client.ts throws ApiError with status
-            const isUnauthorized = error instanceof Error &&
-                (error.message.includes('401') || (error as any).status === 401);
-
-            if (isUnauthorized) {
-                console.log('Session invalid (401), disconnecting...');
-                await this.disconnect();
+            // Check if error is AuthError (401/403)
+            if (error instanceof AuthError) {
+                console.log('Session invalid (AuthError), disconnecting...');
+                await this.handleAuthError(error);
                 return false;
             }
 
-            // Other errors (network, timeout) don't invalidate the session due to bad key
-            // They just mean we can't connect right now.
-            // We stay authenticated but might be offline.
+            // Other errors (network, etc.) don't invalidate session state
             return true;
         }
+    }
+
+    /**
+     * Handles authentication errors (401/403) from API calls
+     * Clears session and sets state to Unauthenticated
+     * 
+     * @param error - The error object
+     */
+    public async handleAuthError(error: Error): Promise<void> {
+        console.error('Authentication error detected:', error.message);
+        await this.disconnect();
     }
 }
