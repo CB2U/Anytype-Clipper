@@ -1151,6 +1151,7 @@ From constitution.md - these apply to ALL epics:
   #### Maintenance / Unplanned Work
 
 - **Input Code Authentication (P0):** `specs/031-input-code-auth/` - Feature to support manual code entry.
+- **Tag Management Integration (P1):** `specs/035-tag-management/` - Completed.
 
 This section tracks bug fixes, chores, and unplanned changes that are not part of the main roadmap.
   #### Epic 11.6: Collaboration Features

@@ -1,4 +1,5 @@
 import { AuthManager, AuthStatus } from '../lib/auth/auth-manager';
+import { TagAutocomplete } from './components/tag-autocomplete';
 
 
 // DOM Elements
@@ -36,6 +37,8 @@ const mainElements = {
   bookmarkFields: document.getElementById('bookmark-fields'),
   inputQuote: document.getElementById('input-quote') as HTMLTextAreaElement,
   displayContext: document.getElementById('display-context'),
+  tagContainer: document.getElementById('tag-autocomplete-container') as HTMLDivElement,
+  tagChips: document.getElementById('tag-chips') as HTMLDivElement,
 };
 
 const authManager = AuthManager.getInstance();
@@ -43,6 +46,7 @@ const authManager = AuthManager.getInstance();
 // State
 let currentTab: chrome.tabs.Tab | null = null;
 let currentHighlight: any = null;
+let tagAutocomplete: TagAutocomplete | null = null;
 
 // --- Space Management ---
 
@@ -99,6 +103,11 @@ async function loadSpaces() {
     // Save initial default if none selected
     persistSpaceSelection();
 
+    // Update Tag Autocomplete
+    if (tagAutocomplete && mainElements.spaceSelector) {
+      tagAutocomplete.setSpaceId(mainElements.spaceSelector.value);
+    }
+
   } catch (error) {
     console.error('Failed to load spaces:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -119,6 +128,9 @@ function persistSpaceSelection() {
   const selectedId = mainElements.spaceSelector?.value;
   if (selectedId) {
     chrome.storage.local.set({ lastSelectedSpaceId: selectedId });
+    if (tagAutocomplete) {
+      tagAutocomplete.setSpaceId(selectedId);
+    }
   }
 }
 
@@ -141,6 +153,10 @@ async function loadCurrentTab() {
       mainElements.bookmarkFields?.classList.add('hidden');
       mainElements.highlightFields?.classList.remove('hidden');
       if (mainElements.btnSave) mainElements.btnSave.textContent = 'Save Highlight';
+
+      if (tagAutocomplete) {
+        tagAutocomplete.setObjectTypeId('Note');
+      }
 
       // Populate fields
       if (mainElements.inputQuote) mainElements.inputQuote.value = currentHighlight.quote;
@@ -173,7 +189,8 @@ async function handleSave() {
 
   const title = mainElements.inputTitle?.value || currentTab.title || 'Untitled';
   const note = mainElements.inputNote?.value || '';
-  const tags = mainElements.inputTags?.value.split(',').map(t => t.trim()).filter(t => t.length > 0) || [];
+  const tags = tagAutocomplete ? tagAutocomplete.getSelectedTags() :
+    (mainElements.inputTags?.value.split(',').map(t => t.trim()).filter(t => t.length > 0) || []);
 
   // Disable button
   if (mainElements.btnSave) {
@@ -406,4 +423,13 @@ document.addEventListener('DOMContentLoaded', () => {
   authElements.btnVerify?.addEventListener('click', handleVerify);
   mainElements.btnDisconnect?.addEventListener('click', handleDisconnect);
   mainElements.btnSave?.addEventListener('click', handleSave);
+
+  // Initialize tag autocomplete
+  if (mainElements.inputTags && mainElements.tagContainer && mainElements.tagChips) {
+    tagAutocomplete = new TagAutocomplete(
+      mainElements.inputTags,
+      mainElements.tagContainer,
+      mainElements.tagChips
+    );
+  }
 });

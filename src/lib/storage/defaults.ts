@@ -13,4 +13,6 @@ export const DEFAULTS: StorageSchema = {
     _version: 1,
     settings: DEFAULT_APP_SETTINGS,
     auth: DEFAULT_AUTH_DATA,
+    tagCache: {},
+    tagPropertyMappings: {},
 };

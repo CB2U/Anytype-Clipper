@@ -9,6 +9,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="./components/tag-autocomplete.css" />
 </head>
 
 <body>
@@ -88,7 +89,10 @@
 
         <div class="form-group">
           <label for="input-tags">Tags</label>
-          <input type="text" id="input-tags" placeholder="tag1, tag2">
+          <div id="tag-autocomplete-container" class="tag-autocomplete-container">
+            <input type="text" id="input-tags" placeholder="Add tags..." autocomplete="off">
+          </div>
+          <div id="tag-chips" class="tag-chips-container"></div>
         </div>
 
         <div class="form-actions" style="margin-top: 8px;">

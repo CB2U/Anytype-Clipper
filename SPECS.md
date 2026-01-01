@@ -296,6 +296,7 @@ This section tracks bug fixes, chores, and unplanned changes that are not part o
 | N/A | Input Code Auth (Unplanned) | `specs/031-input-code-auth/` | Feature | P0 | Done | N/A | [Evidence](specs/031-input-code-auth/spec.md#evidence) | AC-U1, AC-U2, AC-U3, AC-U4 |
 | N/A | Fix Spaces Loading Error | `specs/033-fix-spaces-error/` | Bug | P0 | Done | N/A | [Evidence](specs/033-fix-spaces-error/spec.md#evidence) | FR1, FR2, FR3 |
 | N/A | Fix Bookmark Creation 404 | `specs/034-fix-bookmark-404/` | Bug | P0 | Done | None | [Evidence](specs/034-fix-bookmark-404/spec.md#evidence) | FR1, FR2 |
+| N/A | Tag Management Integration | `specs/035-tag-management/` | Feature | P1 | Done | None | [Evidence](specs/035-tag-management/spec.md#evidence) | AC-U1, AC-U2, AC-U3, AC-U4, AC-U5 |
 
 ---
 

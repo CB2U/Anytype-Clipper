@@ -24,10 +24,12 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 import { AnytypeApiClient } from '../lib/api/client';
+import { TagService } from '../lib/tags/tag-service';
 import { ExtensionMessage, MessageResponse, HighlightCapturedMessage } from '../types/messages';
 
-// Initialize API Client
+// Initialize API Client and Tag Service
 const apiClient = new AnytypeApiClient();
+const tagService = TagService.getInstance();
 
 // Function to sync auth state from storage
 async function syncAuthState() {
@@ -145,7 +147,60 @@ chrome.runtime.onMessage.addListener((
 
         case 'CMD_CAPTURE_BOOKMARK': {
           const { spaceId, params } = message.payload;
-          const result = await apiClient.createObject(spaceId, params);
+
+          // 1. Create the object first (without tags)
+          // We remove tags from create params to keep it clean, though client ignores them anyway
+          const createParams = { ...params };
+          delete createParams.tags;
+
+          const result = await apiClient.createObject(spaceId, createParams);
+
+          // 2. Resolve and assign tags if present
+          const tagNames = (params.tags || []) as string[];
+          const objectType = (params.type_key || 'bookmark') as string;
+
+          if (Array.isArray(tagNames) && tagNames.length > 0 && result.id) {
+            try {
+              // Discover the tag property ID for this space
+              const tagPropertyId = await (tagService as any)['resolvePropertyId'](spaceId, objectType);
+
+              // Get all existing tags for this space
+              const existingTags = await tagService.getTags(spaceId, objectType);
+
+              const tagIds: string[] = [];
+              for (const tagName of tagNames) {
+                if (typeof tagName !== 'string') continue;
+
+                const existingTag = existingTags.find(t => t.name.toLowerCase() === tagName.toLowerCase());
+                if (existingTag) {
+                  tagIds.push(existingTag.id);
+                } else {
+                  // Create new tag
+                  const newTag = await tagService.createTag(spaceId, objectType, tagName);
+                  tagIds.push(newTag.id);
+                }
+              }
+
+              if (tagPropertyId && tagIds.length > 0) {
+                const properties = [
+                  {
+                    key: tagPropertyId,
+                    objects: tagIds
+                  }
+                ];
+
+                console.log(`[CMD_CAPTURE_BOOKMARK] Updating object ${result.id} with properties:`, properties);
+
+                await apiClient.updateObject(spaceId, result.id, properties);
+
+                console.log(`[CMD_CAPTURE_BOOKMARK] Tags assigned successfully`);
+              }
+
+            } catch (tagError) {
+              console.error('[CMD_CAPTURE_BOOKMARK] Tag assignment failed:', tagError);
+            }
+          }
+
           sendResponse({ success: true, data: result });
           break;
         }

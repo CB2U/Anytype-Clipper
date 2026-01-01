@@ -128,10 +128,11 @@ export interface CreateObjectRequest {
  * Response from POST /v1/objects/create
  */
 export interface CreateObjectResponse {
-    /** Unique identifier for the created object */
-    objectId: string;
-    /** Optional: Deep link URL to open this object in Anytype Desktop */
-    url?: string;
+    object: {
+        id: string;
+        [key: string]: unknown;
+    };
+    [key: string]: unknown;
 }
 
 /**
@@ -192,4 +193,78 @@ export interface UpdateObjectResponse {
     objectId: string;
     /** Unix timestamp when this object was last updated */
     updatedAt: number;
+}
+// ============================================================================
+// Properties Endpoints
+// ============================================================================
+
+/**
+ * Represents a Property (Relation) in Anytype
+ */
+export interface Property {
+    /** Unique identifier for this property (used as propertyId in other endpoints) */
+    id: string;
+    /** Human-readable name of the property (e.g., "Tag", "Source") */
+    name: string;
+    /** Format of the property (e.g., "multi-select", "text", "tag") */
+    format: string;
+}
+
+/**
+ * Response from GET /v1/spaces/:spaceId/properties
+ */
+export interface ListPropertiesResponse {
+    /** Array of properties available in the space */
+    data: Property[];
+}
+
+// ============================================================================
+// Tags Endpoints
+// ============================================================================
+
+/**
+ * Represents a Tag in Anytype
+ */
+export interface Tag {
+    id: string;
+    name: string;
+    color: string;
+}
+
+/**
+ * Request for listing tags
+ */
+export interface ListTagsOptions {
+    offset?: number;
+    limit?: number;
+    filters?: Record<string, string>;
+}
+
+/**
+ * Response from GET /v1/spaces/:spaceId/properties/:propertyId/tags
+ */
+export interface ListTagsResponse {
+    data: Tag[];
+    pagination: {
+        has_more: boolean;
+        limit: number;
+        offset: number;
+        total: number;
+    };
+}
+
+/**
+ * Request body for POST /v1/spaces/:spaceId/properties/:propertyId/tags
+ */
+export interface CreateTagRequestData {
+    /** Anytype Desktop API seems to require capitalized field names for tags */
+    Name: string;
+    Color: string;
+}
+
+/**
+ * Response from POST /v1/spaces/:spaceId/properties/:propertyId/tags
+ */
+export interface CreateTagResponse {
+    tag: Tag;
 }

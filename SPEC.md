@@ -10,14 +10,14 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-- **Active Spec:** [Highlight Capture](specs/031-highlight-capture/spec.md) (Epic 3.1)
-- **Next Up:** Metadata Extraction (Epic 3.2)
-- **Action:** Begin implementation with T1
+- **Active Spec:** [Tag Management Integration](specs/035-tag-management/spec.md)
+- **Status:** Done
+- **Action:** Complete
 
 ## Links
-- spec.md: [specs/031-highlight-capture/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/031-highlight-capture/spec.md)
-- plan.md: [specs/031-highlight-capture/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/031-highlight-capture/plan.md)
-- tasks.md: [specs/031-highlight-capture/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/031-highlight-capture/tasks.md)
+- spec.md: [specs/035-tag-management/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/035-tag-management/spec.md)
+- plan.md: [specs/035-tag-management/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/035-tag-management/plan.md)
+- tasks.md: [specs/035-tag-management/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/035-tag-management/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.

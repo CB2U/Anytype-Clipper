@@ -11,8 +11,9 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 - **Offline Support**: Queue captures when Anytype is offline (retry logic).
 les with Markdown formatting
 - **Offline Queue**: Captures work even when Anytype is offline
-- **Smart Tagging**: Auto-suggest tags based on domain and content
-- **Privacy-First**: All data stays local, no cloud sync
+- **Tag Management**: Integrated autocomplete and selection of existing Anytype tags.
+- **Inline Tag Creation**: Create new tags directly within the popup UI.
+- **Privacy-First**: All data stays local, no cloud sync.
 
 ## Prerequisites
 
@@ -105,6 +106,6 @@ ISC
 
 ## Status
 
-🚧 **In Development** - Epic 1.0: Project Setup & Architecture (Complete)
+🚧 **In Development** - Epic 3.5: Tag Management Integration (Complete)
 
 See [SPECS.md](SPECS.md) for current progress.

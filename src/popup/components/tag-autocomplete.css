@@ -1,0 +1,128 @@
+.tag-autocomplete-container {
+    position: relative;
+    width: 100%;
+}
+
+.tag-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 4px;
+}
+
+.tag-dropdown.hidden {
+    display: none;
+}
+
+.tag-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.tag-option:hover,
+.tag-option.highlighted {
+    background: #f5f5f5;
+}
+
+.tag-option .tag-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.tag-option .tag-name {
+    flex: 1;
+    font-size: 13px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag-option.create-option {
+    border-top: 1px solid #f0f0f0;
+    color: #2196f3;
+}
+
+.tag-loading,
+.tag-error,
+.tag-empty {
+    padding: 12px;
+    font-size: 13px;
+    color: #888;
+    text-align: center;
+}
+
+.tag-retry-link {
+    color: #2196f3;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-left: 4px;
+    font-weight: 500;
+}
+
+.tag-retry-link:hover {
+    color: #1976d2;
+}
+
+.tag-error {
+    color: #f44336;
+}
+
+/* Chips styling */
+.tag-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+    min-height: 24px;
+}
+
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f1f3f4;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #3c4043;
+    border: 1px solid #dadce0;
+}
+
+.tag-chip .tag-color-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.tag-chip .remove-tag {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    font-size: 14px;
+    color: #5f6368;
+    margin-left: 2px;
+}
+
+.tag-chip .remove-tag:hover {
+    background: #e8eaed;
+    color: #202124;
+}

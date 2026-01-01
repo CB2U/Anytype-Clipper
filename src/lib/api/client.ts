@@ -14,7 +14,13 @@ import {
     CreateObjectParams,
     CreateObjectRequest,
     CreateObjectResponse,
-    AnytypeObject
+    UpdateObjectResponse,
+    AnytypeObject,
+    ListTagsResponse,
+    ListTagsOptions,
+    CreateTagRequestData,
+    CreateTagResponse,
+    ListPropertiesResponse,
 } from './types';
 
 /**
@@ -136,13 +142,8 @@ export class AnytypeApiClient {
         // Map params to top-level fields and properties
         const { title, description, tags, type_key = 'bookmark', ...otherParams } = params;
 
-        // Combine description and tags into the body
+        // Build body content (excluding tags - they'll be handled as a proper relation)
         let bodyContent = '';
-
-        // For highlights, we put the quote and context in the body if needed
-        // but FR4.4 says Quote and Context are properties? 
-        // Anytype API often prefers long text in the body.
-        // Let's check the spec: "Map quote + context to object body (formatted)"
 
         if (params.quote) {
             bodyContent += `> ${params.quote}\n\n`;
@@ -155,9 +156,8 @@ export class AnytypeApiClient {
             bodyContent += `${description}\n\n`;
         }
 
-        if (Array.isArray(tags) && tags.length > 0) {
-            bodyContent += `Tags: ${tags.join(', ')}`;
-        }
+        // NOTE: Tags are NOT added to body. They should be handled by the caller
+        // using TagService to get tag IDs and then updating the object with the tag relation.
 
         // Map internal keys to Anytype relation keys
         const propertyMapping: Record<string, string> = {
@@ -182,13 +182,76 @@ export class AnytypeApiClient {
         const response = await this.post<CreateObjectResponse>(`/v1/spaces/${spaceId}/objects`, requestBody);
 
         return {
-            id: response.objectId,
+            id: response.object?.id,
             name: requestBody.name,
             type_key: requestBody.type_key,
             properties: params,
             createdAt: Date.now(),
             updatedAt: Date.now()
         };
+    }
+
+    /**
+     * Lists existing tags for a specific property in a space
+     * 
+     * @param spaceId - ID of the space
+     * @param propertyId - ID of the property (relation)
+     * @param options - Pagination and filter options
+     * @returns List of tags
+     */
+    async listTags(spaceId: string, propertyId: string, options?: ListTagsOptions): Promise<ListTagsResponse> {
+        let endpoint = `/v1/spaces/${spaceId}/properties/${propertyId}/tags`;
+
+        if (options) {
+            const params = new URLSearchParams();
+            if (options.offset !== undefined) params.append('offset', options.offset.toString());
+            if (options.limit !== undefined) params.append('limit', options.limit.toString());
+            if (options.filters) {
+                Object.entries(options.filters).forEach(([key, value]) => {
+                    params.append(key, value);
+                });
+            }
+            const queryString = params.toString();
+            if (queryString) {
+                endpoint += `?${queryString}`;
+            }
+        }
+
+        return this.get<ListTagsResponse>(endpoint);
+    }
+
+    /**
+     * Lists available properties in a space
+     * 
+     * @param spaceId - ID of the space
+     * @returns List of properties
+     */
+    async listProperties(spaceId: string): Promise<ListPropertiesResponse> {
+        return this.get<ListPropertiesResponse>(`/v1/spaces/${spaceId}/properties`);
+    }
+
+    /**
+     * Creates a new tag for a specific property in a space
+     * 
+     * @param spaceId - ID of the space
+     * @param propertyId - ID of the property (relation)
+     * @param data - Tag data (name, color)
+     * @returns Created tag
+     */
+    async createTag(spaceId: string, propertyId: string, data: CreateTagRequestData): Promise<CreateTagResponse> {
+        return this.post<CreateTagResponse>(`/v1/spaces/${spaceId}/properties/${propertyId}/tags`, data);
+    }
+
+    /**
+     * Updates an existing object's properties
+     * 
+     * @param spaceId - ID of the space
+     * @param objectId - ID of the object to update
+     * @param properties - Properties to update (key-value pairs)
+     * @returns Updated object response
+     */
+    async updateObject(spaceId: string, objectId: string, properties: any): Promise<UpdateObjectResponse> {
+        return this.patch<UpdateObjectResponse>(`/v1/spaces/${spaceId}/objects/${objectId}`, { properties });
     }
 
     /**
@@ -244,6 +307,25 @@ export class AnytypeApiClient {
         timeout?: number
     ): Promise<T> {
         return this.request<T>('PUT', endpoint, body, headers, timeout);
+    }
+
+    /**
+     * Performs a PATCH request
+     *
+     * @param endpoint - API endpoint (e.g., '/v1/objects/{id}')
+     * @param body - Request body (will be JSON serialized)
+     * @param headers - Optional request headers
+     * @param timeout - Optional timeout in milliseconds (default: 10000)
+     * @returns Response data
+     * @throws AuthError, NetworkError, or ApiError
+     */
+    async patch<T>(
+        endpoint: string,
+        body?: unknown,
+        headers?: Record<string, string>,
+        timeout?: number
+    ): Promise<T> {
+        return this.request<T>('PATCH', endpoint, body, headers, timeout);
     }
 
     /**
@@ -308,8 +390,8 @@ export class AnytypeApiClient {
             headers: requestHeaders,
         };
 
-        // Add body for POST/PUT requests
-        if (body !== undefined && (method === 'POST' || method === 'PUT')) {
+        // Add body for POST/PUT/PATCH requests
+        if (body !== undefined && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
             requestOptions.body = JSON.stringify(body);
         }
 
