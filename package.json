@@ -18,7 +18,7 @@
     "web-clipper"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.3.0",
     "@eslint/js": "^9.39.2",
