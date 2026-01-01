@@ -42,7 +42,7 @@ This document serves as the **central index** for all specifications in the Anyt
 
 | Roadmap Anchor | Epic Name                     | Spec Folder                 | Breakpoint | Status      | Target ACs                                                |
 | -------------- | ----------------------------- | --------------------------- | ---------- | ----------- | --------------------------------------------------------- |
-| 2.0            | Challenge Code Authentication | `specs/004-challenge-auth/` | BP1        | Not Started | FR1.1, FR1.2, FR1.3, FR1.4, AC1, AUTH-1, AUTH-2           |
+| 2.0            | Challenge Code Authentication | `specs/020-challenge-auth/` | BP1        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/020-challenge-auth/spec.md#evidence) | FR1.1, FR1.2, FR1.3, FR1.4, AC1, AUTH-1, AUTH-2           |
 | 2.1            | API Key Management            | `specs/005-api-key-mgmt/`   | BP1        | Not Started | FR1.4, FR1.5, FR1.8, AUTH-2, AUTH-5, AUTH-6, SEC-1, SEC-3 |
 | 2.2            | Re-authentication Flow        | `specs/006-reauth-flow/`    | BP1        | Not Started | FR1.6, FR1.7, AUTH-3, AUTH-4, REL-1                       |
 

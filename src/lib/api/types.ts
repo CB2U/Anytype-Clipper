@@ -15,7 +15,8 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface CreateChallengeRequest {
-    // Empty interface - no request body needed
+    /** Name of the application requesting access */
+    app_name: string;
 }
 
 /**

@@ -6,6 +6,11 @@
  */
 
 import { ApiError, NetworkError, classifyHttpError } from './errors';
+import {
+    CreateChallengeResponse,
+    CreateApiKeyRequest,
+    CreateApiKeyResponse
+} from './types';
 
 /**
  * HTTP client for Anytype API
@@ -36,6 +41,27 @@ export class AnytypeApiClient {
         }
 
         this.baseUrl = `http://localhost:${port}`;
+    }
+
+    /**
+     * Creates an authentication challenge
+     * 
+     * @returns Challenge ID and code to display to user
+     */
+    async createChallenge(): Promise<CreateChallengeResponse> {
+        return this.post<CreateChallengeResponse>('/v1/auth/challenges', {
+            app_name: 'Anytype Clipper'
+        });
+    }
+
+    /**
+     * Creates an API key using an approved challenge
+     * 
+     * @param request - Challenge ID and code
+     * @returns New API key
+     */
+    async createApiKey(request: CreateApiKeyRequest): Promise<CreateApiKeyResponse> {
+        return this.post<CreateApiKeyResponse>('/v1/auth/api_keys', request);
     }
 
     /**
