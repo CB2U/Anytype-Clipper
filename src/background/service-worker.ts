@@ -51,8 +51,15 @@ chrome.runtime.onMessage.addListener((
     try {
       switch (message.type) {
         case 'CMD_GET_SPACES': {
-          const result = await apiClient.getSpaces();
-          sendResponse({ success: true, data: result.spaces });
+          console.log('Fetching spaces...');
+          try {
+            const result = await apiClient.getSpaces();
+            console.log('Spaces fetched successfully:', result);
+            sendResponse({ success: true, data: result.spaces });
+          } catch (e) {
+            console.error('API Error in CMD_GET_SPACES:', e);
+            throw e; // Let the catch block below handle formatting
+          }
           break;
         }
 

@@ -294,6 +294,7 @@ This section tracks bug fixes, chores, and unplanned changes that are not part o
 | -------------- | ----- | ----------- | ---- | -------- | ------ | --------- | -------- | ---------- |
 | N/A | Disable CI Workflow | `specs/012-disable-ci/` | Bug | P2 | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/012-disable-ci/spec.md#evidence) | AC-U1, AC-U2 |
 | N/A | Input Code Auth (Unplanned) | `specs/031-input-code-auth/` | Feature | P0 | Done | N/A | [Evidence](specs/031-input-code-auth/spec.md#evidence) | AC-U1, AC-U2, AC-U3, AC-U4 |
+| N/A | Fix Spaces Loading Error | `specs/033-fix-spaces-error/` | Bug | P0 | Done | N/A | [Evidence](specs/033-fix-spaces-error/spec.md#evidence) | FR1, FR2, FR3 |
 
 ---
 

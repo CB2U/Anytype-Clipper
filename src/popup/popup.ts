@@ -94,8 +94,17 @@ async function loadSpaces() {
 
   } catch (error) {
     console.error('Failed to load spaces:', error);
-    if (mainElements.spaceSelector) mainElements.spaceSelector.innerHTML = '<option>Error loading spaces</option>';
-    showError('Could not load spaces. Is Anytype running?');
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
+    if (mainElements.spaceSelector) {
+      mainElements.spaceSelector.innerHTML = `<option disabled>Error: ${errorMessage}</option>`;
+    }
+
+    if (errorMessage.includes('401') || errorMessage.toLowerCase().includes('auth')) {
+      showError('Authentication failed. Please reconnect.');
+    } else {
+      showError(`Could not load spaces: ${errorMessage}`);
+    }
   }
 }
 

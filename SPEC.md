@@ -10,14 +10,14 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-- **Active Spec:** None
+- **Active Spec:** None (Previous: [Fix Spaces Loading Error](specs/033-fix-spaces-error/spec.md) - Done)
 - **Next Up:** [Highlight Capture](specs/032-highlight-capture/spec.md) (Epic 3.1)
-- **Action:** Run `/implement_from_spec` (or `/specify` if refining)
+- **Action:** Run `/implement_from_spec`
 
 ## Links
-- spec.md: [specs/021-api-key-management/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/021-api-key-management/spec.md)
-- plan.md: [specs/021-api-key-management/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/021-api-key-management/plan.md)
-- tasks.md: [specs/021-api-key-management/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/021-api-key-management/tasks.md)
+- spec.md: [specs/033-fix-spaces-error/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/033-fix-spaces-error/spec.md)
+- plan.md: [specs/033-fix-spaces-error/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/033-fix-spaces-error/plan.md)
+- tasks.md: [specs/033-fix-spaces-error/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/033-fix-spaces-error/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.

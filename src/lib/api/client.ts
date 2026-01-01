@@ -105,7 +105,24 @@ export class AnytypeApiClient {
      * @returns List of spaces
      */
     async getSpaces(): Promise<ListSpacesResponse> {
-        return this.get<ListSpacesResponse>('/v1/spaces');
+        const response = await this.get<unknown>('/v1/spaces');
+
+        // Handle variable response schemas
+        if (Array.isArray(response)) {
+            return { spaces: response as any[] };
+        }
+
+        if (typeof response === 'object' && response !== null) {
+            if ('spaces' in response && Array.isArray((response as any).spaces)) {
+                return response as ListSpacesResponse;
+            }
+            if ('data' in response && Array.isArray((response as any).data)) {
+                return { spaces: (response as any).data };
+            }
+        }
+
+        console.warn('Unexpected spaces response format:', response);
+        throw new Error('Invalid response format from Anytype API');
     }
 
     /**
