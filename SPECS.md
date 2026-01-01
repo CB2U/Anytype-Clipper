@@ -48,11 +48,11 @@ This document serves as the **central index** for all specifications in the Anyt
 
 ### BP2: Basic Capture (Weeks 5-6)
 
-| Roadmap Anchor | Epic Name           | Spec Folder                      | Breakpoint | Status      | Target ACs                                          |
-| -------------- | ------------------- | -------------------------------- | ---------- | ----------- | --------------------------------------------------- |
-| 3.0            | Bookmark Capture    | `specs/030-bookmark-capture/`    | BP2        | Done | FR3.1, FR3.2, FR3.3, FR3.4, AC2, US1                |
-| 3.1            | Highlight Capture   | `specs/008-highlight-capture/`   | BP2        | Not Started | FR4.1, FR4.2, FR4.3, FR4.4, FR4.5, AC3, US2, PERF-5 |
-| 3.2            | Metadata Extraction | `specs/009-metadata-extraction/` | BP2        | Not Started | FR3.3, FR10.1, FR10.2, FR10.3, FR10.4, FR10.5, AC10 |
+| Roadmap Anchor | Epic Name           | Spec Folder                      | Breakpoint | Status | Next Task | Evidence | Target ACs                                          |
+| -------------- | ------------------- | -------------------------------- | ---------- | ------ | --------- | -------- | --------------------------------------------------- |
+| 3.0            | Bookmark Capture    | `specs/030-bookmark-capture/`    | BP2        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/030-bookmark-capture/spec.md#evidence) | FR3.1, FR3.2, FR3.3, FR3.4, AC2, US1                |
+| 3.1            | Highlight Capture   | `specs/031-highlight-capture/`   | BP2        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/031-highlight-capture/spec.md#evidence) | FR4.1, FR4.2, FR4.3, FR4.4, FR4.5, AC3, US2, PERF-5 |
+| 3.2            | Metadata Extraction | `specs/033-metadata-extraction/` | BP2        | Not Started | | | FR3.3, FR10.1, FR10.2, FR10.3, FR10.4, FR10.5, AC10 |
 
 ### BP3: Article Extraction (Weeks 7-8)
 
@@ -193,24 +193,24 @@ specs/NNN-slug/
 ### MVP Progress (v1.0)
 
 - **Total Epics:** 32
-- **Not Started:** 30
+- **Not Started:** 24
 - **In Progress:** 0
 - **Approved:** 0
 - **Planning:** 0
 - **Tasks Defined:** 0
 - **Implementing:** 0
 - **Testing:** 0
-- **Done:** 2
-  **Completion:** 6% (2/32 complete)
+- **Done:** 8
+  **Completion:** 25% (8/32 complete)
   
   ### Breakpoint Progress
-- **BP0 (Foundation):** 2/3 complete
-- **BP1 (Authentication):** 0/3 complete
-- **BP2 (Basic Capture):** 0/3 complete
+- **BP0 (Foundation):** 3/3 complete
+- **BP1 (Authentication):** 3/3 complete
+- **BP2 (Basic Capture):** 1/3 complete
 - **BP3 (Article Extraction):** 0/5 complete
 - **BP4 (Queue & Reliability):** 0/4 complete
 - **BP5 (Deduplication & Tagging):** 0/3 complete
-- **BP6 (UI & Integration):** 0/4 complete
+- **BP6 (UI & Integration):** 1/4 complete
 - **BP7 (Testing & Polish):** 0/5 complete
 - **BP8 (MVP Release):** 0/2 complete
 

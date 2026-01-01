@@ -30,12 +30,19 @@ const mainElements = {
   inputTags: document.getElementById('input-tags') as HTMLInputElement,
   btnSave: document.getElementById('btn-save') as HTMLButtonElement,
   statusMsg: document.getElementById('save-status'),
+
+  // Highlight Specific
+  highlightFields: document.getElementById('highlight-fields'),
+  bookmarkFields: document.getElementById('bookmark-fields'),
+  inputQuote: document.getElementById('input-quote') as HTMLTextAreaElement,
+  displayContext: document.getElementById('display-context'),
 };
 
 const authManager = AuthManager.getInstance();
 
 // State
 let currentTab: chrome.tabs.Tab | null = null;
+let currentHighlight: any = null;
 
 // --- Space Management ---
 
@@ -124,6 +131,29 @@ async function loadCurrentTab() {
       currentTab = tabs[0];
       if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
     }
+
+    // Check for highlight capture
+    const data = await chrome.storage.local.get('lastHighlight');
+    if (data.lastHighlight) {
+      currentHighlight = data.lastHighlight;
+
+      // Switch to highlight mode UI
+      mainElements.bookmarkFields?.classList.add('hidden');
+      mainElements.highlightFields?.classList.remove('hidden');
+      if (mainElements.btnSave) mainElements.btnSave.textContent = 'Save Highlight';
+
+      // Populate fields
+      if (mainElements.inputQuote) mainElements.inputQuote.value = currentHighlight.quote;
+      if (mainElements.inputTitle) mainElements.inputTitle.value = currentHighlight.pageTitle || currentTab?.title || '';
+      if (mainElements.displayContext) {
+        const before = currentHighlight.contextBefore ? `...${currentHighlight.contextBefore}` : '';
+        const after = currentHighlight.contextAfter ? `${currentHighlight.contextAfter}...` : '';
+        mainElements.displayContext.innerHTML = `<span style="opacity: 0.6">${before}</span> <strong style="color: #000">${currentHighlight.quote}</strong> <span style="opacity: 0.6">${after}</span>`;
+      }
+
+      // Clear the temporary highlight from storage so it doesn't persist inappropriately
+      await chrome.storage.local.remove('lastHighlight');
+    }
   } catch (error) {
     console.error('Error loading tab info:', error);
   }
@@ -145,12 +175,6 @@ async function handleSave() {
   const note = mainElements.inputNote?.value || '';
   const tags = mainElements.inputTags?.value.split(',').map(t => t.trim()).filter(t => t.length > 0) || [];
 
-  // Helper to extract domain
-  let domain = '';
-  try {
-    domain = new URL(currentTab.url).hostname;
-  } catch (e) { /* ignore */ }
-
   // Disable button
   if (mainElements.btnSave) {
     mainElements.btnSave.disabled = true;
@@ -158,18 +182,37 @@ async function handleSave() {
   }
 
   try {
+    const isHighlight = !!currentHighlight;
+    const params: any = {
+      title,
+      description: note,
+      tags,
+    };
+
+    if (isHighlight) {
+      params.type_key = 'note'; // Use 'note' type for highlights
+      params.quote = currentHighlight.quote;
+      params.contextBefore = currentHighlight.contextBefore;
+      params.contextAfter = currentHighlight.contextAfter;
+      params.url = currentHighlight.url;
+      params.source_url = currentHighlight.url;
+      params.pageTitle = currentHighlight.pageTitle;
+    } else {
+      params.type_key = 'bookmark';
+      params.source_url = currentTab.url;
+      // Helper to extract domain for bookmarks
+      let domain = '';
+      try {
+        domain = new URL(currentTab.url!).hostname;
+      } catch (e) { /* ignore */ }
+      params.domain = domain;
+    }
+
     const response = await chrome.runtime.sendMessage({
-      type: 'CMD_CAPTURE_BOOKMARK',
+      type: 'CMD_CAPTURE_BOOKMARK', // We can rename this later if needed, but background handles it
       payload: {
         spaceId,
-        params: {
-          title,
-          description: note,
-          source_url: currentTab.url,
-          domain,
-          tags,
-          // Additional metadata could go here in future epics
-        }
+        params
       }
     });
 

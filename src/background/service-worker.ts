@@ -8,10 +8,23 @@ chrome.runtime.onInstalled.addListener((details) => {
   } else if (details.reason === 'update') {
     console.log('Anytype Clipper updated');
   }
+
+  // Register context menu for text selection
+  chrome.contextMenus.create({
+    id: 'send-selection-to-anytype',
+    title: 'Send selection to Anytype',
+    contexts: ['selection']
+  }, () => {
+    if (chrome.runtime.lastError) {
+      console.error('Error creating context menu:', chrome.runtime.lastError);
+    } else {
+      console.log('Context menu registered successfully');
+    }
+  });
 });
 
 import { AnytypeApiClient } from '../lib/api/client';
-import { ExtensionMessage, MessageResponse } from '../types/messages';
+import { ExtensionMessage, MessageResponse, HighlightCapturedMessage } from '../types/messages';
 
 // Initialize API Client
 const apiClient = new AnytypeApiClient();
@@ -38,6 +51,73 @@ chrome.storage.onChanged.addListener((changes, area) => {
     syncAuthState();
   }
 });
+
+// Context menu click handler
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === 'send-selection-to-anytype' && tab?.id) {
+    console.log('[Service Worker] Injecting highlight capture script');
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => {
+          // Inline highlight capture logic
+          const selection = window.getSelection();
+          if (!selection || selection.rangeCount === 0 || !selection.toString().trim()) {
+            console.warn('[Highlight Capture] No valid selection');
+            return;
+          }
+
+          const quote = selection.toString();
+          const range = selection.getRangeAt(0);
+          const container = range.commonAncestorContainer;
+          const fullText = container.textContent || '';
+
+          // Extract context
+          const offset = fullText.indexOf(quote);
+          let contextBefore = '';
+          let contextAfter = '';
+
+          if (offset !== -1) {
+            contextBefore = fullText.substring(Math.max(0, offset - 50), offset).trim();
+            contextAfter = fullText.substring(offset + quote.length, Math.min(fullText.length, offset + quote.length + 50)).trim();
+          }
+
+          // Send message to background
+          chrome.runtime.sendMessage({
+            type: 'CMD_HIGHLIGHT_CAPTURED',
+            payload: {
+              quote,
+              contextBefore,
+              contextAfter,
+              url: window.location.href,
+              pageTitle: document.title,
+              timestamp: new Date().toISOString(),
+            }
+          });
+        }
+      });
+      console.log('[Service Worker] Script injected successfully');
+    } catch (error) {
+      console.error('[Service Worker] Script injection failed:', error);
+    }
+  }
+});
+
+// Update handleAsync to include CMD_HIGHLIGHT_CAPTURED
+const handleHighlightCaptured = async (payload: HighlightCapturedMessage['payload']) => {
+  console.log('Highlight captured in background:', payload.quote);
+  // Store the payload for the popup to retrieve
+  await chrome.storage.local.set({ lastHighlight: payload });
+
+  // Try to open the popup automatically (may not work on all platforms)
+  try {
+    if ((chrome.action as any).openPopup) {
+      await (chrome.action as any).openPopup();
+    }
+  } catch (e) {
+    console.log('Optional: openPopup failed (expected on non-Chrome browsers)', e);
+  }
+};
 
 // Message handling
 chrome.runtime.onMessage.addListener((
@@ -74,6 +154,12 @@ chrome.runtime.onMessage.addListener((
           // Simple check by trying to get spaces
           // If it fails with 401, client throws AuthError
           await apiClient.getSpaces();
+          sendResponse({ success: true });
+          break;
+        }
+
+        case 'CMD_HIGHLIGHT_CAPTURED': {
+          await handleHighlightCaptured(message.payload);
           sendResponse({ success: true });
           break;
         }

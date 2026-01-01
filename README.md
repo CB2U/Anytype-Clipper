@@ -4,9 +4,12 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 
 ## Features
 
-- **Bookmark Capture**: Save current tab with metadata and tags
-- **Highlight Capture**: Capture selected text with context
-- **Article Capture**: Extract and save full articles with Markdown formatting
+- **Bookmark Capture**: Save current page as a bookmark in Anytype.
+- **Highlight Capture**: Capture selected text from any page with surrounding context (50 chars before/after).
+- **Context Menu Integration**: Right-click any selection and "Send selection to Anytype".
+- **Space Selection**: Choose which Anytype Space to save content into.
+- **Offline Support**: Queue captures when Anytype is offline (retry logic).
+les with Markdown formatting
 - **Offline Queue**: Captures work even when Anytype is offline
 - **Smart Tagging**: Auto-suggest tags based on domain and content
 - **Privacy-First**: All data stays local, no cloud sync

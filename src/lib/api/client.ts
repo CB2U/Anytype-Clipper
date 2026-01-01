@@ -134,16 +134,32 @@ export class AnytypeApiClient {
      */
     async createObject(spaceId: string, params: CreateObjectParams): Promise<AnytypeObject> {
         // Map params to top-level fields and properties
-        const { title, description, tags, ...otherParams } = params;
+        const { title, description, tags, type_key = 'bookmark', ...otherParams } = params;
 
         // Combine description and tags into the body
-        let bodyContent = String(description || '');
+        let bodyContent = '';
+
+        // For highlights, we put the quote and context in the body if needed
+        // but FR4.4 says Quote and Context are properties? 
+        // Anytype API often prefers long text in the body.
+        // Let's check the spec: "Map quote + context to object body (formatted)"
+
+        if (params.quote) {
+            bodyContent += `> ${params.quote}\n\n`;
+            if (params.contextBefore || params.contextAfter) {
+                bodyContent += `*Context: ...${params.contextBefore || ''} **${params.quote}** ${params.contextAfter || ''}...*\n\n`;
+            }
+        }
+
+        if (description) {
+            bodyContent += `${description}\n\n`;
+        }
+
         if (Array.isArray(tags) && tags.length > 0) {
-            bodyContent += `\n\nTags: ${tags.join(', ')}`;
+            bodyContent += `Tags: ${tags.join(', ')}`;
         }
 
         // Map internal keys to Anytype relation keys
-        // ONLY include properties that are confirmed standard
         const propertyMapping: Record<string, string> = {
             'source_url': 'source'
         };
@@ -157,9 +173,9 @@ export class AnytypeApiClient {
 
         const requestBody: CreateObjectRequest = {
             spaceId,
-            name: String(title || 'Untitled Bookmark'),
+            name: String(title || (type_key === 'bookmark' ? 'Untitled Bookmark' : 'Untitled Highlight')),
             body: bodyContent.trim(),
-            type_key: 'bookmark',
+            type_key: type_key as string,
             properties: propertiesArray
         };
 

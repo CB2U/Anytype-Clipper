@@ -60,9 +60,25 @@
       </div>
 
       <div id="bookmark-form" style="display: flex; flex-direction: column; gap: 16px;">
-        <div class="form-group">
-          <label for="input-title">Title</label>
-          <input type="text" id="input-title" placeholder="Page Title">
+        <div id="highlight-fields" class="hidden">
+          <div class="form-group">
+            <label for="input-quote">Quote</label>
+            <textarea id="input-quote" readonly rows="3"
+              style="font-style: italic; background-color: #f9f9f9;"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="input-context">Context</label>
+            <div id="display-context"
+              style="font-size: 11px; color: #666; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background-color: #fff; line-height: 1.4;">
+            </div>
+          </div>
+        </div>
+
+        <div id="bookmark-fields">
+          <div class="form-group">
+            <label for="input-title">Title</label>
+            <input type="text" id="input-title" placeholder="Page Title">
+          </div>
         </div>
 
         <div class="form-group">
