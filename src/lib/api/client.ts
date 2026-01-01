@@ -133,33 +133,44 @@ export class AnytypeApiClient {
      * @returns Created object response
      */
     async createObject(spaceId: string, params: CreateObjectParams): Promise<AnytypeObject> {
-        // Construct the request body matching Anytype API expectations
-        // Note: The specific layout/typeId usually defaults to "Note" or "Page" if not specified.
-        // We will send a generic payload and let Anytype handle defaults or map specific fields.
-        // Based on PRD, we want a Bookmark type. We'll pass "Bookmark" as typeId if supported,
-        // or let the API decide based on fields. For MVP, we pass a flexible object.
+        // Map params to top-level fields and properties
+        const { title, description, tags, ...otherParams } = params;
+
+        // Combine description and tags into the body
+        let bodyContent = String(description || '');
+        if (Array.isArray(tags) && tags.length > 0) {
+            bodyContent += `\n\nTags: ${tags.join(', ')}`;
+        }
+
+        // Map internal keys to Anytype relation keys
+        // ONLY include properties that are confirmed standard
+        const propertyMapping: Record<string, string> = {
+            'source_url': 'source'
+        };
+
+        const propertiesArray = Object.entries(otherParams)
+            .filter(([key]) => key in propertyMapping)
+            .map(([key, value]) => ({
+                key: propertyMapping[key],
+                text: String(value ?? '')
+            }));
 
         const requestBody: CreateObjectRequest = {
             spaceId,
-            typeId: 'Bookmark', // Requesting specific type
-            properties: {
-                title: params.title || 'Untitled',
-                description: params.description || '',
-                source_url: params.source_url || '',
-                domain: params.domain || '',
-                tags: params.tags || [],
-                ...params // Spread other custom params
-            }
+            name: String(title || 'Untitled Bookmark'),
+            body: bodyContent.trim(),
+            type_key: 'bookmark',
+            properties: propertiesArray
         };
 
-        const response = await this.post<CreateObjectResponse>('/v1/objects/create', requestBody);
+        const response = await this.post<CreateObjectResponse>(`/v1/spaces/${spaceId}/objects`, requestBody);
 
-        // Construct a partial AnytypeObject from the response
         return {
             id: response.objectId,
-            typeId: 'Bookmark',
-            properties: requestBody.properties,
-            createdAt: Date.now(), // Approximate
+            name: requestBody.name,
+            type_key: requestBody.type_key,
+            properties: params,
+            createdAt: Date.now(),
             updatedAt: Date.now()
         };
     }

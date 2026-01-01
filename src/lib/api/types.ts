@@ -107,12 +107,21 @@ export interface CreateObjectParams {
  * Request body for POST /v1/objects/create
  */
 export interface CreateObjectRequest {
-    /** ID of the space to create the object in */
+    /** ID of the space to create the object in - extracted from URL by API but included for clarity */
     spaceId: string;
-    /** ID of the object type (e.g., "Bookmark", "Article", "Highlight") */
-    typeId: string;
-    /** Object properties - flexible structure depends on object type */
-    properties: Record<string, unknown>;
+    /** Object title */
+    name: string;
+    /** Object content (Markdown) */
+    body?: string;
+    /** ID of the object type (e.g., "bookmark", "page") */
+    type_key: string;
+    /** Object properties - Array of key-value pairs (flattened value) */
+    properties?: {
+        key: string;
+        text?: string;
+        // Add other value types as needed
+        [k: string]: unknown;
+    }[];
 }
 
 /**
@@ -155,8 +164,10 @@ export interface SearchObjectsResponse {
 export interface AnytypeObject {
     /** Unique identifier for this object */
     id: string;
+    /** Object title */
+    name: string;
     /** ID of the object type */
-    typeId: string;
+    type_key: string;
     /** Object properties - flexible structure depends on object type */
     properties: Record<string, unknown>;
     /** Unix timestamp when this object was created */

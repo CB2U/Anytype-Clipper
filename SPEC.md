@@ -10,14 +10,14 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-- **Active Spec:** None (Previous: [Fix Spaces Loading Error](specs/033-fix-spaces-error/spec.md) - Done)
+- **Active Spec:** None
 - **Next Up:** [Highlight Capture](specs/032-highlight-capture/spec.md) (Epic 3.1)
-- **Action:** Run `/implement_from_spec`
+- **Action:** Select a new task
 
 ## Links
-- spec.md: [specs/033-fix-spaces-error/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/033-fix-spaces-error/spec.md)
-- plan.md: [specs/033-fix-spaces-error/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/033-fix-spaces-error/plan.md)
-- tasks.md: [specs/033-fix-spaces-error/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/033-fix-spaces-error/tasks.md)
+- spec.md: [specs/034-fix-bookmark-404/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/034-fix-bookmark-404/spec.md)
+- plan.md: [specs/034-fix-bookmark-404/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/034-fix-bookmark-404/plan.md)
+- tasks.md: [specs/034-fix-bookmark-404/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/034-fix-bookmark-404/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.
