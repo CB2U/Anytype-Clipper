@@ -283,9 +283,21 @@ The following items require clarification before implementation (from constituti
 - Changes to approved specifications require re-approval and impact assessment
 - This index is the single source of truth for specification status
 
+
+---
+
+## Maintenance / Unplanned Work
+
+This section tracks bug fixes, chores, and unplanned changes that are not part of the main roadmap.
+
+| Roadmap Anchor | Title | Spec Folder | Type | Priority | Status | Next Task | Evidence | Target ACs |
+| -------------- | ----- | ----------- | ---- | -------- | ------ | --------- | -------- | ---------- |
+| N/A | Disable CI Workflow | `specs/012-disable-ci/` | Bug | P2 | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/012-disable-ci/spec.md#evidence) | AC-U1, AC-U2 |
+
 ---
 
 ## Maintenance
+
 
 This document is maintained by the project team and updated as specifications progress through gates. All updates must be committed with descriptive messages referencing the affected epic(s).
 **Last Reviewed:** 2026-01-01 

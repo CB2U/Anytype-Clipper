@@ -1,3 +1,21 @@
+# DISABLED: This workflow is temporarily disabled during early development
+#
+# Reason: The project is in active development (Epic 1.1 completed) and does not
+# have test infrastructure configured yet (Jest not set up). The CI workflow was
+# failing on every push to main, causing noise and email notifications.
+#
+# When to re-enable:
+# - After test infrastructure is set up (Jest configured)
+# - When the project reaches a more stable state
+# - Likely during or after Epic focused on testing
+#
+# How to re-enable:
+# 1. Rename this file from 'ci.yml.disabled' back to 'ci.yml'
+# 2. Remove this comment block (optional)
+# 3. Commit and push to main
+# 4. Workflow will become active immediately
+#
+
 name: CI
 
 on:
