@@ -42,7 +42,10 @@ export class AuthManager {
         const authData = await this.storage.get('auth');
         if (authData.isAuthenticated && authData.apiKey) {
             this.state = { status: AuthStatus.Authenticated };
-            // TODO: Validate key (Epic 2.1)
+            // Validate key asynchronously so we don't block init
+            this.validateSession().catch(err => {
+                console.log('Session validation failed:', err);
+            });
         } else {
             this.state = { status: AuthStatus.Unauthenticated };
         }
@@ -128,5 +131,54 @@ export class AuthManager {
 
     public getState(): AuthState {
         return this.state;
+    }
+
+    /**
+     * Disconnects the extension from Anytype
+     * Clears storage and internal state
+     */
+    public async disconnect(): Promise<void> {
+        // Clear auth data from storage
+        await this.storage.remove('auth');
+
+        // Reset internal state
+        this.currentChallengeId = undefined;
+        this.state = { status: AuthStatus.Unauthenticated };
+
+        // We might want to notify listeners here if we had an event emitter
+        // For now, the popup polls/checks state on render
+    }
+
+    /**
+     * Validates the current session by making a lightweight API call
+     * If session is invalid (401), automatically disconnects
+     */
+    public async validateSession(): Promise<boolean> {
+        // If not authenticated, session is invalid
+        if (this.state.status !== AuthStatus.Authenticated) {
+            return false;
+        }
+
+        try {
+            await this.client.getSpaces();
+            return true;
+        } catch (error) {
+            // Check if error is 401 Unauthorized
+            // We need to check the error message or type since we don't have exact status codes exposes easily
+            // But classifyHttpError in client.ts throws ApiError with status
+            const isUnauthorized = error instanceof Error &&
+                (error.message.includes('401') || (error as any).status === 401);
+
+            if (isUnauthorized) {
+                console.log('Session invalid (401), disconnecting...');
+                await this.disconnect();
+                return false;
+            }
+
+            // Other errors (network, timeout) don't invalidate the session due to bad key
+            // They just mean we can't connect right now.
+            // We stay authenticated but might be offline.
+            return true;
+        }
     }
 }

@@ -1,48 +1,56 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Anytype Clipper</title>
-    <link rel="stylesheet" href="./popup.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <!-- Initial Loading State -->
-    <div id="loading-view" class="view">
-        <div class="loader"></div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anytype Clipper</title>
+  <link rel="stylesheet" href="./popup.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Mono:wght@700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <!-- Initial Loading State -->
+  <div id="loading-view" class="view">
+    <div class="loader"></div>
+  </div>
+
+  <!-- Authentication View -->
+  <div id="auth-view" class="view hidden">
+    <div class="auth-container">
+      <h2>Connect to Anytype</h2>
+      <p id="auth-desc">Open Anytype Desktop on this device and click Connect to start.</p>
+
+      <div id="challenge-section" class="hidden">
+        <div class="code-display">
+          <div class="code-digits" id="code-digits">----</div>
+        </div>
+        <p>Enter this code in Anytype app</p>
+      </div>
+
+      <div id="action-section" style="margin-top: 16px;">
+        <button id="btn-connect" class="btn-primary">Connect</button>
+      </div>
+
+      <p id="auth-error" class="error-message hidden"></p>
     </div>
+  </div>
 
-    <!-- Authentication View -->
-    <div id="auth-view" class="view hidden">
-      <div class="auth-container">
-        <h2>Connect to Anytype</h2>
-        <p id="auth-desc">Open Anytype Desktop on this device and click Connect to start.</p>
-        
-        <div id="challenge-section" class="hidden">
-            <div class="code-display">
-                <div class="code-digits" id="code-digits">----</div>
-            </div>
-            <p>Enter this code in Anytype app</p>
-        </div>
+  <!-- Main View -->
+  <div id="main-view" class="view hidden">
+    <div class="container">
+      <h1>Anytype Clipper</h1>
+      <p>Extension loaded successfully!</p>
+      <p class="version">v0.1.0 (Authenticated)</p>
 
-        <div id="action-section" style="margin-top: 16px;">
-            <button id="btn-connect" class="btn-primary">Connect</button>
-        </div>
-        
-        <p id="auth-error" class="error-message hidden"></p>
+      <div style="margin-top: 16px;">
+        <button id="btn-disconnect" class="btn-secondary">Disconnect</button>
       </div>
     </div>
+  </div>
 
-    <!-- Main View -->
-    <div id="main-view" class="view hidden">
-      <div class="container">
-        <h1>Anytype Clipper</h1>
-        <p>Extension loaded successfully!</p>
-        <p class="version">v0.1.0 (Authenticated)</p>
-      </div>
-    </div>
-    
-    <script type="module" src="./popup.ts"></script>
-  </body>
+  <script type="module" src="./popup.ts"></script>
+</body>
+
 </html>

@@ -9,7 +9,8 @@ import { ApiError, NetworkError, classifyHttpError } from './errors';
 import {
     CreateChallengeResponse,
     CreateApiKeyRequest,
-    CreateApiKeyResponse
+    CreateApiKeyResponse,
+    ListSpacesResponse
 } from './types';
 
 /**
@@ -62,6 +63,16 @@ export class AnytypeApiClient {
      */
     async createApiKey(request: CreateApiKeyRequest): Promise<CreateApiKeyResponse> {
         return this.post<CreateApiKeyResponse>('/v1/auth/api_keys', request);
+    }
+
+    /**
+     * Gets list of available spaces
+     * Used for session validation and space selection
+     * 
+     * @returns List of spaces
+     */
+    async getSpaces(): Promise<ListSpacesResponse> {
+        return this.get<ListSpacesResponse>('/v1/spaces');
     }
 
     /**

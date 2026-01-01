@@ -17,6 +17,10 @@ const authElements = {
   actionSection: document.getElementById('action-section'),
 };
 
+const mainElements = {
+  btnDisconnect: document.getElementById('btn-disconnect') as HTMLButtonElement,
+};
+
 const authManager = AuthManager.getInstance();
 
 // Simple router
@@ -80,6 +84,12 @@ function resetAuthUI() {
   if (authElements.desc) authElements.desc.textContent = 'Open Anytype Desktop on this device and click Connect to start.';
 }
 
+async function handleDisconnect() {
+  await authManager.disconnect();
+  switchView('auth');
+  resetAuthUI();
+}
+
 // Initialization
 async function init() {
   try {
@@ -102,4 +112,5 @@ async function init() {
 document.addEventListener('DOMContentLoaded', () => {
   init();
   authElements.btnConnect?.addEventListener('click', handleConnect);
+  mainElements.btnDisconnect?.addEventListener('click', handleDisconnect);
 });
