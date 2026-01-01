@@ -10,6 +10,7 @@ export const AppSettingsSchema = z.object({
 export const AuthDataSchema = z.object({
     apiKey: z.string().optional(),
     isAuthenticated: z.boolean(),
+    challengeId: z.string().optional(),
 });
 
 // Root schema including metadata

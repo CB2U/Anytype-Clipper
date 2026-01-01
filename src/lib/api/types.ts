@@ -25,10 +25,11 @@ export interface CreateChallengeRequest {
 export interface CreateChallengeResponse {
     /** Unique identifier for this challenge */
     challengeId: string;
-    /** 4-digit code to display to user */
-    code: string;
     /** Unix timestamp when this challenge expires */
     expiresAt: number;
+    // API might return snake_case
+    challenge_id?: string;
+    expires_at?: number;
 }
 
 /**
@@ -49,6 +50,9 @@ export interface CreateApiKeyResponse {
     apiKey: string;
     /** Optional: Unix timestamp when this API key expires (if Anytype implements expiration) */
     expiresAt?: number;
+    // API might return snake_case
+    api_key?: string;
+    expires_at?: number;
 }
 
 // ============================================================================
@@ -80,6 +84,24 @@ export interface Space {
 // ============================================================================
 // Objects Endpoints
 // ============================================================================
+
+/**
+ * Parameters for creating an object (helper interface)
+ */
+export interface CreateObjectParams {
+    /** Text content/body of the object (treated as description or note body) */
+    description?: string;
+    /** Title of the object */
+    title?: string;
+    /** Source URL */
+    source_url?: string;
+    /** Domain name */
+    domain?: string;
+    /** Array of tags */
+    tags?: string[];
+    /** Any other custom fields */
+    [key: string]: unknown;
+}
 
 /**
  * Request body for POST /v1/objects/create

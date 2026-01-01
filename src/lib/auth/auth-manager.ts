@@ -12,7 +12,6 @@ export enum AuthStatus {
 
 export interface AuthState {
     status: AuthStatus;
-    challengeCode?: string;
     error?: string;
 }
 
@@ -40,16 +39,33 @@ export class AuthManager {
      * Initializes auth state from storage
      */
     public async init(): Promise<AuthState> {
+        console.log('[AuthManager] Init called');
         const authData = await this.storage.get('auth');
+        console.log('[AuthManager] Auth data loaded:', authData);
+
+        // 1. Check for valid session first
         if (authData.isAuthenticated && authData.apiKey) {
+            this.client.setApiKey(authData.apiKey);
             this.state = { status: AuthStatus.Authenticated };
             // Validate key asynchronously so we don't block init
             this.validateSession().catch(err => {
                 console.log('Session validation failed:', err);
             });
-        } else {
-            this.state = { status: AuthStatus.Unauthenticated };
+            return this.state;
         }
+
+        // 2. Check for pending challenge (persisted state)
+        if (authData.challengeId) {
+            console.log('[AuthManager] Found pending challenge:', authData.challengeId);
+            this.currentChallengeId = authData.challengeId;
+            this.state = {
+                status: AuthStatus.WaitingForUser
+            };
+            return this.state;
+        }
+
+        // 3. Default to unauthenticated
+        this.state = { status: AuthStatus.Unauthenticated };
         return this.state;
     }
 
@@ -58,6 +74,7 @@ export class AuthManager {
      */
     public async startAuth(): Promise<AuthState> {
         try {
+            console.log('[AuthManager] starting Auth...');
             this.state = { status: AuthStatus.Requesting };
 
             // Get port from settings (if changed)
@@ -65,13 +82,23 @@ export class AuthManager {
             this.client = new AnytypeApiClient(settings.apiPort);
 
             const challenge = await this.client.createChallenge();
+            console.log('[AuthManager] Challenge received:', challenge);
+
             this.currentChallengeId = challenge.challengeId;
 
+            // Persist pending challenge
+            const currentAuth = await this.storage.get('auth');
+            await this.storage.set('auth', {
+                ...currentAuth,
+                challengeId: this.currentChallengeId
+            });
+            console.log('[AuthManager] Challenge persisted');
+
             this.state = {
-                status: AuthStatus.WaitingForUser,
-                challengeCode: challenge.code
+                status: AuthStatus.WaitingForUser
             };
         } catch (error) {
+            console.error('[AuthManager] StartAuth error:', error);
             this.state = {
                 status: AuthStatus.Error,
                 error: error instanceof Error ? error.message : 'Unknown error starting auth'
@@ -81,52 +108,55 @@ export class AuthManager {
     }
 
     /**
-     * Finalizes auth by exchanging challenge for API key
-     * Retries for up to 30 seconds
+     * Submits the 4-digit code entered by the user
+     * @param code - The 4-digit pairing code
      */
-    public async finalizeAuth(): Promise<AuthState> {
-        if (!this.currentChallengeId || !this.state.challengeCode) {
-            return { status: AuthStatus.Error, error: 'No active challenge' };
+    public async submitCode(code: string): Promise<AuthState> {
+        console.log('[AuthManager] Submitting code. CurrentChallengeId:', this.currentChallengeId);
+
+        if (!this.currentChallengeId) {
+            // Check storage one last time just in case memory update failed?
+            // Or maybe a race condition handled by reload.
+            const authData = await this.storage.get('auth');
+            if (authData.challengeId) {
+                console.log('[AuthManager] Recovered challengeId from storage just in time:', authData.challengeId);
+                this.currentChallengeId = authData.challengeId;
+            } else {
+                console.error('[AuthManager] No active challengeId found in memory or storage');
+                return { status: AuthStatus.Error, error: 'No active challenge' };
+            }
         }
 
-        const challengeCode = this.state.challengeCode;
-        const maxAttempts = 30;
-        const intervalMs = 1000;
+        try {
+            // Try to create API key
+            const response = await this.client.createApiKey({
+                challengeId: this.currentChallengeId,
+                code: code
+            });
 
-        for (let i = 0; i < maxAttempts; i++) {
-            try {
-                // Try to create API key
-                const response = await this.client.createApiKey({
-                    challengeId: this.currentChallengeId,
-                    code: challengeCode
+            if (response.apiKey) {
+                // Success! Save to storage and CLEAR challengeId
+                await this.storage.set('auth', {
+                    apiKey: response.apiKey,
+                    isAuthenticated: true,
+                    challengeId: undefined // Clear pending challenge
                 });
 
-                if (response.apiKey) {
-                    // Success! Save to storage
-                    await this.storage.set('auth', {
-                        apiKey: response.apiKey,
-                        isAuthenticated: true
-                    });
+                // Configure client with new key
+                this.client.setApiKey(response.apiKey);
 
-                    this.state = { status: AuthStatus.Authenticated };
-                    return this.state;
-                }
-            } catch (error) {
-                // If it's a 404 or specific "pending" error, we continue.
-                // For now, assume any error means "not ready" or "failed", 
-                // but detailed error handling would check specific codes.
-                // We'll log and retry.
-                console.log(`Connection attempt ${i + 1} failed, retrying...`);
+                this.state = { status: AuthStatus.Authenticated };
+                return this.state;
             }
-
-            // Wait before next attempt
-            await new Promise(resolve => setTimeout(resolve, intervalMs));
+        } catch (error) {
+            console.error('Failed to submit code:', error);
+            // Don't reset state to Error immediately, allow retry?
+            // Or maybe just return Error state
+            this.state = {
+                status: AuthStatus.Error,
+                error: 'Invalid code or connection failed. Please try again.'
+            };
         }
-
-        this.state = {
-            status: AuthStatus.Error,
-            error: 'Connection timed out. Please try again.'
-        };
         return this.state;
     }
 

@@ -10,7 +10,11 @@ import {
     CreateChallengeResponse,
     CreateApiKeyRequest,
     CreateApiKeyResponse,
-    ListSpacesResponse
+    ListSpacesResponse,
+    CreateObjectParams,
+    CreateObjectRequest,
+    CreateObjectResponse,
+    AnytypeObject
 } from './types';
 
 /**
@@ -28,6 +32,7 @@ import {
 export class AnytypeApiClient {
     private readonly baseUrl: string;
     private readonly defaultTimeout: number = 10000; // 10 seconds
+    private apiKey?: string;
 
     /**
      * Creates a new Anytype API client
@@ -45,14 +50,29 @@ export class AnytypeApiClient {
     }
 
     /**
+     * Sets the API key to use for authenticated requests
+     * @param key - The API key
+     */
+    public setApiKey(key: string) {
+        this.apiKey = key;
+    }
+
+    /**
      * Creates an authentication challenge
      * 
      * @returns Challenge ID and code to display to user
      */
     async createChallenge(): Promise<CreateChallengeResponse> {
-        return this.post<CreateChallengeResponse>('/v1/auth/challenges', {
+        const response = await this.post<CreateChallengeResponse>('/v1/auth/challenges', {
             app_name: 'Anytype Clipper'
         });
+
+        // Normalize snake_case to camelCase if needed
+        return {
+            ...response,
+            challengeId: response.challengeId || response.challenge_id || '',
+            expiresAt: response.expiresAt || response.expires_at || 0,
+        };
     }
 
     /**
@@ -62,7 +82,20 @@ export class AnytypeApiClient {
      * @returns New API key
      */
     async createApiKey(request: CreateApiKeyRequest): Promise<CreateApiKeyResponse> {
-        return this.post<CreateApiKeyResponse>('/v1/auth/api_keys', request);
+        // Map camelCase to snake_case for the API
+        const body = {
+            challenge_id: request.challengeId,
+            code: request.code
+        };
+
+        const response = await this.post<CreateApiKeyResponse>('/v1/auth/api_keys', body);
+
+        // Normalize
+        return {
+            ...response,
+            apiKey: response.apiKey || response.api_key || '',
+            expiresAt: response.expiresAt || response.expires_at || 0,
+        };
     }
 
     /**
@@ -73,6 +106,45 @@ export class AnytypeApiClient {
      */
     async getSpaces(): Promise<ListSpacesResponse> {
         return this.get<ListSpacesResponse>('/v1/spaces');
+    }
+
+    /**
+     * Creates a new object in a specific space
+     * 
+     * @param spaceId - ID of the space to create object in
+     * @param params - Object parameters (title, description, etc.)
+     * @returns Created object response
+     */
+    async createObject(spaceId: string, params: CreateObjectParams): Promise<AnytypeObject> {
+        // Construct the request body matching Anytype API expectations
+        // Note: The specific layout/typeId usually defaults to "Note" or "Page" if not specified.
+        // We will send a generic payload and let Anytype handle defaults or map specific fields.
+        // Based on PRD, we want a Bookmark type. We'll pass "Bookmark" as typeId if supported,
+        // or let the API decide based on fields. For MVP, we pass a flexible object.
+
+        const requestBody: CreateObjectRequest = {
+            spaceId,
+            typeId: 'Bookmark', // Requesting specific type
+            properties: {
+                title: params.title || 'Untitled',
+                description: params.description || '',
+                source_url: params.source_url || '',
+                domain: params.domain || '',
+                tags: params.tags || [],
+                ...params // Spread other custom params
+            }
+        };
+
+        const response = await this.post<CreateObjectResponse>('/v1/objects/create', requestBody);
+
+        // Construct a partial AnytypeObject from the response
+        return {
+            id: response.objectId,
+            typeId: 'Bookmark',
+            properties: requestBody.properties,
+            createdAt: Date.now(), // Approximate
+            updatedAt: Date.now()
+        };
     }
 
     /**
@@ -183,6 +255,7 @@ export class AnytypeApiClient {
         // Build request options
         const requestHeaders: Record<string, string> = {
             'Content-Type': 'application/json',
+            ...(this.apiKey ? { 'X-Anytype-Api-Key': this.apiKey, 'Authorization': `Bearer ${this.apiKey}` } : {}),
             ...headers,
         };
 

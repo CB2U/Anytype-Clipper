@@ -1148,6 +1148,11 @@ From constitution.md - these apply to ALL epics:
 - Export analytics as CSV
 - **Targets:** FR16.1, FR16.2, FR16.3, FR16.4
   
+  #### Maintenance / Unplanned Work
+
+- **Input Code Authentication (P0):** `specs/031-input-code-auth/` - Feature to support manual code entry.
+
+This section tracks bug fixes, chores, and unplanned changes that are not part of the main roadmap.
   #### Epic 11.6: Collaboration Features
 - Share captured content to shared Spaces
 - Capture with @mentions

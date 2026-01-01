@@ -50,7 +50,7 @@ This document serves as the **central index** for all specifications in the Anyt
 
 | Roadmap Anchor | Epic Name           | Spec Folder                      | Breakpoint | Status      | Target ACs                                          |
 | -------------- | ------------------- | -------------------------------- | ---------- | ----------- | --------------------------------------------------- |
-| 3.0            | Bookmark Capture    | `specs/007-bookmark-capture/`    | BP2        | Not Started | FR3.1, FR3.2, FR3.3, FR3.4, AC2, US1                |
+| 3.0            | Bookmark Capture    | `specs/030-bookmark-capture/`    | BP2        | Done | FR3.1, FR3.2, FR3.3, FR3.4, AC2, US1                |
 | 3.1            | Highlight Capture   | `specs/008-highlight-capture/`   | BP2        | Not Started | FR4.1, FR4.2, FR4.3, FR4.4, FR4.5, AC3, US2, PERF-5 |
 | 3.2            | Metadata Extraction | `specs/009-metadata-extraction/` | BP2        | Not Started | FR3.3, FR10.1, FR10.2, FR10.3, FR10.4, FR10.5, AC10 |
 
@@ -293,6 +293,7 @@ This section tracks bug fixes, chores, and unplanned changes that are not part o
 | Roadmap Anchor | Title | Spec Folder | Type | Priority | Status | Next Task | Evidence | Target ACs |
 | -------------- | ----- | ----------- | ---- | -------- | ------ | --------- | -------- | ---------- |
 | N/A | Disable CI Workflow | `specs/012-disable-ci/` | Bug | P2 | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/012-disable-ci/spec.md#evidence) | AC-U1, AC-U2 |
+| N/A | Input Code Auth (Unplanned) | `specs/031-input-code-auth/` | Feature | P0 | Done | N/A | [Evidence](specs/031-input-code-auth/spec.md#evidence) | AC-U1, AC-U2, AC-U3, AC-U4 |
 
 ---
 

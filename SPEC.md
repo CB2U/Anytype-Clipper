@@ -9,14 +9,10 @@ It points to the spec folder for the current work and links to the product docs.
 - PRD: PRD.md (or docs/PRD.md)
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
-## Current focus
-- Roadmap anchor: 3.0
-- Spec folder: specs/007-bookmark-capture/
-- Type: Feature
-- Priority: P1
-- Status: Not Started
-- Next command:
-  - /specify 3.0
+## Current Focus
+- **Active Spec:** None
+- **Next Up:** [Highlight Capture](specs/032-highlight-capture/spec.md) (Epic 3.1)
+- **Action:** Run `/specify` to start next epic.
 
 ## Links
 - spec.md: [specs/021-api-key-management/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/021-api-key-management/spec.md)
