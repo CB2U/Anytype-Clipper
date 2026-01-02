@@ -34,7 +34,9 @@ export class BookmarkCaptureService {
         metadata: PageMetadata,
         userNote?: string,
         tags: string[] = [],
-        typeKey: string = 'bookmark'
+        typeKey: string = 'bookmark',
+        isHighlightCapture: boolean = false,
+        quote?: string
     ): Promise<any> {
         // 1. Sync auth state
         const auth = await this.storage.get('auth');
@@ -49,21 +51,28 @@ export class BookmarkCaptureService {
             source_url: metadata.canonicalUrl,
         };
 
-        // If it's an article, include the full content with safety limits
+        // If it's an article or note, include the content with safety limits
         if (typeKey === 'article' || typeKey === 'note') {
-            // Content is now pre-converted to Markdown in the content script (where DOM is available)
-            let articleBody = metadata.content || '';
+            let articleBody = '';
 
-            // Fallback to textContent (stripped) if content is empty
-            if (!articleBody) {
-                articleBody = (metadata.textContent || '').replace(/<[^>]*>/g, '').trim();
+            if (isHighlightCapture && quote) {
+                console.log('[BookmarkCaptureService] Using quote for highlight description');
+                articleBody = quote;
+            } else {
+                // Content is now pre-converted to Markdown in the content script
+                articleBody = metadata.content || '';
+
+                // Fallback to textContent (stripped) if content is empty
+                if (!articleBody) {
+                    articleBody = (metadata.textContent || '').replace(/<[^>]*>/g, '').trim();
+                }
             }
 
             // Safety: Anytype API might struggle with very large bodies. 
             // Truncate to ~100KB to be extra safe
             const MAX_BODY_SIZE = 100 * 1024;
             if (articleBody.length > MAX_BODY_SIZE) {
-                console.warn(`[BookmarkCaptureService] Article content too large (${articleBody.length}), truncating.`);
+                console.warn(`[BookmarkCaptureService] Content too large (${articleBody.length}), truncating.`);
                 articleBody = articleBody.substring(0, MAX_BODY_SIZE) + '\n\n... [Content Truncated]';
             }
 

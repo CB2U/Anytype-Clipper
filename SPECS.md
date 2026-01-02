@@ -3,7 +3,7 @@
 **Project:** Anytype Clipper Extension 
 **Version:** 1.0 
 **Status:** Active 
-**Last Updated:** 2026-01-02 
+**Last Updated:** 2024-05-15 
 **PRD Reference:** PRD.md v2.0 
 **Constitution Reference:** constitution.md v1.0 
 **Roadmap Reference:** roadmap.md v1.0
@@ -322,13 +322,14 @@ For API-related questions, the Coding Agent should refer to the Anytype API Open
 
 This section tracks bug fixes, chores, and unplanned changes that are not part of the main roadmap.
 
-| Roadmap Anchor | Title                       | Spec Folder                   | Type    | Priority | Status | Next Task | Evidence                                                                                                 | Target ACs                        |
-| -------------- | --------------------------- | ----------------------------- | ------- | -------- | ------ | --------- | -------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| N/A            | Disable CI Workflow         | `specs/012-disable-ci/`       | Bug     | P2       | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/012-disable-ci/spec.md#evidence) | AC-U1, AC-U2                      |
-| N/A            | Input Code Auth (Unplanned) | `specs/031-input-code-auth/`  | Feature | P0       | Done   | N/A       | [Evidence](specs/031-input-code-auth/spec.md#evidence)                                                   | AC-U1, AC-U2, AC-U3, AC-U4        |
-| N/A            | Fix Spaces Loading Error    | `specs/033-fix-spaces-error/` | Bug     | P0       | Done   | N/A       | [Evidence](specs/033-fix-spaces-error/spec.md#evidence)                                                  | FR1, FR2, FR3                     |
-| N/A            | Fix Bookmark Creation 404   | `specs/034-fix-bookmark-404/` | Bug     | P0       | Done   | None      | [Evidence](specs/034-fix-bookmark-404/spec.md#evidence)                                                  | FR1, FR2                          |
-| N/A            | Tag Management Integration  | `specs/035-tag-management/`   | Feature | P1       | Done   | None      | [Evidence](specs/035-tag-management/spec.md#evidence)                                                    | AC-U1, AC-U2, AC-U3, AC-U4, AC-U5 |
+| Roadmap Anchor | Title                       | Spec Folder                   | Type    | Priority | Status      | Next Task | Evidence                                                                                                 | Target ACs                        |
+| -------------- | --------------------------- | ----------------------------- | ------- | -------- | ----------- | --------- | -------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| N/A            | Disable CI Workflow         | `specs/012-disable-ci/`       | Bug     | P2       | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/012-disable-ci/spec.md#evidence) | AC-U1, AC-U2                      |
+| N/A            | Input Code Auth (Unplanned) | `specs/031-input-code-auth/`  | Feature | P0       | Done        | N/A       | [Evidence](specs/031-input-code-auth/spec.md#evidence)                                                   | AC-U1, AC-U2, AC-U3, AC-U4        |
+| N/A            | Fix Spaces Loading Error    | `specs/033-fix-spaces-error/` | Bug     | P0       | Done        | N/A       | [Evidence](specs/033-fix-spaces-error/spec.md#evidence)                                                  | FR1, FR2, FR3                     |
+| N/A            | Fix Bookmark Creation 404   | `specs/034-fix-bookmark-404/` | Bug     | P0       | Done        | None      | [Evidence](specs/034-fix-bookmark-404/spec.md#evidence)                                                  | FR1, FR2                          |
+| N/A            | Tag Management Integration  | `specs/035-tag-management/`   | Feature | P1       | Done        | None      | [Evidence](specs/035-tag-management/spec.md#evidence)                                                    | AC-U1, AC-U2, AC-U3, AC-U4, AC-U5 |
+| N/A            | Fix Highlight Save Function | `specs/036-fix-highlight-save/` | Bug     | P0       | Done        | N/A       | [Evidence](specs/036-fix-highlight-save/spec.md#evidence)                                                | AC-U1, AC-U2, AC-U3, AC-U4        |
 
 ---
 

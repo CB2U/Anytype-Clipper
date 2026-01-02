@@ -148,41 +148,12 @@ async function loadCurrentTab() {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tabs.length > 0) {
       currentTab = tabs[0];
-
-      // Trigger metadata and article extraction
-      if (currentTab.id) {
-        try {
-          // 1. Try Extract Article first
-          const articleResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_ARTICLE' });
-          if (articleResponse && articleResponse.success) {
-            currentMetadata = articleResponse.data;
-            updateMetadataUI();
-
-            // Show Save as Article button
-            if (mainElements.btnSaveArticle) {
-              mainElements.btnSaveArticle.classList.remove('hidden');
-            }
-          } else {
-            // 2. Fallback to basic metadata
-            const metaResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_METADATA' });
-            if (metaResponse && metaResponse.success) {
-              currentMetadata = metaResponse.data;
-              updateMetadataUI();
-            }
-          }
-        } catch (e) {
-          console.warn('Extraction failed:', e);
-          // Fallback to basic tab info
-          if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
-        }
-      } else {
-        if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
-      }
     }
 
-    // Check for highlight capture
+    // 1. Check for highlight capture FIRST
     const data = await chrome.storage.local.get('lastHighlight');
     if (data.lastHighlight) {
+      console.log('[Popup] Highlight detected, skipping article extraction');
       currentHighlight = data.lastHighlight;
 
       // Switch to highlight mode UI
@@ -205,6 +176,37 @@ async function loadCurrentTab() {
 
       // Clear the temporary highlight from storage so it doesn't persist inappropriately
       await chrome.storage.local.remove('lastHighlight');
+      return; // Exit early, no need for further extraction
+    }
+
+    // 2. Trigger metadata and article extraction (only if NOT a highlight)
+    if (currentTab && currentTab.id) {
+      try {
+        // Try Extract Article first
+        const articleResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_ARTICLE' });
+        if (articleResponse && articleResponse.success) {
+          currentMetadata = articleResponse.data;
+          updateMetadataUI();
+
+          // Show Save as Article button
+          if (mainElements.btnSaveArticle) {
+            mainElements.btnSaveArticle.classList.remove('hidden');
+          }
+        } else {
+          // Fallback to basic metadata
+          const metaResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_METADATA' });
+          if (metaResponse && metaResponse.success) {
+            currentMetadata = metaResponse.data;
+            updateMetadataUI();
+          }
+        }
+      } catch (e) {
+        console.warn('Extraction failed:', e);
+        // Fallback to basic tab info
+        if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
+      }
+    } else if (currentTab) {
+      if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
     }
   } catch (error) {
     console.error('Error loading tab info:', error);
@@ -295,7 +297,8 @@ async function handleSave(isArticle: boolean = false) {
       spaceId,
       metadata: currentMetadata,
       userNote: note,
-      tags: tags
+      tags: tags,
+      isHighlightCapture: isHighlight
     };
 
     if (isArticle) {
@@ -308,6 +311,13 @@ async function handleSave(isArticle: boolean = false) {
       payload.contextBefore = currentHighlight.contextBefore;
       payload.contextAfter = currentHighlight.contextAfter;
       payload.url = currentHighlight.url;
+
+      // Ensure metadata is minimal for highlights to avoid article content leaks
+      payload.metadata = {
+        title: title,
+        canonicalUrl: currentHighlight.url,
+        source: 'highlight'
+      };
     }
 
     const response = await chrome.runtime.sendMessage({

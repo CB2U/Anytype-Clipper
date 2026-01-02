@@ -10,14 +10,14 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-- **Active Spec:** [Metadata Extraction](specs/032-metadata-extraction/spec.md)
-- **Status:** Done
-- **Action:** Point focus to next epic (4.0/4.1)
+**Current Focus:** [Fix Highlight Save Function](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/spec.md) (Bug Fix - P0)
 
-## Links
-- spec.md: [specs/032-metadata-extraction/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/032-metadata-extraction/spec.md)
-- plan.md: [specs/032-metadata-extraction/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/032-metadata-extraction/plan.md)
-- tasks.md: [specs/032-metadata-extraction/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/032-metadata-extraction/tasks.md)
+**Status:** Done
+
+**Quick Links:**
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.

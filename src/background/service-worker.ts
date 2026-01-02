@@ -180,7 +180,7 @@ chrome.runtime.onMessage.addListener((
         }
 
         case 'CMD_CAPTURE_BOOKMARK': {
-          const { spaceId, metadata, userNote, tags, type_key } = message.payload;
+          const { spaceId, metadata, userNote, tags, type_key, isHighlightCapture, quote } = message.payload;
           console.log('[Service Worker] Capturing object with metadata...');
 
           const result = await bookmarkCaptureService.captureBookmark(
@@ -188,7 +188,9 @@ chrome.runtime.onMessage.addListener((
             metadata,
             userNote,
             tags,
-            type_key
+            type_key,
+            isHighlightCapture,
+            quote
           );
 
           sendResponse({ success: true, data: result });

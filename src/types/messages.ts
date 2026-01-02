@@ -29,6 +29,11 @@ export interface CaptureBookmarkMessage extends BaseMessage {
         userNote?: string;
         tags?: string[];
         type_key?: string;
+        isHighlightCapture?: boolean;
+        quote?: string;
+        contextBefore?: string;
+        contextAfter?: string;
+        url?: string;
     };
 }
 
