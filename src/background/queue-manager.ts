@@ -149,6 +149,43 @@ export class QueueManager {
     }
 
     /**
+     * Get a specific queue item by ID.
+     */
+    public async get(id: string): Promise<QueueItem | null> {
+        const queue = await this.storage.getQueue();
+        return queue.find(item => item.id === id) || null;
+    }
+
+    /**
+     * Update the retry count of a queue item.
+     */
+    public async updateRetryCount(id: string, count: number): Promise<void> {
+        const queue = await this.storage.getQueue();
+        const index = queue.findIndex(item => item.id === id);
+
+        if (index !== -1) {
+            queue[index].retryCount = count;
+            queue[index].timestamps.lastAttempt = Date.now();
+            await this.storage.setQueue(queue);
+            console.debug(`[QueueManager] Updated retry count (id: ${id}, count: ${count})`);
+        }
+    }
+
+    /**
+     * Update the error message of a queue item without marking as failed.
+     */
+    public async updateErrorMessage(id: string, error: string): Promise<void> {
+        const queue = await this.storage.getQueue();
+        const index = queue.findIndex(item => item.id === id);
+
+        if (index !== -1) {
+            queue[index].error = error;
+            await this.storage.setQueue(queue);
+            console.debug(`[QueueManager] Updated error message (id: ${id})`);
+        }
+    }
+
+    /**
      * Clear the entire queue.
      */
     public async clear(): Promise<void> {

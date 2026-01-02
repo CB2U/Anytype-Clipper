@@ -67,12 +67,12 @@ This document serves as the **central index** for all specifications in the Anyt
 
 ### BP4: Queue & Reliability (Weeks 9-10)
 
-| Roadmap Anchor | Epic Name                | Spec Folder                | Breakpoint | Status      | Target ACs                                                                       |
-| -------------- | ------------------------ | -------------------------- | ---------- | ----------- | -------------------------------------------------------------------------------- |
-| 5.0            | Offline Queue System     | `specs/050-offline-queue/` | BP4        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/050-offline-queue/spec.md#evidence) | FR6.1, FR6.2, FR6.4, FR6.6, FR6.9, FR6.10, AC5, AC8, DATA-1, DATA-3, DATA-4, US3 |
-| 5.1            | Retry Logic with Backoff | `specs/016-retry-logic/`   | BP4        | Not Started | FR6.3, FR6.5, NFR2.3, REL-4, REL-7                                               |
-| 5.2            | Health Check & Recovery  | `specs/017-health-check/`  | BP4        | Not Started | FR6.7, NFR2.2, NFR2.4, NFR2.5, REL-2, REL-3, REL-5                               |
-| 5.3            | Queue UI & Status        | `specs/018-queue-ui/`      | BP4        | Not Started | FR6.2, FR6.5, AC5, US3                                                           |
+| Roadmap Anchor | Epic Name                | Spec Folder                | Breakpoint | Status | Next Task | Evidence                                                                                                      | Target ACs                                                                       |
+| -------------- | ------------------------ | -------------------------- | ---------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 5.0            | Offline Queue System     | `specs/050-offline-queue/` | BP4        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/050-offline-queue/spec.md#evidence) | FR6.1, FR6.2, FR6.4, FR6.6, FR6.9, FR6.10, AC5, AC8, DATA-1, DATA-3, DATA-4, US3 |
+| 5.1            | Retry Logic with Backoff | `specs/051-retry-logic/`   | BP4        | Done   | T17       | [Evidence](specs/051-retry-logic/spec.md#evidence)                                                            | FR6.3, FR6.5, NFR2.3, REL-4, REL-7                                               |
+| 5.2            | Health Check & Recovery  | `specs/017-health-check/`  | BP4        | Not Started | -         | -                                                                                                             | FR6.7, NFR2.2, NFR2.4, NFR2.5, REL-2, REL-3, REL-5                               |
+| 5.3            | Queue UI & Status        | `specs/018-queue-ui/`      | BP4        | Not Started | -         | -                                                                                                             | FR6.2, FR6.5, AC5, US3                                                           |
 
 ### BP5: Deduplication & Tagging (Weeks 11-12)
 

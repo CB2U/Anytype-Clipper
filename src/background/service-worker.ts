@@ -27,10 +27,23 @@ import { AnytypeApiClient } from '../lib/api/client';
 import { BookmarkCaptureService } from '../lib/capture/bookmark-capture-service';
 import { ExtensionMessage, MessageResponse, HighlightCapturedMessage } from '../types/messages';
 import { ArticleExtractionResult, ExtractionQuality } from '../types/article';
+import { QueueManager } from './queue-manager';
+import { RetryScheduler } from './retry-scheduler';
 
 // Initialize API Client and Services
 const apiClient = new AnytypeApiClient();
 const bookmarkCaptureService = BookmarkCaptureService.getInstance();
+const queueManager = QueueManager.getInstance();
+const retryScheduler = RetryScheduler.getInstance(queueManager, apiClient);
+
+// T8: Register Alarm Listener for retries
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name.startsWith('retry-')) {
+    const queueItemId = alarm.name.replace('retry-', '');
+    console.debug(`[Service Worker] Alarm triggered: ${alarm.name} for item ${queueItemId}`);
+    await retryScheduler.processRetry(queueItemId);
+  }
+});
 
 // Function to sync auth state from storage
 async function syncAuthState() {
@@ -45,8 +58,13 @@ async function syncAuthState() {
   }
 }
 
-// Initial sync
-syncAuthState();
+// Initial sync and resume retries
+async function initialize() {
+  await syncAuthState();
+  await retryScheduler.resumeRetries();
+}
+
+initialize();
 
 // Listen for storage changes to keep API key in sync (e.g. login/logout)
 chrome.storage.onChanged.addListener((changes, area) => {
