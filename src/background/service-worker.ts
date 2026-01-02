@@ -139,6 +139,8 @@ const handleExtractMetadata = async () => {
 };
 
 const handleExtractArticle = async () => {
+  const startTime = performance.now();
+
   // 1. Get current active tab
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
   const activeTab = tabs[0];
@@ -146,13 +148,53 @@ const handleExtractArticle = async () => {
 
   // 2. Send message to content script
   console.log('[Service Worker] Requesting article from content script in tab', activeTab.id);
-  const response = await chrome.tabs.sendMessage(activeTab.id, { type: 'CMD_EXTRACT_ARTICLE' });
 
-  if (!response || !response.success) {
-    throw new Error(response?.error || 'Failed to extract article from page');
+  try {
+    const response = await chrome.tabs.sendMessage(activeTab.id, { type: 'CMD_EXTRACT_ARTICLE' });
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+    console.log(`[Performance] Article extraction took ${duration.toFixed(2)}ms`);
+
+    if (!response || !response.success) {
+      const errorMsg = response?.error || 'Failed to extract article from page';
+      console.error('[Service Worker] Extraction failed:', errorMsg);
+
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icons/icon48.png',
+        title: 'Article Extraction Failed',
+        message: 'Could not extract article content. Using fallback...'
+      });
+
+      throw new Error(errorMsg);
+    }
+
+    // Success handling
+    const quality = response.quality || 'unknown';
+    const wordCount = response.metadata?.wordCount || 0;
+
+    // Store result
+    await chrome.storage.local.set({
+      lastArticleExtraction: {
+        ...response,
+        timestamp: new Date().toISOString()
+      }
+    });
+
+    // Show notification for success quality
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icons/icon48.png',
+      title: 'Article Extracted',
+      message: `Successfully captured article (${wordCount} words). Quality: ${quality}`
+    });
+
+    return response.data || response; // Return full response or data depending on structure
+  } catch (err) {
+    // Handle communication errors (e.g. content script not loaded)
+    console.error('[Service Worker] Communication error:', err);
+    throw err;
   }
-
-  return response.data;
 };
 
 // Message handling

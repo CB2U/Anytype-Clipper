@@ -10,14 +10,14 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-**Current Focus:** [Fix Highlight Save Function](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/spec.md) (Bug Fix - P0)
+**Current Focus:** [Markdown Conversion](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md) (Epic 4.1)
 
-**Status:** Done
+**Status:** Not Started
 
 **Quick Links:**
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/036-fix-highlight-save/tasks.md)
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.

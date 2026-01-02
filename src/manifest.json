@@ -7,7 +7,8 @@
         "storage",
         "activeTab",
         "contextMenus",
-        "scripting"
+        "scripting",
+        "notifications"
     ],
     "host_permissions": [
         "http://localhost/*"
@@ -22,7 +23,8 @@
                 "<all_urls>"
             ],
             "js": [
-                "src/content/metadata-script.ts"
+                "src/content/metadata-script.ts",
+                "src/content/content-script.ts"
             ],
             "run_at": "document_end"
         }

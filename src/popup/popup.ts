@@ -183,9 +183,23 @@ async function loadCurrentTab() {
     if (currentTab && currentTab.id) {
       try {
         // Try Extract Article first
+        // Try Extract Article first
         const articleResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_ARTICLE' });
-        if (articleResponse && articleResponse.success) {
-          currentMetadata = articleResponse.data;
+        if (articleResponse && articleResponse.success && articleResponse.data?.article) {
+          const result = articleResponse.data;
+          // Map ArticleExtractionResult to PageMetadata for consistent usage
+          currentMetadata = {
+            title: result.article.title,
+            description: result.article.excerpt, // Use excerpt for description
+            // Use textContent for now as Anytype API doesn't support raw HTML body
+            // Markdown conversion will be implemented in Epic 4.1
+            content: result.article.textContent,
+            textContent: result.article.textContent,
+            author: result.article.byline,
+            siteName: result.article.siteName,
+            language: result.article.lang,
+            canonicalUrl: currentTab.url,
+          };
           updateMetadataUI();
 
           // Show Save as Article button
@@ -204,6 +218,15 @@ async function loadCurrentTab() {
         console.warn('Extraction failed:', e);
         // Fallback to basic tab info
         if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
+
+        // Even if extraction failed, try basic metadata fallback
+        try {
+          const metaResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_METADATA' });
+          if (metaResponse && metaResponse.success) {
+            currentMetadata = metaResponse.data;
+            updateMetadataUI();
+          }
+        } catch (ignored) { }
       }
     } else if (currentTab) {
       if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';

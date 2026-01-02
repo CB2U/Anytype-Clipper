@@ -4,6 +4,10 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 
 ## Features
 
+- **Smart Article Extraction**: Automatically strips ads, navigation, and clutter using Mozilla Readability.
+- **Save to Anytype**: Captures title, author, and content directly to your workspace.
+- **Metadata Extraction**: Captures page metadata (OpenGraph tags, etc.).
+- **Authentication**: Securely connects to local Anytype app via Challenge Code.
 - **Bookmark Capture**: Save current page as a bookmark in Anytype.
 - **Highlight Capture**: Capture selected text from any page with surrounding context (50 chars before/after).
 - **Context Menu Integration**: Right-click any selection and "Send selection to Anytype".

@@ -1,69 +1,105 @@
-import { Readability, isProbablyReaderable } from '@mozilla/readability';
-
-export interface ExtractedArticle {
-    title: string;
-    content: string;
-    textContent: string;
-    length: number;
-    excerpt: string;
-    byline: string;
-    dir: string;
-    siteName: string;
-    lang: string;
-    publishedTime: string | null;
-}
+import { Readability } from '@mozilla/readability';
+import { ArticleExtractionResult, ExtractionQuality } from '../../types/article';
 
 /**
- * Service for extracting readable article content from a DOM.
- * Uses @mozilla/readability for robust extraction.
+ * Extract article content from the current document using Mozilla Readability
+ * 
+ * @param doc - Optional document to extract from (defaults to window.document)
+ * @param timeoutMs - Timeout in milliseconds (default: 5000)
+ * @returns Promise resolving to extraction result
  */
-export class ArticleExtractor {
-    /**
-     * Extracts article content from a document.
-     * 
-     * @param document - The HTML document to extract from
-     * @returns Extracted article data or null if extraction fails
-     */
-    public extract(document: Document): ExtractedArticle | null {
-        try {
-            // Clone the document to avoid modifying the original
-            const docClone = document.cloneNode(true) as Document;
+export async function extractArticle(
+    doc: Document = document,
+    timeoutMs: number = 5000
+): Promise<ArticleExtractionResult> {
+    const startTime = performance.now();
 
-            const reader = new Readability(docClone, {
-                charThreshold: 500, // Minimum number of characters to be considered an article
-            });
+    try {
+        // Clone document to avoid modifying the live page
+        // We only need the body and head for Readability
+        const clone = doc.cloneNode(true) as Document;
 
-            const article = reader.parse();
+        // Create timeout promise
+        let timeoutId: ReturnType<typeof setTimeout>;
+        const timeoutPromise = new Promise<never>((_, reject) => {
+            timeoutId = setTimeout(() => reject(new Error('Extraction timed out')), timeoutMs);
+        });
 
-            if (!article) {
-                return null;
+        // Create extraction promise
+        const extractionPromise = new Promise<ArticleExtractionResult>((resolve) => {
+            try {
+                const reader = new Readability(clone);
+                const article = reader.parse();
+                const endTime = performance.now();
+                const extractionTime = endTime - startTime;
+
+                if (!article) {
+                    resolve({
+                        success: false,
+                        quality: ExtractionQuality.FAILURE,
+                        article: null,
+                        metadata: {
+                            extractionTime,
+                            wordCount: 0
+                        },
+                        error: 'Readability returned null (no article found)'
+                    });
+                    return;
+                }
+
+                // Determine quality (simplified logic for now)
+                const textContent = article.textContent || '';
+                const quality = textContent.length > 200
+                    ? ExtractionQuality.SUCCESS
+                    : ExtractionQuality.PARTIAL;
+
+                // Estimate word count from plain text
+                const wordCount = textContent.split(/\s+/).filter((w: string) => w.length > 0).length;
+
+                resolve({
+                    success: true,
+                    quality,
+                    article,
+                    metadata: {
+                        extractionTime,
+                        wordCount
+                    }
+                });
+            } catch (error) {
+                const endTime = performance.now();
+                resolve({
+                    success: false,
+                    quality: ExtractionQuality.FAILURE,
+                    article: null,
+                    metadata: {
+                        extractionTime: endTime - startTime,
+                        wordCount: 0
+                    },
+                    error: error instanceof Error ? error.message : String(error)
+                });
             }
+        });
 
-            return {
-                title: article.title || '',
-                content: article.content || '',
-                textContent: article.textContent || '',
-                length: article.length || 0,
-                excerpt: article.excerpt || '',
-                byline: article.byline || '',
-                dir: article.dir || '',
-                siteName: article.siteName || '',
-                lang: article.lang || '',
-                publishedTime: article.publishedTime || null,
-            };
-        } catch (error) {
-            console.error('[ArticleExtractor] Extraction failed:', error);
-            return null;
-        }
-    }
+        // Race between extraction and timeout
+        const result = await Promise.race([extractionPromise, timeoutPromise]);
 
-    /**
-     * Heuristic to check if a document likely contains an article.
-     * 
-     * @param document - The HTML document to check
-     * @returns True if it looks like an article
-     */
-    public isProbablyArticle(document: Document): boolean {
-        return isProbablyReaderable(document);
+        // Clear timeout if extraction finished first
+        if (timeoutId!) clearTimeout(timeoutId);
+
+        return result;
+
+    } catch (error) {
+        // This catches the timeout error or cloning errors
+        const endTime = performance.now();
+        return {
+            success: false,
+            quality: ExtractionQuality.FAILURE,
+            article: null,
+            metadata: {
+                extractionTime: endTime - startTime,
+                wordCount: 0
+            },
+            error: error instanceof Error ? error.message : String(error)
+        };
     }
 }
