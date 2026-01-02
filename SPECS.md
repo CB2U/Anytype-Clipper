@@ -60,9 +60,10 @@ This document serves as the **central index** for all specifications in the Anyt
 | -------------- | ------------------------- | -------------------------------- | ---------- | ----------- | --------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | 4.0            | Readability Integration   | `specs/040-readability/`         | BP3        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/040-readability/spec.md#evidence)     | FR5.1, FR5.10, NFR1.2, PERF-2, US1       |
 | 4.1            | Markdown Conversion       | `specs/041-markdown-conversion/` | BP3        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md#evidence) | FR5.2, FR5.3, FR5.4, AC4, AC16           |
-| 4.2            | Fallback Extraction Chain | `specs/042-fallback-chain/`      | BP3        | Not Started | N/A       | N/A                                                                                                            | FR5.1, FR5.10, FR5.11, AC9, ERR-7, REL-8 |
+| 4.2            | Fallback Extraction Chain | `specs/042-fallback-chain/`      | BP3        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/spec.md#evidence)                                           | FR5.1, FR5.10, FR5.11, AC9, ERR-7, REL-8 |
 | 4.3            | Image Handling            | `specs/043-image-handling/`      | BP3        | Not Started | N/A       | N/A                                                                                                            | FR5.6, AC10, PERF-6, NFR1.7, NET-3       |
 | 4.4            | Table Preservation        | `specs/044-table-preservation/`  | BP3        | Not Started | N/A       | N/A                                                                                                            | FR5.5, AC11                              |
+
 
 ### BP4: Queue & Reliability (Weeks 9-10)
 

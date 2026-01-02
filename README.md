@@ -110,6 +110,6 @@ ISC
 
 ## Status
 
-🚧 **In Development** - Epic 4.1: Markdown Conversion (Complete)
+🚧 **In Development** - Epic 4.2: Fallback Extraction Chain (Implementation Complete, Verifying)
 
 See [SPECS.md](SPECS.md) for current progress.

@@ -26,6 +26,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 import { AnytypeApiClient } from '../lib/api/client';
 import { BookmarkCaptureService } from '../lib/capture/bookmark-capture-service';
 import { ExtensionMessage, MessageResponse, HighlightCapturedMessage } from '../types/messages';
+import { ArticleExtractionResult, ExtractionQuality } from '../types/article';
 
 // Initialize API Client and Services
 const apiClient = new AnytypeApiClient();
@@ -138,64 +139,145 @@ const handleExtractMetadata = async () => {
   return response.data;
 };
 
-const handleExtractArticle = async () => {
+// T8: Quality Indicators
+function getQualityEmoji(quality: ExtractionQuality): string {
+  switch (quality) {
+    case ExtractionQuality.SUCCESS: return '🟢';
+    case ExtractionQuality.PARTIAL: return '🟡';
+    case ExtractionQuality.FALLBACK: return '🟠';
+    case ExtractionQuality.FAILURE: return '🔴';
+    default: return '⚪';
+  }
+}
+
+function getQualityMessage(result: ArticleExtractionResult): string {
+  switch (result.quality) {
+    case ExtractionQuality.SUCCESS:
+      return `Article captured successfully (${result.metadata.wordCount} words)`;
+    case ExtractionQuality.PARTIAL:
+      return `Article captured (simplified version) - ${result.metadata.wordCount} words`;
+    case ExtractionQuality.FALLBACK:
+      return 'Article extraction failed. Saved as smart bookmark.';
+    default:
+      return 'Extraction status unknown';
+  }
+}
+
+// T9: Manual Retry Logic
+const retryCountMap = new Map<number, number>(); // tabId -> retryCount
+
+const handleExtractArticle = async (targetTabId?: number) => {
   const startTime = performance.now();
 
-  // 1. Get current active tab
-  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-  const activeTab = tabs[0];
+  // 1. Get tab
+  let activeTab: chrome.tabs.Tab | undefined;
+  if (targetTabId) {
+    try {
+      activeTab = await chrome.tabs.get(targetTabId);
+    } catch {
+      // Tab closed or doesn't exist
+      console.warn('Retry target tab not found:', targetTabId);
+      return;
+    }
+  } else {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    activeTab = tabs[0];
+  }
+
   if (!activeTab?.id) throw new Error('No active tab found');
+  const tabId = activeTab.id;
 
   // 2. Send message to content script
-  console.log('[Service Worker] Requesting article from content script in tab', activeTab.id);
+  console.log('[Service Worker] Requesting article from content script in tab', tabId);
 
   try {
-    const response = await chrome.tabs.sendMessage(activeTab.id, { type: 'CMD_EXTRACT_ARTICLE' });
+    const response = await chrome.tabs.sendMessage(tabId, { type: 'CMD_EXTRACT_ARTICLE' });
     const endTime = performance.now();
     const duration = endTime - startTime;
     console.log(`[Performance] Article extraction took ${duration.toFixed(2)}ms`);
 
-    if (!response || !response.success) {
+    if (!response || (!response.success && response.quality === ExtractionQuality.FAILURE)) {
+      // Only treat as error if COMPLETELY failed (FAILURE)
+      // Levels 2,3,4 (PARTIAL, FALLBACK) are considered "success: true" by the fallbacker mostly, 
+      // but let's check the fields.
+      // Fallback chain always returns success=true for L4 unless catastrophic error.
       const errorMsg = response?.error || 'Failed to extract article from page';
       console.error('[Service Worker] Extraction failed:', errorMsg);
 
       chrome.notifications.create({
         type: 'basic',
         iconUrl: 'icons/icon48.png',
-        title: 'Article Extraction Failed',
-        message: 'Could not extract article content. Using fallback...'
+        title: '🔴 Extraction Failed',
+        message: errorMsg
       });
 
       throw new Error(errorMsg);
     }
 
-    // Success handling
-    const quality = response.quality || 'unknown';
-    const wordCount = response.metadata?.wordCount || 0;
+    const result = response as ArticleExtractionResult;
+    const qualityEmoji = getQualityEmoji(result.quality);
+    const message = getQualityMessage(result);
 
     // Store result
     await chrome.storage.local.set({
       lastArticleExtraction: {
-        ...response,
+        ...result,
         timestamp: new Date().toISOString()
       }
     });
 
-    // Show notification for success quality
-    chrome.notifications.create({
+    // Clear retry count on success
+    retryCountMap.delete(tabId);
+
+    // Show notification
+    const notificationOptions: chrome.notifications.NotificationOptions = {
       type: 'basic',
       iconUrl: 'icons/icon48.png',
-      title: 'Article Extracted',
-      message: `Successfully captured article with Markdown formatting (${wordCount} words). Quality: ${quality}`
-    });
+      title: `${qualityEmoji} Article Extracted`,
+      message: message,
+      priority: 2
+    };
 
-    return response.data || response; // Return full response or data depending on structure
+    // Add Retry button for FALLBACK quality (T9 prep)
+    if (result.quality === ExtractionQuality.FALLBACK) {
+      // Check retry count logic here later
+      notificationOptions.buttons = [{ title: 'Retry Extraction' }];
+    }
+
+    chrome.notifications.create(`extraction:${tabId}`, notificationOptions as any);
+
+    return result;
   } catch (err) {
-    // Handle communication errors (e.g. content script not loaded)
     console.error('[Service Worker] Communication error:', err);
     throw err;
   }
 };
+
+// Handle Notification Button Clicks (Retry)
+chrome.notifications.onButtonClicked.addListener(async (notificationId, buttonIndex) => {
+  if (buttonIndex === 0 && notificationId.startsWith('extraction:')) {
+    const tabId = parseInt(notificationId.split(':')[1], 10);
+    if (!isNaN(tabId)) {
+      const currentRetry = retryCountMap.get(tabId) || 0;
+      if (currentRetry < 3) {
+        retryCountMap.set(tabId, currentRetry + 1);
+        console.log(`[Service Worker] Retrying extraction for tab ${tabId} (Attempt ${currentRetry + 1})`);
+
+        // Clear previous notification
+        chrome.notifications.clear(notificationId);
+
+        await handleExtractArticle(tabId);
+      } else {
+        chrome.notifications.create({
+          type: 'basic',
+          iconUrl: 'icons/icon48.png',
+          title: 'Retry Limit Reached',
+          message: 'Maximum of 3 retries executed.'
+        });
+      }
+    }
+  }
+});
 
 // Message handling
 chrome.runtime.onMessage.addListener((

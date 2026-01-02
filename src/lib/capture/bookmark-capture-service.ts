@@ -131,7 +131,8 @@ export class BookmarkCaptureService {
 
         // 2. Handle Metadata Fields
         const metadataFields: (keyof PageMetadata)[] = [
-            'author', 'publishedDate', 'siteName', 'language', 'favicon', 'canonicalUrl'
+            'author', 'publishedDate', 'siteName', 'language', 'favicon', 'canonicalUrl',
+            'extractionLevel', 'extractionQuality', 'extractionTime', 'note'
         ];
 
         for (const field of metadataFields) {

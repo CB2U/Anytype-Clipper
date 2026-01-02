@@ -34,6 +34,18 @@ export const METADATA_PROPERTY_LOOKUP: Record<string, { searchNames: string[], f
         searchNames: ['Source', 'Source URL', 'Original URL'],
         fallback: 'source'
     },
+    'extractionLevel': {
+        searchNames: ['Extraction Level', 'Level'],
+    },
+    'extractionQuality': {
+        searchNames: ['Extraction Quality', 'Quality'],
+    },
+    'extractionTime': {
+        searchNames: ['Extraction Time', 'Time'],
+    },
+    'note': {
+        searchNames: ['Note', 'Comment', 'Remarks'],
+    },
 };
 
 // Kept for backward compatibility during transition if needed, but we should use LOOKUP

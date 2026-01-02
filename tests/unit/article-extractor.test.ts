@@ -1,133 +1,89 @@
 import { extractArticle } from '../../src/lib/extractors/article-extractor';
-import { ExtractionQuality } from '../../src/types/article';
-import { Readability } from '@mozilla/readability';
-import { convertToMarkdown } from '../../src/lib/converters/markdown-converter';
+import { extractWithFallback } from '../../src/lib/extractors/fallback-extractor';
+import { ExtractionQuality, ExtractionLevel } from '../../src/types/article';
 
-// Mock Readability
-jest.mock('@mozilla/readability', () => {
-    return {
-        Readability: jest.fn().mockImplementation(() => {
-            return {
-                parse: jest.fn()
-            };
-        })
-    };
-});
-
-// Mock Markdown Converter
-jest.mock('../../src/lib/converters/markdown-converter', () => ({
-    convertToMarkdown: jest.fn()
+// Mock Fallback Extractor
+jest.mock('../../src/lib/extractors/fallback-extractor', () => ({
+    extractWithFallback: jest.fn()
 }));
 
-describe('Article Extractor', () => {
-    let mockParse: jest.Mock;
-    const mockConvertToMarkdown = convertToMarkdown as jest.Mock;
+describe('Article Extractor Wrapper', () => {
+    const mockExtractWithFallback = extractWithFallback as jest.Mock;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockParse = (Readability as any).mock.instances[0]?.parse || jest.fn();
-        (Readability as unknown as jest.Mock).mockImplementation(() => ({
-            parse: mockParse
-        }));
+    });
 
-        // Default successful conversion
-        mockConvertToMarkdown.mockResolvedValue({
+    test('should map successful fallback result to article result', async () => {
+        mockExtractWithFallback.mockResolvedValue({
             success: true,
-            markdown: '# Markdown Content',
-            metadata: { conversionTime: 10, characterCount: 50 }
+            level: ExtractionLevel.SIMPLIFIED_DOM,
+            quality: ExtractionQuality.PARTIAL,
+            content: {
+                html: '<p>Content</p>',
+                markdown: '# Content',
+                title: 'Title',
+                metadata: {
+                    description: 'Desc',
+                    author: 'Auth',
+                    siteName: 'Site',
+                    language: 'en',
+                    publishedDate: '2023-01-01',
+                    wordCount: 100
+                }
+            },
+            performance: {
+                totalTime: 50,
+                levelTimes: { [ExtractionLevel.READABILITY]: 10, [ExtractionLevel.SIMPLIFIED_DOM]: 40 }
+            }
         });
-    });
 
-    // Helper to create a mock document
-    const createMockDoc = (content: string = '') => {
-        const doc = document.implementation.createHTMLDocument('Test Page');
-        doc.body.innerHTML = content;
-        return doc;
-    };
-
-    test('should successfully extract article with content and markdown', async () => {
-        const mockArticle = {
-            title: 'Test Article',
-            content: '<p>Some content</p>',
-            textContent: 'Some content with more than just a few words.',
-            length: 100,
-            excerpt: 'Excerpt',
-            byline: 'Author',
-            dir: 'ltr',
-            siteName: 'Site',
-            lang: 'en'
-        };
-        mockParse.mockReturnValue(mockArticle);
-
-        const doc = createMockDoc('<div>Some content</div>');
-        const result = await extractArticle(doc);
+        const result = await extractArticle();
 
         expect(result.success).toBe(true);
+        expect(result.level).toBe(ExtractionLevel.SIMPLIFIED_DOM);
+        expect(result.quality).toBe(ExtractionQuality.PARTIAL);
         expect(result.article).toEqual({
-            ...mockArticle,
-            markdown: '# Markdown Content'
-        });
-        expect(result.metadata.wordCount).toBeGreaterThan(0);
-        expect(result.metadata.conversionTime).toBe(10);
-        expect(result.error).toBeUndefined();
-        expect(mockConvertToMarkdown).toHaveBeenCalledWith('<p>Some content</p>', 2000);
-    });
-
-    test('should use textContent as fallback when markdown conversion fails', async () => {
-        const mockArticle = {
-            title: 'Test Article',
+            title: 'Title',
             content: '<p>Content</p>',
-            textContent: 'Plain text content',
-        };
-        mockParse.mockReturnValue(mockArticle);
-
-        mockConvertToMarkdown.mockResolvedValue({
-            success: false,
-            markdown: null,
-            metadata: { conversionTime: 5, characterCount: 0 },
-            error: 'Conversion failed'
+            textContent: '',
+            length: 14,
+            excerpt: 'Desc',
+            byline: 'Auth',
+            dir: '', // Default from document.dir
+            siteName: 'Site',
+            lang: 'en',
+            publishedTime: '2023-01-01',
+            markdown: '# Content'
         });
-
-        const doc = createMockDoc();
-        const result = await extractArticle(doc);
-
-        expect(result.success).toBe(true);
-        expect(result.article?.markdown).toBe('Plain text content');
-        expect(result.metadata.conversionTime).toBe(5);
+        expect(result.metadata.levelTimes[ExtractionLevel.SIMPLIFIED_DOM]).toBe(40);
+        expect(result.metadata.extractionTime).toBe(50);
     });
 
-    test('should return failure quality when extraction returns null', async () => {
-        mockParse.mockReturnValue(null);
+    test('should map failure result correctly', async () => {
+        mockExtractWithFallback.mockResolvedValue({
+            success: false,
+            level: ExtractionLevel.SMART_BOOKMARK, // If L4 fails technically it returns success/fallback but if it threw error
+            quality: ExtractionQuality.FAILURE,
+            content: { html: null, markdown: null, title: '', metadata: {} },
+            performance: { totalTime: 10, levelTimes: {} },
+            error: 'Failed completely'
+        });
 
-        const doc = createMockDoc('');
-        const result = await extractArticle(doc);
+        const result = await extractArticle();
 
         expect(result.success).toBe(false);
-        expect(result.quality).toBe(ExtractionQuality.FAILURE);
+        expect(result.error).toBe('Failed completely');
         expect(result.article).toBeNull();
-        expect(result.error).toBe('Readability returned null (no article found)');
-        expect(mockConvertToMarkdown).not.toHaveBeenCalled();
     });
 
-    test('should calculate word count correctly', async () => {
-        mockParse.mockReturnValue({
-            textContent: 'One two three four five',
-            content: '<p>One two three four five</p>',
-            length: 50
-        });
+    test('should handle exceptions', async () => {
+        mockExtractWithFallback.mockRejectedValue(new Error('Critical error'));
 
-        const doc = createMockDoc();
-        const result = await extractArticle(doc);
+        const result = await extractArticle();
 
-        expect(result.metadata.wordCount).toBe(5);
-    });
-
-    test('should track extraction time', async () => {
-        mockParse.mockReturnValue({ textContent: 'Content' });
-
-        const doc = createMockDoc();
-        const result = await extractArticle(doc);
-
-        expect(result.metadata.extractionTime).toBeGreaterThanOrEqual(0);
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('Critical error');
+        expect(result.quality).toBe(ExtractionQuality.FAILURE);
     });
 });

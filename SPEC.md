@@ -10,14 +10,15 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-**Current Focus:** [Markdown Conversion](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md) (Epic 4.1)
+**Current Focus:** [Fallback Extraction Chain](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/spec.md) (Epic 4.2)
 
-**Status:** Done
+**Status:** Draft
 
 **Quick Links:**
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/tasks.md)
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.
+

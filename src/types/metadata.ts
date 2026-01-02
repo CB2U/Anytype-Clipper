@@ -42,6 +42,16 @@ export interface PageMetadata {
     extractedAt: string;
     /** Source of the extraction for debugging */
     source: 'opengraph' | 'twitter' | 'schema.org' | 'standard' | 'fallback';
+    /** Extraction level (1-4) */
+    extractionLevel?: number;
+    /** Extraction quality */
+    extractionQuality?: string;
+    /** Extraction time in milliseconds */
+    extractionTime?: number;
+    /** Whether extraction failed */
+    extractionFailed?: boolean;
+    /** Additional note (e.g. failure reason) */
+    note?: string;
 }
 
 /**
