@@ -47,10 +47,19 @@
   <!-- Main View -->
   <div id="main-view" class="view hidden">
     <div class="container">
-      <header>
-        <div class="logo-area">
-          <h1 style="text-align: center; width: 100%;">Anytype Clipper</h1>
+      <header style="display: flex; align-items: center; justify-content: space-between; padding: 16px;">
+        <div class="logo-area" style="flex: 1;">
+          <h1 style="text-align: left; font-size: 16px; font-weight: 600;">Anytype Clipper</h1>
         </div>
+        <button id="btn-settings" class="icon-button" title="Settings"
+          style="background: none; border: none; cursor: pointer; padding: 4px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.72v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
+            </path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
       </header>
 
       <div class="form-group">

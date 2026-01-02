@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Anytype Clipper Options</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Anytype Clipper Settings</h1>
+
+        <section class="section">
+            <h2>Image Handling</h2>
+            <div class="form-group">
+                <label for="imagePreference">Embedding Preference:</label>
+                <select id="imagePreference">
+                    <option value="smart">Smart (Default)</option>
+                    <option value="always">Always Embed</option>
+                    <option value="never">Never Embed</option>
+                </select>
+                <p class="help-text">
+                    <strong>Smart:</strong> Embeds images &lt; 500KB and all featured images.<br>
+                    <strong>Always:</strong> Embeds all images (up to limit).<br>
+                    <strong>Never:</strong> Keeps all images as external links.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="maxImages">Max Embedded Images:</label>
+                <input type="number" id="maxImages" min="0" max="100">
+                <p class="help-text">Maximum number of images to embed per article (Max 100).</p>
+            </div>
+
+            <!-- Future settings can go here -->
+        </section>
+
+        <div class="actions">
+            <button id="save" class="primary">Save Settings</button>
+            <span id="status" class="status"></span>
+        </div>
+    </div>
+    <script type="module" src="options.ts"></script>
+</body>
+
+</html>

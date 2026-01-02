@@ -21,6 +21,7 @@ const authElements = {
 
 const mainElements = {
   header: document.querySelector('.header'),
+  btnSettings: document.getElementById('btn-settings') as HTMLButtonElement,
   btnDisconnect: document.getElementById('btn-disconnect') as HTMLButtonElement,
   spaceSelector: document.getElementById('space-selector') as HTMLSelectElement,
   formContainer: document.getElementById('bookmark-form-placeholder'),
@@ -197,6 +198,8 @@ async function loadCurrentTab() {
             siteName: result.article.siteName,
             language: result.article.lang,
             canonicalUrl: currentTab.url,
+            imageCount: result.metadata.imageCount,
+            embeddedImageCount: result.metadata.embeddedImageCount
           };
           updateMetadataUI();
 
@@ -347,9 +350,13 @@ async function handleSave(isArticle: boolean = false) {
     });
 
     if (response && response.success) {
+      const imgStats = (isArticle && currentMetadata.imageCount)
+        ? ` (${currentMetadata.embeddedImageCount}/${currentMetadata.imageCount} images embedded)`
+        : '';
+
       showStatus(
         isHighlight ? 'Highlight Saved! 🎉' :
-          (isArticle ? 'Article Saved! 🎉' : 'Bookmark Saved! 🎉'),
+          (isArticle ? `Article Saved! 🎉${imgStats}` : 'Bookmark Saved! 🎉'),
         false
       );
     } else {
@@ -541,6 +548,14 @@ document.addEventListener('DOMContentLoaded', () => {
   authElements.btnConnect?.addEventListener('click', handleConnect);
   authElements.btnVerify?.addEventListener('click', handleVerify);
   mainElements.btnDisconnect?.addEventListener('click', handleDisconnect);
+  mainElements.btnSettings?.addEventListener('click', () => {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage();
+    } else {
+      window.open(chrome.runtime.getURL('src/options/options.html'));
+    }
+  });
+
   mainElements.btnSave?.addEventListener('click', () => handleSave(false));
   mainElements.btnSaveArticle?.addEventListener('click', handleSaveArticle);
 

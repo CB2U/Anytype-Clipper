@@ -36,6 +36,10 @@ export interface ArticleExtractionResult {
         wordCount: number;
         /** Time taken for each extraction level */
         levelTimes: Partial<Record<ExtractionLevel, number>>;
+        /** Total number of images processed */
+        imageCount?: number;
+        /** Number of images embedded as Data URLs */
+        embeddedImageCount?: number;
     };
 
     /** Error message if extraction failed */

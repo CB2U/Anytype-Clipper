@@ -69,8 +69,8 @@ export class BookmarkCaptureService {
             }
 
             // Safety: Anytype API might struggle with very large bodies. 
-            // Truncate to ~100KB to be extra safe
-            const MAX_BODY_SIZE = 100 * 1024;
+            // Truncate to ~10MB (enough for text + several optimized images)
+            const MAX_BODY_SIZE = 10 * 1024 * 1024;
             if (articleBody.length > MAX_BODY_SIZE) {
                 console.warn(`[BookmarkCaptureService] Content too large (${articleBody.length}), truncating.`);
                 articleBody = articleBody.substring(0, MAX_BODY_SIZE) + '\n\n... [Content Truncated]';

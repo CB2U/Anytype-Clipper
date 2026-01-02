@@ -151,11 +151,15 @@ function getQualityEmoji(quality: ExtractionQuality): string {
 }
 
 function getQualityMessage(result: ArticleExtractionResult): string {
+  const images = result.metadata.imageCount || 0;
+  const embedded = result.metadata.embeddedImageCount || 0;
+  const imageMsg = images > 0 ? ` and ${images} images (${embedded} embedded)` : '';
+
   switch (result.quality) {
     case ExtractionQuality.SUCCESS:
-      return `Article captured successfully (${result.metadata.wordCount} words)`;
+      return `Article captured successfully (${result.metadata.wordCount} words${imageMsg})`;
     case ExtractionQuality.PARTIAL:
-      return `Article captured (simplified version) - ${result.metadata.wordCount} words`;
+      return `Article captured (simplified version) - ${result.metadata.wordCount} words${imageMsg}`;
     case ExtractionQuality.FALLBACK:
       return 'Article extraction failed. Saved as smart bookmark.';
     default:

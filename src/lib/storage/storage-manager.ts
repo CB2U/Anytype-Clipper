@@ -106,4 +106,18 @@ export class StorageManager {
             console.warn(`[StorageManager] Storage usage is high: ${Math.round(ratio * 100)}% (${used} / ${limit} bytes)`);
         }
     }
+
+    /**
+     * Get image handling settings.
+     */
+    public async getImageHandlingSettings(): Promise<import('./schema').ImageHandlingSettings> {
+        return (await this.get('imageHandlingSettings')) as import('./schema').ImageHandlingSettings;
+    }
+
+    /**
+     * Set image handling settings.
+     */
+    public async setImageHandlingSettings(settings: import('./schema').ImageHandlingSettings): Promise<void> {
+        await this.set('imageHandlingSettings', settings);
+    }
 }

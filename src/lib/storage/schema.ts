@@ -23,10 +23,19 @@ export const TagCacheEntrySchema = z.object({
     propertyId: z.string(),
 });
 
+export const ImageHandlingSettingsSchema = z.object({
+    preference: z.enum(['always', 'smart', 'never']),
+    sizeThreshold: z.number().int().positive(),
+    maxEmbeddedImages: z.number().int().positive(),
+    webpQuality: z.number().int().min(0).max(100),
+    fetchTimeout: z.number().int().positive(),
+});
+
 // Root schema including metadata
 export const StorageSchemaValidator = z.object({
     _version: z.number().int(),
     settings: AppSettingsSchema,
+    imageHandlingSettings: ImageHandlingSettingsSchema.optional(), // Optional for backward compat / initial load
     auth: AuthDataSchema,
     tagCache: z.record(z.string(), TagCacheEntrySchema).optional(),
     tagPropertyMappings: z.record(z.string(), z.record(z.string(), z.string())).optional(),
@@ -36,6 +45,7 @@ export const StorageSchemaValidator = z.object({
 // Infer TypeScript types from Zod schemas
 export type AppSettings = z.infer<typeof AppSettingsSchema>;
 export type AuthData = z.infer<typeof AuthDataSchema>;
+export type ImageHandlingSettings = z.infer<typeof ImageHandlingSettingsSchema>;
 export type StorageSchema = z.infer<typeof StorageSchemaValidator>;
 
 // Keys type helper

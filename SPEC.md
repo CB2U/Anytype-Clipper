@@ -10,14 +10,14 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-**Current Focus:** [Fallback Extraction Chain](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/spec.md) (Epic 4.2)
+**Current Focus:** [Image Handling](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/spec.md) (Epic 4.3)
 
-**Status:** Draft
+**Status:** In Progress
 
 **Quick Links:**
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/tasks.md)
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.
