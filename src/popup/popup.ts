@@ -350,15 +350,19 @@ async function handleSave(isArticle: boolean = false) {
     });
 
     if (response && response.success) {
-      const imgStats = (isArticle && currentMetadata.imageCount)
-        ? ` (${currentMetadata.embeddedImageCount}/${currentMetadata.imageCount} images embedded)`
-        : '';
+      if (response.data?.queued) {
+        showStatus('Saved offline! Will sync when Anytype is back. 📶', false);
+      } else {
+        const imgStats = (isArticle && currentMetadata.imageCount)
+          ? ` (${currentMetadata.embeddedImageCount}/${currentMetadata.imageCount} images embedded)`
+          : '';
 
-      showStatus(
-        isHighlight ? 'Highlight Saved! 🎉' :
-          (isArticle ? `Article Saved! 🎉${imgStats}` : 'Bookmark Saved! 🎉'),
-        false
-      );
+        showStatus(
+          isHighlight ? 'Highlight Saved! 🎉' :
+            (isArticle ? `Article Saved! 🎉${imgStats}` : 'Bookmark Saved! 🎉'),
+          false
+        );
+      }
     } else {
       throw new Error(response?.error || 'Unknown error');
     }

@@ -15,8 +15,13 @@ All notable changes to this project will be documented in this file.
     - `listTags` and `createTag` methods added to `AnytypeApiClient`.
 - **Infrastructure:**
     - Extension storage schema updated to support tag caching and mappings.
-
     - Performance optimizations with a 5-minute tag cache TTL.
+- **Offline Queue System (Epic 5.0):**
+    - Implementation of `QueueManager` for persistent capture queuing.
+    - Automatic fallback to offline queue on connectivity failures (NetworkError, 401, 502-504).
+    - Queue persistence using `chrome.storage.local` with FIFO eviction (1000 items).
+    - UI feedback in popup when content is saved offline.
+    - Unit and integration test suites for queue logic and persistence.
 - **Table Preservation:**
     - Intelligent classification of tables (Simple, Complex, Data).
     - Conversion of simple tables to clean Markdown.

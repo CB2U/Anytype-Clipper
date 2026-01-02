@@ -32,4 +32,5 @@ export const DEFAULTS: StorageSchema = {
     tagCache: {},
     tagPropertyMappings: {},
     metadataPropertyMappings: {},
+    queue: [],
 };

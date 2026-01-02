@@ -1,0 +1,19 @@
+{
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "type": "highlight",
+    "payload": {
+        "quote": "This is a sample quote from a web page.",
+        "context": "The quote appears in the middle of this context text which provides more information.",
+        "url": "https://example.com/article",
+        "pageTitle": "Sample Article",
+        "tags": [
+            "highlight",
+            "research"
+        ]
+    },
+    "status": "queued",
+    "timestamps": {
+        "created": 1735830001000
+    },
+    "retryCount": 0
+}

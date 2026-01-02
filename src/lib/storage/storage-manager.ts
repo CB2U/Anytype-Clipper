@@ -134,4 +134,50 @@ export class StorageManager {
     public async setExtensionSettings(settings: import('./schema').ExtensionSettings): Promise<void> {
         await this.set('extensionSettings', settings);
     }
+
+    /**
+     * Get the current offline queue.
+     */
+    public async getQueue(): Promise<import('../../types/queue').QueueItem[]> {
+        return (await this.get('queue')) || [];
+    }
+
+    /**
+     * Set the entire offline queue.
+     */
+    public async setQueue(queue: import('../../types/queue').QueueItem[]): Promise<void> {
+        await this.set('queue', queue);
+    }
+
+    /**
+     * Add an item to the queue.
+     */
+    public async addQueueItem(item: import('../../types/queue').QueueItem): Promise<void> {
+        const queue = await this.getQueue();
+        queue.push(item);
+        await this.setQueue(queue);
+    }
+
+    /**
+     * Update an item in the queue.
+     */
+    public async updateQueueItem(id: string, updates: Partial<import('../../types/queue').QueueItem>): Promise<void> {
+        const queue = await this.getQueue();
+        const index = queue.findIndex(item => item.id === id);
+        if (index !== -1) {
+            queue[index] = { ...queue[index], ...updates };
+            await this.setQueue(queue);
+        }
+    }
+
+    /**
+     * Delete an item from the queue.
+     */
+    public async deleteQueueItem(id: string): Promise<void> {
+        const queue = await this.getQueue();
+        const filtered = queue.filter(item => item.id !== id);
+        if (filtered.length !== queue.length) {
+            await this.setQueue(filtered);
+        }
+    }
 }

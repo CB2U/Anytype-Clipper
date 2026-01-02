@@ -14,7 +14,7 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 - **Space Selection**: Choose which Anytype Space to save content into.
 - **Offline Support**: Queue captures when Anytype is offline (retry logic).
 - **Markdown Support**: Articles are automatically converted to clean Markdown, preserving headings, lists, and code blocks.
-- **Offline Queue**: Captures work even when Anytype is offline
+- **Offline Queue**: Persistent capture queue when Anytype is unavailable, surviving restarts.
 - **Table Preservation**: Intelligent handling of tables - Simple tables as Markdown, Complex as HTML, Data as JSON/CSV.
 - **Tag Management**: Integrated autocomplete and selection of existing Anytype tags.
 - **Inline Tag Creation**: Create new tags directly within the popup UI.
@@ -111,6 +111,6 @@ ISC
 
 ## Status
 
-🚧 **In Development** - Epic 4.2: Fallback Extraction Chain (Implementation Complete, Verifying)
+🚧 **In Development** - Epic 5.1: Retry Logic (Planning)
 
 See [SPECS.md](SPECS.md) for current progress.

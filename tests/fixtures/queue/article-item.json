@@ -1,0 +1,24 @@
+{
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "type": "article",
+    "payload": {
+        "url": "https://example.com/blog/offline-support",
+        "title": "Implementing Offline Support in Browser Extensions",
+        "content": "# Implementing Offline Support\n\nOffline support is critical for a good user experience...\n\n## Why it matters\n\nUsers expect apps to work even when disconnected.",
+        "tags": [
+            "web-dev",
+            "offline"
+        ],
+        "metadata": {
+            "title": "Implementing Offline Support in Browser Extensions",
+            "url": "https://example.com/blog/offline-support",
+            "extractedAt": "2026-01-02T15:05:00Z",
+            "source": "opengraph"
+        }
+    },
+    "status": "queued",
+    "timestamps": {
+        "created": 1735830002000
+    },
+    "retryCount": 0
+}

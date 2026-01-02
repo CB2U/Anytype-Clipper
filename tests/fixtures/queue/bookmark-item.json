@@ -1,0 +1,24 @@
+{
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "type": "bookmark",
+    "payload": {
+        "url": "https://example.com",
+        "title": "Example Domain",
+        "tags": [
+            "testing",
+            "example"
+        ],
+        "notes": "Testing the offline queue system.",
+        "metadata": {
+            "title": "Example Domain",
+            "url": "https://example.com",
+            "extractedAt": "2026-01-02T15:00:00Z",
+            "source": "standard"
+        }
+    },
+    "status": "queued",
+    "timestamps": {
+        "created": 1735830000000
+    },
+    "retryCount": 0
+}

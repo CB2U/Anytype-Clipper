@@ -10,19 +10,20 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-**Current Focus:** None (Epic 4.4 Completed)
+**Recent Completion:**
+- Completed [Table Preservation](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/spec.md)
+Working on **Epic 5.1: Retry Logic** (Breakpoint 4).
 
-**Status:** Idle
-
-**Recent Fixes:**
-- Completed [Table Preservation](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/spec.md) (Epic 4.4).
-- Fixed "Incorrect Headers" bug for complex tables (Worldometer).
-- Added JSON Data Table export option.
+## Active Specification
+- **Epic:** 5.1
+- **Name:** Retry Logic with Backoff
+- **Status:** Planning
+- **Spec Path:** [specs/051-retry-logic/spec.md](specs/051-retry-logic/spec.md)
 
 **Quick Links:**
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/015-offline-queue/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/tasks.md)
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/050-offline-queue/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/050-offline-queue/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/050-offline-queue/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.

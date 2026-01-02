@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { QueueStatus } from '../../types/queue';
 
 // Define Zod schemas for runtime validation
 export const AppSettingsSchema = z.object({
@@ -37,6 +38,20 @@ export const ExtensionSettingsSchema = z.object({
     includeJSONForDataTables: z.boolean().optional(),
 });
 
+export const QueueItemSchema = z.object({
+    id: z.string().uuid().or(z.string()), // Support both UUID and simple IDs for tests
+    type: z.enum(['bookmark', 'highlight', 'article']),
+    payload: z.any(),
+    status: z.nativeEnum(QueueStatus),
+    timestamps: z.object({
+        created: z.number(),
+        lastAttempt: z.number().optional(),
+        completed: z.number().optional(),
+    }),
+    retryCount: z.number().int().min(0),
+    error: z.string().optional(),
+});
+
 // Root schema including metadata
 export const StorageSchemaValidator = z.object({
     _version: z.number().int(),
@@ -47,6 +62,7 @@ export const StorageSchemaValidator = z.object({
     tagCache: z.record(z.string(), TagCacheEntrySchema).optional(),
     tagPropertyMappings: z.record(z.string(), z.record(z.string(), z.string())).optional(),
     metadataPropertyMappings: z.record(z.string(), z.record(z.string(), z.string())).optional(),
+    queue: z.array(QueueItemSchema).optional(),
 });
 
 // Infer TypeScript types from Zod schemas

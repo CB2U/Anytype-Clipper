@@ -3,6 +3,8 @@ import { TagService } from '../tags/tag-service';
 import { StorageManager } from '../storage/storage-manager';
 import { PageMetadata } from '../../types/metadata';
 import { METADATA_PROPERTY_LOOKUP } from '../utils/constants';
+import { QueueManager } from '../../background/queue-manager';
+import { QueueStatus } from '../../types/queue';
 
 /**
  * Service for orchestrating the capture of bookmarks and articles with metadata.
@@ -12,11 +14,13 @@ export class BookmarkCaptureService {
     private apiClient: AnytypeApiClient;
     private tagService: TagService;
     private storage: StorageManager;
+    private queueManager: QueueManager;
 
     private constructor() {
         this.apiClient = new AnytypeApiClient();
         this.tagService = TagService.getInstance();
         this.storage = StorageManager.getInstance();
+        this.queueManager = QueueManager.getInstance(this.storage);
     }
 
     public static getInstance(): BookmarkCaptureService {
@@ -79,20 +83,61 @@ export class BookmarkCaptureService {
             createParams.description = articleBody || createParams.description;
         }
 
-        // 3. Create the object
-        console.log('[BookmarkCaptureService] Creating object:', createParams);
-        const result = await this.apiClient.createObject(spaceId, createParams);
-        if (!result.id) throw new Error('Failed to create object: No ID returned');
+        try {
+            // 3. Create the object
+            console.log('[BookmarkCaptureService] Creating object:', createParams);
+            const result = await this.apiClient.createObject(spaceId, createParams);
+            if (!result.id) throw new Error('Failed to create object: No ID returned');
 
-        // 4. Resolve and update advanced properties (metadata + tags)
-        const updateProperties = await this.prepareProperties(spaceId, typeKey, metadata, tags);
+            // 4. Resolve and update advanced properties (metadata + tags)
+            const updateProperties = await this.prepareProperties(spaceId, typeKey, metadata, tags);
 
-        if (updateProperties.length > 0) {
-            console.log('[BookmarkCaptureService] Updating properties:', updateProperties);
-            await this.apiClient.updateObject(spaceId, result.id, updateProperties);
+            if (updateProperties.length > 0) {
+                console.log('[BookmarkCaptureService] Updating properties:', updateProperties);
+                await this.apiClient.updateObject(spaceId, result.id, updateProperties);
+            }
+
+            return result;
+        } catch (error) {
+            if (QueueManager.shouldQueue(error)) {
+                console.info('[BookmarkCaptureService] API unavailable, adding to offline queue.', error);
+
+                // Construct Queue Item
+                const queueItem: import('../../types/queue').QueueItem = {
+                    id: crypto.randomUUID(),
+                    type: typeKey as any,
+                    payload: {
+                        spaceId,
+                        url: metadata.canonicalUrl || '',
+                        title: metadata.title || '',
+                        metadata,
+                        notes: userNote,
+                        tags,
+                        // Content for article/note
+                        content: (typeKey === 'article' || typeKey === 'note') ? (createParams.description || '') : '',
+                        // Additional fields for highlight if we want to support them in payload
+                        quote: quote || '',
+                        pageTitle: metadata.title || '',
+                    } as any,
+                    status: QueueStatus.Queued,
+                    timestamps: {
+                        created: Date.now()
+                    },
+                    retryCount: 0
+                };
+
+                await this.queueManager.add(queueItem);
+
+                return {
+                    queued: true,
+                    itemId: queueItem.id,
+                    type: typeKey
+                };
+            }
+
+            // Re-throw if not queueable
+            throw error;
         }
-
-        return result;
     }
 
     /**
