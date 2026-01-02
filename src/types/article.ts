@@ -1,4 +1,4 @@
-import { ParseResult } from '@mozilla/readability';
+import { Readability } from '@mozilla/readability';
 
 /**
  * Result of an article extraction attempt
@@ -11,17 +11,38 @@ export interface ArticleExtractionResult {
     quality: ExtractionQuality;
 
     /** The extracted article content, or null if failed */
-    article: ReadabilityArticle | null;
+    article: ExtractedArticle | null;
 
     /** Performance and stats metadata */
     metadata: {
         /** Time taken to extract in milliseconds */
         extractionTime: number;
+        /** Time taken to convert to Markdown in milliseconds */
+        conversionTime?: number;
         /** Word count of the extracted text */
         wordCount: number;
     };
 
     /** Error message if extraction failed */
+    error?: string;
+}
+
+/**
+ * Result of HTML to Markdown conversion
+ */
+export interface MarkdownConversionResult {
+    /** Whether the conversion was successful */
+    success: boolean;
+    /** The converted Markdown content, or null if failed */
+    markdown: string | null;
+    /** Performance and stats metadata */
+    metadata: {
+        /** Time taken to convert in milliseconds */
+        conversionTime: number;
+        /** Character count of the Markdown text */
+        characterCount: number;
+    };
+    /** Error message if conversion failed */
     error?: string;
 }
 
@@ -38,6 +59,14 @@ export enum ExtractionQuality {
 }
 
 /**
- * Extended article type based on Readability's output
+ * Base Readability article type derived from the library's return type
  */
-export type ReadabilityArticle = ParseResult;
+export type ReadabilityArticle = NonNullable<ReturnType<InstanceType<typeof Readability>['parse']>>;
+
+/**
+ * Extended article type with Clipper specific fields
+ */
+export interface ExtractedArticle extends ReadabilityArticle {
+    /** Converted Markdown content */
+    markdown: string;
+}

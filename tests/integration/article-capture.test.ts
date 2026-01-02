@@ -1,25 +1,12 @@
 import 'expect-puppeteer';
+import { convertToMarkdown } from '../../src/lib/converters/markdown-converter';
 
 describe('Article Capture Integration', () => {
     beforeAll(async () => {
-        // In a real extension test we would load the extension
-        // But jest-puppeteer usually just launches a browser.
-        // Loading extension requires args to puppeteer launch.
-        // jest-puppeteer.config.js handles launch args.
-        // For now, we will just test that we can load a page and maybe run the extraction script manually if we can inject it.
-        // testing full extension end-to-end requires complex setup (loading extension path).
-
-        // However, T8 goal is "Integrate with Content Script".
-        // We can test article-extractor logic in a real browser environment via Puppeteer page.evaluate()
-        // without loading the full extension background worker, to verify the DOM logic works on real sites.
+        // Setup
     });
 
-    test('should extract article from a sample page', async () => {
-        // Navigate to a text-heavy page
-        // We'll use a local mock or a stable public URL if allowed.
-        // Let's use a simple data URI or local server if possible.
-        // Using data URI for stability.
-
+    test('should render page and convert content to Markdown', async () => {
         const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -27,35 +14,47 @@ describe('Article Capture Integration', () => {
         <body>
             <article>
                 <h1>Integration Test Article</h1>
-                <p>This is the first paragraph of the test article. It has enough words to be detected.</p>
-                <p>This is the second paragraph. It adds more content to ensure Readability picks it up.</p>
-                <p>We are testing if Puppeteer can run the extraction logic in the browser context.</p>
+                <p>This is test content.</p>
+                <ul>
+                    <li>Item 1</li>
+                    <li>Item 2</li>
+                </ul>
             </article>
-            <nav>Menu 1 | Menu 2</nav>
         </body>
         </html>
         `;
 
         await page.setContent(htmlContent);
 
-        // We need to inject the extraction code. 
-        // Since we can't easily import the typescript module in the browser without bundling,
-        // we might have to rely on the "build" output if we wanted to test the bundle.
-        // Or we can just verify that the PAGE renders correctly.
+        // Get content from browser (this tests how browser serializes DOM)
+        // We target the article specifically to simulate extractor finding it
+        const articleHtml = await page.$eval('article', el => el.innerHTML);
 
-        // Wait, checking the plan: "Test 2: Extract article from real news page".
-        // This implies network access.
+        const result = await convertToMarkdown(articleHtml);
 
-        // If I can't inject the code easily, I'll limit this test to verification of the environment
-        // and acknowledge manual testing is key. 
+        expect(result.success).toBe(true);
+        expect(result.markdown).toContain('# Integration Test Article');
+        expect(result.markdown).toContain('This is test content.');
+        expect(result.markdown).toMatch(/-\s+Item 1/);
+    });
 
-        // BUT, I can try to simply use Readability library if I can inject it.
-        // Since I can't easily inject the bundled extension in this setup without more config,
-        // I will write a placeholder test that verifies Puppeteer works, and mark T8 as "Partial/Manual Verify needed".
+    test('should preserve code block language from browser DOM', async () => {
+        const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <body>
+            <pre><code class="language-python">def hello():\n    print("world")</code></pre>
+        </body>
+        </html>
+        `;
 
-        const title = await page.title();
-        expect(title).toBe('Test Article');
+        await page.setContent(htmlContent);
+        const bodyHtml = await page.$eval('body', el => el.innerHTML);
 
-        // Ideally we would trigger the content script here.
+        const result = await convertToMarkdown(bodyHtml);
+
+        expect(result.success).toBe(true);
+        expect(result.markdown).toContain('```python');
+        expect(result.markdown).toContain('def hello():');
     });
 });

@@ -1,5 +1,6 @@
 import { Readability } from '@mozilla/readability';
 import { ArticleExtractionResult, ExtractionQuality } from '../../types/article';
+import { convertToMarkdown } from '../converters/markdown-converter';
 
 /**
  * Extract article content from the current document using Mozilla Readability
@@ -47,24 +48,51 @@ export async function extractArticle(
                     return;
                 }
 
-                // Determine quality (simplified logic for now)
                 const textContent = article.textContent || '';
-                const quality = textContent.length > 200
-                    ? ExtractionQuality.SUCCESS
-                    : ExtractionQuality.PARTIAL;
+                const articleContent = article.content || '';
 
-                // Estimate word count from plain text
-                const wordCount = textContent.split(/\s+/).filter((w: string) => w.length > 0).length;
+                // Convert to Markdown
+                convertToMarkdown(articleContent, 2000).then(conversionResult => {
+                    // Determine quality
+                    const quality = textContent.length > 200
+                        ? ExtractionQuality.SUCCESS
+                        : ExtractionQuality.PARTIAL;
 
-                resolve({
-                    success: true,
-                    quality,
-                    article,
-                    metadata: {
-                        extractionTime,
-                        wordCount
-                    }
+                    // Estimate word count
+                    const wordCount = textContent.split(/\s+/).filter((w: string) => w.length > 0).length;
+
+                    // Use Markdown if successful, otherwise fallback to text
+                    const markdown = conversionResult.success && conversionResult.markdown
+                        ? conversionResult.markdown
+                        : textContent;
+
+                    resolve({
+                        success: true,
+                        quality,
+                        article: {
+                            ...article,
+                            markdown
+                        },
+                        metadata: {
+                            extractionTime,
+                            conversionTime: conversionResult.metadata.conversionTime,
+                            wordCount
+                        }
+                    });
+                }).catch(err => {
+                    // Fallback if something goes wrong in the promise chain
+                    resolve({
+                        success: false,
+                        quality: ExtractionQuality.FAILURE,
+                        article: null,
+                        metadata: {
+                            extractionTime: 0,
+                            wordCount: 0
+                        },
+                        error: 'Markdown conversion error: ' + String(err)
+                    });
                 });
+
             } catch (error) {
                 const endTime = performance.now();
                 resolve({

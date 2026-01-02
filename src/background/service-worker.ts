@@ -186,7 +186,7 @@ const handleExtractArticle = async () => {
       type: 'basic',
       iconUrl: 'icons/icon48.png',
       title: 'Article Extracted',
-      message: `Successfully captured article (${wordCount} words). Quality: ${quality}`
+      message: `Successfully captured article with Markdown formatting (${wordCount} words). Quality: ${quality}`
     });
 
     return response.data || response; // Return full response or data depending on structure

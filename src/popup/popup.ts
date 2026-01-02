@@ -191,9 +191,7 @@ async function loadCurrentTab() {
           currentMetadata = {
             title: result.article.title,
             description: result.article.excerpt, // Use excerpt for description
-            // Use textContent for now as Anytype API doesn't support raw HTML body
-            // Markdown conversion will be implemented in Epic 4.1
-            content: result.article.textContent,
+            content: result.article.markdown || result.article.textContent,
             textContent: result.article.textContent,
             author: result.article.byline,
             siteName: result.article.siteName,

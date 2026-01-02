@@ -12,7 +12,7 @@ It points to the spec folder for the current work and links to the product docs.
 ## Current Focus
 **Current Focus:** [Markdown Conversion](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md) (Epic 4.1)
 
-**Status:** Not Started
+**Status:** Done
 
 **Quick Links:**
 - [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md)

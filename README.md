@@ -13,7 +13,7 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 - **Context Menu Integration**: Right-click any selection and "Send selection to Anytype".
 - **Space Selection**: Choose which Anytype Space to save content into.
 - **Offline Support**: Queue captures when Anytype is offline (retry logic).
-les with Markdown formatting
+- **Markdown Support**: Articles are automatically converted to clean Markdown, preserving headings, lists, and code blocks.
 - **Offline Queue**: Captures work even when Anytype is offline
 - **Tag Management**: Integrated autocomplete and selection of existing Anytype tags.
 - **Inline Tag Creation**: Create new tags directly within the popup UI.
@@ -110,6 +110,6 @@ ISC
 
 ## Status
 
-🚧 **In Development** - Epic 3.5: Tag Management Integration (Complete)
+🚧 **In Development** - Epic 4.1: Markdown Conversion (Complete)
 
 See [SPECS.md](SPECS.md) for current progress.

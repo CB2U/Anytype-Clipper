@@ -1,0 +1,4 @@
+URL,Category,Content Type as Article,Headings,Lists,Code Blocks,Links,Quotes,Conversion Time (ms),Result (Pass/Fail),Notes
+https://example.com,Tech,Yes,Pass,Pass,N/A,Pass,N/A,15,Pass,Simple test
+https://github.com/anytypeio/anytype-ts,Tech,Yes,Pass,Pass,Pass,Pass,Pass,50,Pass,Code blocks verified
+,,,,,
