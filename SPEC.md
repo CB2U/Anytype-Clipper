@@ -10,14 +10,14 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-- **Active Spec:** [Tag Management Integration](specs/035-tag-management/spec.md)
+- **Active Spec:** [Metadata Extraction](specs/032-metadata-extraction/spec.md)
 - **Status:** Done
-- **Action:** Complete
+- **Action:** Point focus to next epic (4.0/4.1)
 
 ## Links
-- spec.md: [specs/035-tag-management/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/035-tag-management/spec.md)
-- plan.md: [specs/035-tag-management/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/035-tag-management/plan.md)
-- tasks.md: [specs/035-tag-management/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/035-tag-management/tasks.md)
+- spec.md: [specs/032-metadata-extraction/spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/032-metadata-extraction/spec.md)
+- plan.md: [specs/032-metadata-extraction/plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/032-metadata-extraction/plan.md)
+- tasks.md: [specs/032-metadata-extraction/tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/032-metadata-extraction/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.

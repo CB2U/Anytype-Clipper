@@ -1,0 +1,77 @@
+import { BookmarkCaptureService } from '../../src/lib/capture/bookmark-capture-service';
+import { StorageManager } from '../../src/lib/storage/storage-manager';
+import { PageMetadata } from '../../src/types/metadata';
+
+// Mock API Client
+jest.mock('../../src/lib/api/client', () => {
+    return {
+        AnytypeApiClient: jest.fn().mockImplementation(() => ({
+            setApiKey: jest.fn(),
+            createObject: jest.fn().mockResolvedValue({ id: 'new-bookmark-id' }),
+            updateObject: jest.fn().mockResolvedValue({ objectId: 'new-bookmark-id' }),
+            listProperties: jest.fn().mockResolvedValue({ data: [] })
+        }))
+    };
+});
+
+describe('Bookmark Metadata Integration', () => {
+    let bookmarkService: BookmarkCaptureService;
+    let storage: StorageManager;
+
+    beforeEach(async () => {
+        // Mock chrome extension storage
+        const mockStorage: Record<string, any> = {};
+        (global as any).chrome = {
+            storage: {
+                local: {
+                    get: jest.fn((keys) => {
+                        const res: any = {};
+                        if (typeof keys === 'string') {
+                            res[keys] = mockStorage[keys];
+                        } else if (Array.isArray(keys)) {
+                            keys.forEach(k => res[k] = mockStorage[k]);
+                        }
+                        return Promise.resolve(res);
+                    }),
+                    set: jest.fn((data) => {
+                        Object.assign(mockStorage, data);
+                        return Promise.resolve();
+                    })
+                }
+            }
+        };
+
+        storage = StorageManager.getInstance();
+        await storage.set('auth', { apiKey: 'test-key', isAuthenticated: true });
+
+        bookmarkService = BookmarkCaptureService.getInstance();
+    });
+
+    it('should capture bookmark with extracted metadata', async () => {
+        const spaceId = 'space-1';
+        const metadata: PageMetadata = {
+            title: 'Test Title',
+            description: 'Test Description',
+            url: 'https://example.com',
+            canonicalUrl: 'https://example.com/canonical',
+            author: 'John Doe',
+            siteName: 'Example Site',
+            language: 'en',
+            extractedAt: new Date().toISOString(),
+            source: 'opengraph',
+            keywords: []
+        };
+
+        const result = await bookmarkService.captureBookmark(spaceId, metadata, 'User Note', ['test-tag']);
+
+        expect(result.id).toBe('new-bookmark-id');
+
+        // Check if API client was called correctly
+        const apiClient = (bookmarkService as any).apiClient;
+        expect(apiClient.createObject).toHaveBeenCalledWith(spaceId, expect.objectContaining({
+            title: 'Test Title',
+            type_key: 'bookmark',
+            source_url: 'https://example.com/canonical'
+        }));
+    });
+});

@@ -50,6 +50,12 @@ describe('Tag Management Integration (Simulated)', () => {
         await storage.clear();
         await storage.set('auth', { apiKey: 'test-key', isAuthenticated: true });
 
+        // Pre-seed property mappings to avoid dynamic discovery API calls in integration tests
+        await storage.set('tagPropertyMappings', {
+            'space-1': { 'Bookmark': 'tag' },
+            'space-2': { 'Bookmark': 'tag' }
+        });
+
         tagService = TagService.getInstance();
     });
 

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="invalid-lang-code">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Malformed Metadata &amp; Entities</title>
+    <!-- Invalid Date -->
+    <meta property="article:published_time" content="not-a-date">
+    <!-- Broken JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Broken JSON",
+      "author": "Missing quote mark
+    }
+    </script>
+    <!-- Relative image URL -->
+    <meta property="og:image" content="relative/path/to/img.jpg">
+    <!-- Entities in title -->
+    <meta property="og:title" content="Metadata &amp; PKM: A Love Story &copy; 2026">
+</head>
+
+<body>
+    <h1>Malformed Metadata &amp; Entities</h1>
+    <p>Testing resilience against bad data.</p>
+</body>
+
+</html>

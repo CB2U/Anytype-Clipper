@@ -3,7 +3,7 @@
 **Project:** Anytype Clipper Extension 
 **Version:** 1.0 
 **Status:** Active 
-**Last Updated:** 2026-01-01 
+**Last Updated:** 2026-01-02 
 **PRD Reference:** PRD.md v2.0 
 **Constitution Reference:** constitution.md v1.0 
 **Roadmap Reference:** roadmap.md v1.0
@@ -32,27 +32,27 @@ This document serves as the **central index** for all specifications in the Anyt
 
 ### BP0: Foundation (Weeks 1-2)
 
-| Roadmap Anchor | Epic Name                    | Spec Folder                  | Breakpoint | Status | Next Task | Evidence | Target ACs                                   |
-| -------------- | ---------------------------- | ---------------------------- | ---------- | ------ | --------- | -------- | -------------------------------------------- |
-| 1.0            | Project Setup & Architecture | `specs/010-project-setup/`   | BP0        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/010-project-setup/spec.md#evidence) | NFR6.1, NFR6.2, NFR6.7, NFR6.8               |
-| 1.1            | API Client Foundation        | `specs/011-api-client/`      | BP0        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/011-api-client/spec.md#evidence) | FR1.2, FR1.3, NFR2.4, NFR5.6, CODE-1, CODE-4 |
-| 1.2            | Storage Manager              | `specs/013-storage-manager/` | BP0        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/013-storage-manager/spec.md#evidence) | NFR3.1, STORE-1, STORE-4, DATA-3, PRIV-4     |
+| Roadmap Anchor | Epic Name                    | Spec Folder                  | Breakpoint | Status | Next Task | Evidence                                                                                                      | Target ACs                                   |
+| -------------- | ---------------------------- | ---------------------------- | ---------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| 1.0            | Project Setup & Architecture | `specs/010-project-setup/`   | BP0        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/010-project-setup/spec.md#evidence)   | NFR6.1, NFR6.2, NFR6.7, NFR6.8               |
+| 1.1            | API Client Foundation        | `specs/011-api-client/`      | BP0        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/011-api-client/spec.md#evidence)      | FR1.2, FR1.3, NFR2.4, NFR5.6, CODE-1, CODE-4 |
+| 1.2            | Storage Manager              | `specs/013-storage-manager/` | BP0        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/013-storage-manager/spec.md#evidence) | NFR3.1, STORE-1, STORE-4, DATA-3, PRIV-4     |
 
 ### BP1: Authentication (Weeks 3-4)
 
-| Roadmap Anchor | Epic Name                     | Spec Folder                 | Breakpoint | Status      | Target ACs                                                |
-| -------------- | ----------------------------- | --------------------------- | ---------- | ----------- | --------------------------------------------------------- |
-| 2.0            | Challenge Code Authentication | `specs/020-challenge-auth/` | BP1        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/020-challenge-auth/spec.md#evidence) | FR1.1, FR1.2, FR1.3, FR1.4, AC1, AUTH-1, AUTH-2           |
-| 2.1            | API Key Management            | `specs/021-api-key-management/` | BP1        | Done     | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/021-api-key-management/spec.md#evidence) | FR1.4, FR1.5, FR1.8, AUTH-2, AUTH-5, AUTH-6, SEC-1, SEC-3 |
-| 2.2            | Re-authentication Flow        | `specs/022-reauth-flow/`    | BP1        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/022-reauth-flow/spec.md#evidence) | FR1.6, FR1.7, AUTH-3, AUTH-4, REL-1                       |
+| Roadmap Anchor | Epic Name                     | Spec Folder                     | Breakpoint | Status | Target ACs |
+| -------------- | ----------------------------- | ------------------------------- | ---------- | ------ | ---------- |
+| 2.0            | Challenge Code Authentication | `specs/020-challenge-auth/`     | BP1        | Done   | N/A        |
+| 2.1            | API Key Management            | `specs/021-api-key-management/` | BP1        | Done   | N/A        |
+| 2.2            | Re-authentication Flow        | `specs/022-reauth-flow/`        | BP1        | Done   | N/A        |
 
 ### BP2: Basic Capture (Weeks 5-6)
 
-| Roadmap Anchor | Epic Name           | Spec Folder                      | Breakpoint | Status | Next Task | Evidence | Target ACs                                          |
-| -------------- | ------------------- | -------------------------------- | ---------- | ------ | --------- | -------- | --------------------------------------------------- |
-| 3.0            | Bookmark Capture    | `specs/030-bookmark-capture/`    | BP2        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/030-bookmark-capture/spec.md#evidence) | FR3.1, FR3.2, FR3.3, FR3.4, AC2, US1                |
-| 3.1            | Highlight Capture   | `specs/031-highlight-capture/`   | BP2        | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/031-highlight-capture/spec.md#evidence) | FR4.1, FR4.2, FR4.3, FR4.4, FR4.5, AC3, US2, PERF-5 |
-| 3.2            | Metadata Extraction | `specs/033-metadata-extraction/` | BP2        | Not Started | | | FR3.3, FR10.1, FR10.2, FR10.3, FR10.4, FR10.5, AC10 |
+| Roadmap Anchor | Epic Name           | Spec Folder                      | Breakpoint | Status | Next Task | Evidence                                                                                                          | Target ACs                                          |
+| -------------- | ------------------- | -------------------------------- | ---------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 3.0            | Bookmark Capture    | `specs/030-bookmark-capture/`    | BP2        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/030-bookmark-capture/spec.md#evidence)    | FR3.1, FR3.2, FR3.3, FR3.4, AC2, US1                |
+| 3.1            | Highlight Capture   | `specs/031-highlight-capture/`   | BP2        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/031-highlight-capture/spec.md#evidence)   | FR4.1, FR4.2, FR4.3, FR4.4, FR4.5, AC3, US2, PERF-5 |
+| 3.2            | Metadata Extraction | `specs/032-metadata-extraction/` | BP2        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/032-metadata-extraction/spec.md#evidence) | FR3.3, FR10.1, FR10.2, FR10.3, FR10.4, FR10.5, AC10 |
 
 ### BP3: Article Extraction (Weeks 7-8)
 
@@ -85,7 +85,7 @@ This document serves as the **central index** for all specifications in the Anyt
 
 | Roadmap Anchor | Epic Name                | Spec Folder                | Breakpoint | Status      | Target ACs                                                                    |
 | -------------- | ------------------------ | -------------------------- | ---------- | ----------- | ----------------------------------------------------------------------------- |
-| 7.0            | Popup UI                 | `specs/022-popup-ui/`      | BP6        | Done        | T1 | [Evidence](specs/022-popup-ui/spec.md#evidence) | FR2.1, FR2.2, FR2.3, FR2.5, FR2.6, NFR1.1, NFR4.6, PERF-1                     |
+| 7.0            | Popup UI                 | `specs/022-popup-ui/`      | BP6        | Done        | T1                                                                            |
 | 7.1            | Context Menu Integration | `specs/023-context-menu/`  | BP6        | Not Started | FR4.5, FR5.9, FR14.1, AC3                                                     |
 | 7.2            | Options Page             | `specs/024-options-page/`  | BP6        | Not Started | FR13.1, FR13.2, FR13.3, FR13.4, FR13.6, FR13.7, FR13.12, FR13.13, AC7, PRIV-4 |
 | 7.3            | Notifications System     | `specs/025-notifications/` | BP6        | Not Started | FR3.4, FR5.10, FR6.2, NFR4.3, NFR4.5, ERR-2, ERR-4                            |
@@ -175,15 +175,21 @@ specs/NNN-slug/
 ### Gate Progression
 
 1. **Gate 1 (Specify):** Write SPEC.md with detailed requirements, acceptance criteria, edge cases
+
 2. **Gate 2 (Plan):** Write PLAN.md with implementation approach, task breakdown, risks
+
 3. **Gate 3 (Tasks):** Write TASKS.md with granular tasks, DoD per task, dependencies
+
 4. **Gate 4 (Implement):** Write code, tests, documentation per constitution DoD
    
    ### Updating This Index
    
    When a specification changes status:
+
 5. Update the **Status** column in the appropriate table
+
 6. Update the **Last Updated** timestamp at the top
+
 7. Commit with message: `docs: update SPECS.md - [Epic Name] status to [New Status]`
 
 ---
@@ -193,25 +199,42 @@ specs/NNN-slug/
 ### MVP Progress (v1.0)
 
 - **Total Epics:** 32
+
 - **Not Started:** 24
+
 - **In Progress:** 0
+
 - **Approved:** 0
+
 - **Planning:** 0
+
 - **Tasks Defined:** 0
+
 - **Implementing:** 0
+
 - **Testing:** 0
-- **Done:** 8
-  **Completion:** 25% (8/32 complete)
+
+- **Done:** 10
+  **Completion:** 31% (10/32 complete)
   
   ### Breakpoint Progress
+
 - **BP0 (Foundation):** 3/3 complete
+
 - **BP1 (Authentication):** 3/3 complete
-- **BP2 (Basic Capture):** 1/3 complete
+
+- **BP2 (Basic Capture):** 2/3 complete
+
 - **BP3 (Article Extraction):** 0/5 complete
+
 - **BP4 (Queue & Reliability):** 0/4 complete
+
 - **BP5 (Deduplication & Tagging):** 0/3 complete
+
 - **BP6 (UI & Integration):** 1/4 complete
+
 - **BP7 (Testing & Polish):** 0/5 complete
+
 - **BP8 (MVP Release):** 0/2 complete
 
 ---
@@ -283,6 +306,15 @@ The following items require clarification before implementation (from constituti
 - Changes to approved specifications require re-approval and impact assessment
 - This index is the single source of truth for specification status
 
+---
+
+## API Reference
+
+For API-related questions, the Coding Agent should refer to the Anytype API OpenAPI specification:
+
+- **File:** `/docs/reference/openapi-2025-11-08.yaml`
+- **Purpose:** API Reference for coding
+- **Usage Notes:** Refer only for API-related tasks
 
 ---
 
@@ -290,18 +322,17 @@ The following items require clarification before implementation (from constituti
 
 This section tracks bug fixes, chores, and unplanned changes that are not part of the main roadmap.
 
-| Roadmap Anchor | Title | Spec Folder | Type | Priority | Status | Next Task | Evidence | Target ACs |
-| -------------- | ----- | ----------- | ---- | -------- | ------ | --------- | -------- | ---------- |
-| N/A | Disable CI Workflow | `specs/012-disable-ci/` | Bug | P2 | Done | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/012-disable-ci/spec.md#evidence) | AC-U1, AC-U2 |
-| N/A | Input Code Auth (Unplanned) | `specs/031-input-code-auth/` | Feature | P0 | Done | N/A | [Evidence](specs/031-input-code-auth/spec.md#evidence) | AC-U1, AC-U2, AC-U3, AC-U4 |
-| N/A | Fix Spaces Loading Error | `specs/033-fix-spaces-error/` | Bug | P0 | Done | N/A | [Evidence](specs/033-fix-spaces-error/spec.md#evidence) | FR1, FR2, FR3 |
-| N/A | Fix Bookmark Creation 404 | `specs/034-fix-bookmark-404/` | Bug | P0 | Done | None | [Evidence](specs/034-fix-bookmark-404/spec.md#evidence) | FR1, FR2 |
-| N/A | Tag Management Integration | `specs/035-tag-management/` | Feature | P1 | Done | None | [Evidence](specs/035-tag-management/spec.md#evidence) | AC-U1, AC-U2, AC-U3, AC-U4, AC-U5 |
+| Roadmap Anchor | Title                       | Spec Folder                   | Type    | Priority | Status | Next Task | Evidence                                                                                                 | Target ACs                        |
+| -------------- | --------------------------- | ----------------------------- | ------- | -------- | ------ | --------- | -------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| N/A            | Disable CI Workflow         | `specs/012-disable-ci/`       | Bug     | P2       | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/012-disable-ci/spec.md#evidence) | AC-U1, AC-U2                      |
+| N/A            | Input Code Auth (Unplanned) | `specs/031-input-code-auth/`  | Feature | P0       | Done   | N/A       | [Evidence](specs/031-input-code-auth/spec.md#evidence)                                                   | AC-U1, AC-U2, AC-U3, AC-U4        |
+| N/A            | Fix Spaces Loading Error    | `specs/033-fix-spaces-error/` | Bug     | P0       | Done   | N/A       | [Evidence](specs/033-fix-spaces-error/spec.md#evidence)                                                  | FR1, FR2, FR3                     |
+| N/A            | Fix Bookmark Creation 404   | `specs/034-fix-bookmark-404/` | Bug     | P0       | Done   | None      | [Evidence](specs/034-fix-bookmark-404/spec.md#evidence)                                                  | FR1, FR2                          |
+| N/A            | Tag Management Integration  | `specs/035-tag-management/`   | Feature | P1       | Done   | None      | [Evidence](specs/035-tag-management/spec.md#evidence)                                                    | AC-U1, AC-U2, AC-U3, AC-U4, AC-U5 |
 
 ---
 
 ## Maintenance
-
 
 This document is maintained by the project team and updated as specifications progress through gates. All updates must be committed with descriptive messages referencing the affected epic(s).
 **Last Reviewed:** 2026-01-01 

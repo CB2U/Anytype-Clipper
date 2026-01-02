@@ -30,6 +30,7 @@ const mainElements = {
   inputNote: document.getElementById('input-note') as HTMLTextAreaElement,
   inputTags: document.getElementById('input-tags') as HTMLInputElement,
   btnSave: document.getElementById('btn-save') as HTMLButtonElement,
+  btnSaveArticle: document.getElementById('btn-save-article') as HTMLButtonElement,
   statusMsg: document.getElementById('save-status'),
 
   // Highlight Specific
@@ -39,6 +40,11 @@ const mainElements = {
   displayContext: document.getElementById('display-context'),
   tagContainer: document.getElementById('tag-autocomplete-container') as HTMLDivElement,
   tagChips: document.getElementById('tag-chips') as HTMLDivElement,
+
+  // Metadata Preview
+  metadataPreview: document.getElementById('metadata-preview'),
+  metaAuthor: document.getElementById('meta-author'),
+  metaSite: document.getElementById('meta-site'),
 };
 
 const authManager = AuthManager.getInstance();
@@ -46,6 +52,7 @@ const authManager = AuthManager.getInstance();
 // State
 let currentTab: chrome.tabs.Tab | null = null;
 let currentHighlight: any = null;
+let currentMetadata: any = null;
 let tagAutocomplete: TagAutocomplete | null = null;
 
 // --- Space Management ---
@@ -141,7 +148,36 @@ async function loadCurrentTab() {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tabs.length > 0) {
       currentTab = tabs[0];
-      if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
+
+      // Trigger metadata and article extraction
+      if (currentTab.id) {
+        try {
+          // 1. Try Extract Article first
+          const articleResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_ARTICLE' });
+          if (articleResponse && articleResponse.success) {
+            currentMetadata = articleResponse.data;
+            updateMetadataUI();
+
+            // Show Save as Article button
+            if (mainElements.btnSaveArticle) {
+              mainElements.btnSaveArticle.classList.remove('hidden');
+            }
+          } else {
+            // 2. Fallback to basic metadata
+            const metaResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_METADATA' });
+            if (metaResponse && metaResponse.success) {
+              currentMetadata = metaResponse.data;
+              updateMetadataUI();
+            }
+          }
+        } catch (e) {
+          console.warn('Extraction failed:', e);
+          // Fallback to basic tab info
+          if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
+        }
+      } else {
+        if (mainElements.inputTitle) mainElements.inputTitle.value = currentTab.title || '';
+      }
     }
 
     // Check for highlight capture
@@ -175,7 +211,47 @@ async function loadCurrentTab() {
   }
 }
 
-async function handleSave() {
+function updateMetadataUI() {
+  if (!currentMetadata) return;
+
+  if (mainElements.inputTitle) mainElements.inputTitle.value = currentMetadata.title || '';
+  if (mainElements.inputNote && currentMetadata.description) {
+    mainElements.inputNote.value = currentMetadata.description;
+  }
+
+  // Preview fields
+  if (mainElements.metadataPreview) {
+    let hasPreview = false;
+
+    if (currentMetadata.author && mainElements.metaAuthor) {
+      mainElements.metaAuthor.textContent = `👤 ${currentMetadata.author}`;
+      mainElements.metaAuthor.classList.remove('hidden');
+      hasPreview = true;
+    } else if (mainElements.metaAuthor) {
+      mainElements.metaAuthor.classList.add('hidden');
+    }
+
+    if (currentMetadata.siteName && mainElements.metaSite) {
+      mainElements.metaSite.textContent = `🌐 ${currentMetadata.siteName}`;
+      mainElements.metaSite.classList.remove('hidden');
+      hasPreview = true;
+    } else if (mainElements.metaSite) {
+      mainElements.metaSite.classList.add('hidden');
+    }
+
+    if (hasPreview) {
+      mainElements.metadataPreview.classList.remove('hidden');
+    } else {
+      mainElements.metadataPreview.classList.add('hidden');
+    }
+  }
+}
+
+async function handleSaveArticle() {
+  await handleSave(true);
+}
+
+async function handleSave(isArticle: boolean = false) {
   if (!currentTab || !currentTab.url) {
     showStatus('Error: No active tab found', true);
     return;
@@ -192,51 +268,59 @@ async function handleSave() {
   const tags = tagAutocomplete ? tagAutocomplete.getSelectedTags() :
     (mainElements.inputTags?.value.split(',').map(t => t.trim()).filter(t => t.length > 0) || []);
 
-  // Disable button
-  if (mainElements.btnSave) {
-    mainElements.btnSave.disabled = true;
-    mainElements.btnSave.textContent = 'Saving...';
+  // Disable buttons
+  const activeBtn = isArticle ? mainElements.btnSaveArticle : mainElements.btnSave;
+  if (mainElements.btnSave) mainElements.btnSave.disabled = true;
+  if (mainElements.btnSaveArticle) mainElements.btnSaveArticle.disabled = true;
+
+  if (activeBtn) {
+    activeBtn.textContent = 'Saving...';
   }
 
+  const isHighlight = !!currentHighlight;
   try {
-    const isHighlight = !!currentHighlight;
-    const params: any = {
-      title,
-      description: note,
-      tags,
+    // If we don't have metadata yet (failed or still loading), create a minimal one
+    if (!currentMetadata) {
+      currentMetadata = {
+        title: title,
+        canonicalUrl: currentTab.url,
+        source: 'fallback'
+      };
+    } else {
+      // Update with user-edited title
+      currentMetadata.title = title;
+    }
+
+    const payload: any = {
+      spaceId,
+      metadata: currentMetadata,
+      userNote: note,
+      tags: tags
     };
 
+    if (isArticle) {
+      payload.type_key = 'note';
+    }
+
     if (isHighlight) {
-      params.type_key = 'note'; // Use 'note' type for highlights
-      params.quote = currentHighlight.quote;
-      params.contextBefore = currentHighlight.contextBefore;
-      params.contextAfter = currentHighlight.contextAfter;
-      params.url = currentHighlight.url;
-      params.source_url = currentHighlight.url;
-      params.pageTitle = currentHighlight.pageTitle;
-    } else {
-      params.type_key = 'bookmark';
-      params.source_url = currentTab.url;
-      // Helper to extract domain for bookmarks
-      let domain = '';
-      try {
-        domain = new URL(currentTab.url!).hostname;
-      } catch (e) { /* ignore */ }
-      params.domain = domain;
+      payload.type_key = 'note';
+      payload.quote = currentHighlight.quote;
+      payload.contextBefore = currentHighlight.contextBefore;
+      payload.contextAfter = currentHighlight.contextAfter;
+      payload.url = currentHighlight.url;
     }
 
     const response = await chrome.runtime.sendMessage({
-      type: 'CMD_CAPTURE_BOOKMARK', // We can rename this later if needed, but background handles it
-      payload: {
-        spaceId,
-        params
-      }
+      type: 'CMD_CAPTURE_BOOKMARK',
+      payload
     });
 
     if (response && response.success) {
-      showStatus('Bookmark Saved! 🎉', false);
-      // Optional: Close popup after delay? 
-      // setTimeout(() => window.close(), 1500); 
+      showStatus(
+        isHighlight ? 'Highlight Saved! 🎉' :
+          (isArticle ? 'Article Saved! 🎉' : 'Bookmark Saved! 🎉'),
+        false
+      );
     } else {
       throw new Error(response?.error || 'Unknown error');
     }
@@ -247,7 +331,11 @@ async function handleSave() {
   } finally {
     if (mainElements.btnSave) {
       mainElements.btnSave.disabled = false;
-      mainElements.btnSave.textContent = 'Save Bookmark';
+      mainElements.btnSave.textContent = isHighlight ? 'Save Highlight' : 'Save Bookmark';
+    }
+    if (mainElements.btnSaveArticle) {
+      mainElements.btnSaveArticle.disabled = false;
+      mainElements.btnSaveArticle.textContent = 'Save as Article';
     }
   }
 }
@@ -422,7 +510,8 @@ document.addEventListener('DOMContentLoaded', () => {
   authElements.btnConnect?.addEventListener('click', handleConnect);
   authElements.btnVerify?.addEventListener('click', handleVerify);
   mainElements.btnDisconnect?.addEventListener('click', handleDisconnect);
-  mainElements.btnSave?.addEventListener('click', handleSave);
+  mainElements.btnSave?.addEventListener('click', () => handleSave(false));
+  mainElements.btnSaveArticle?.addEventListener('click', handleSaveArticle);
 
   // Initialize tag autocomplete
   if (mainElements.inputTags && mainElements.tagContainer && mainElements.tagChips) {

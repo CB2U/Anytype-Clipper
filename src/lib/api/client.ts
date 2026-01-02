@@ -140,7 +140,7 @@ export class AnytypeApiClient {
      */
     async createObject(spaceId: string, params: CreateObjectParams): Promise<AnytypeObject> {
         // Map params to top-level fields and properties
-        const { title, description, tags, type_key = 'bookmark', ...otherParams } = params;
+        const { title, description, type_key = 'bookmark' } = params;
 
         // Build body content (excluding tags - they'll be handled as a proper relation)
         let bodyContent = '';
@@ -159,24 +159,12 @@ export class AnytypeApiClient {
         // NOTE: Tags are NOT added to body. They should be handled by the caller
         // using TagService to get tag IDs and then updating the object with the tag relation.
 
-        // Map internal keys to Anytype relation keys
-        const propertyMapping: Record<string, string> = {
-            'source_url': 'source'
-        };
 
-        const propertiesArray = Object.entries(otherParams)
-            .filter(([key]) => key in propertyMapping)
-            .map(([key, value]) => ({
-                key: propertyMapping[key],
-                text: String(value ?? '')
-            }));
-
+        const typeKeyStr = String(type_key || 'bookmark');
         const requestBody: CreateObjectRequest = {
-            spaceId,
-            name: String(title || (type_key === 'bookmark' ? 'Untitled Bookmark' : 'Untitled Highlight')),
+            name: String(title || `Untitled ${typeKeyStr.charAt(0).toUpperCase() + typeKeyStr.slice(1)}`),
             body: bodyContent.trim(),
-            type_key: type_key as string,
-            properties: propertiesArray
+            type_key: typeKeyStr
         };
 
         const response = await this.post<CreateObjectResponse>(`/v1/spaces/${spaceId}/objects`, requestBody);

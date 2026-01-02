@@ -30,6 +30,7 @@ export const StorageSchemaValidator = z.object({
     auth: AuthDataSchema,
     tagCache: z.record(z.string(), TagCacheEntrySchema).optional(),
     tagPropertyMappings: z.record(z.string(), z.record(z.string(), z.string())).optional(),
+    metadataPropertyMappings: z.record(z.string(), z.record(z.string(), z.string())).optional(),
 });
 
 // Infer TypeScript types from Zod schemas

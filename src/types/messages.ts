@@ -2,13 +2,15 @@
  * Message types for communication between Popup and Background script
  */
 
-import { CreateObjectParams } from '../lib/api/types';
+import { PageMetadata } from './metadata';
 
 export type MessageType =
     | 'CMD_GET_SPACES'
     | 'CMD_CAPTURE_BOOKMARK'
     | 'CMD_CHECK_AUTH'
-    | 'CMD_HIGHLIGHT_CAPTURED';
+    | 'CMD_HIGHLIGHT_CAPTURED'
+    | 'CMD_EXTRACT_METADATA'
+    | 'CMD_EXTRACT_ARTICLE';
 
 export interface BaseMessage {
     type: MessageType;
@@ -23,8 +25,19 @@ export interface CaptureBookmarkMessage extends BaseMessage {
     type: 'CMD_CAPTURE_BOOKMARK';
     payload: {
         spaceId: string;
-        params: CreateObjectParams;
+        metadata: PageMetadata;
+        userNote?: string;
+        tags?: string[];
+        type_key?: string;
     };
+}
+
+export interface ExtractMetadataMessage extends BaseMessage {
+    type: 'CMD_EXTRACT_METADATA';
+}
+
+export interface ExtractArticleMessage extends BaseMessage {
+    type: 'CMD_EXTRACT_ARTICLE';
 }
 
 export interface CheckAuthMessage extends BaseMessage {
@@ -47,7 +60,9 @@ export type ExtensionMessage =
     | GetSpacesMessage
     | CaptureBookmarkMessage
     | CheckAuthMessage
-    | HighlightCapturedMessage;
+    | HighlightCapturedMessage
+    | ExtractMetadataMessage
+    | ExtractArticleMessage;
 
 export interface MessageResponse<T = unknown> {
     success: boolean;

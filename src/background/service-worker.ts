@@ -24,12 +24,12 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 import { AnytypeApiClient } from '../lib/api/client';
-import { TagService } from '../lib/tags/tag-service';
+import { BookmarkCaptureService } from '../lib/capture/bookmark-capture-service';
 import { ExtensionMessage, MessageResponse, HighlightCapturedMessage } from '../types/messages';
 
-// Initialize API Client and Tag Service
+// Initialize API Client and Services
 const apiClient = new AnytypeApiClient();
-const tagService = TagService.getInstance();
+const bookmarkCaptureService = BookmarkCaptureService.getInstance();
 
 // Function to sync auth state from storage
 async function syncAuthState() {
@@ -121,6 +121,40 @@ const handleHighlightCaptured = async (payload: HighlightCapturedMessage['payloa
   }
 };
 
+const handleExtractMetadata = async () => {
+  // 1. Get current active tab
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const activeTab = tabs[0];
+  if (!activeTab?.id) throw new Error('No active tab found');
+
+  // 2. Send message to content script
+  console.log('[Service Worker] Requesting metadata from content script in tab', activeTab.id);
+  const response = await chrome.tabs.sendMessage(activeTab.id, { type: 'CMD_EXTRACT_METADATA' });
+
+  if (!response || !response.success) {
+    throw new Error(response?.error || 'Failed to extract metadata from page');
+  }
+
+  return response.data;
+};
+
+const handleExtractArticle = async () => {
+  // 1. Get current active tab
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const activeTab = tabs[0];
+  if (!activeTab?.id) throw new Error('No active tab found');
+
+  // 2. Send message to content script
+  console.log('[Service Worker] Requesting article from content script in tab', activeTab.id);
+  const response = await chrome.tabs.sendMessage(activeTab.id, { type: 'CMD_EXTRACT_ARTICLE' });
+
+  if (!response || !response.success) {
+    throw new Error(response?.error || 'Failed to extract article from page');
+  }
+
+  return response.data;
+};
+
 // Message handling
 chrome.runtime.onMessage.addListener((
   message: ExtensionMessage,
@@ -146,62 +180,30 @@ chrome.runtime.onMessage.addListener((
         }
 
         case 'CMD_CAPTURE_BOOKMARK': {
-          const { spaceId, params } = message.payload;
+          const { spaceId, metadata, userNote, tags, type_key } = message.payload;
+          console.log('[Service Worker] Capturing object with metadata...');
 
-          // 1. Create the object first (without tags)
-          // We remove tags from create params to keep it clean, though client ignores them anyway
-          const createParams = { ...params };
-          delete createParams.tags;
-
-          const result = await apiClient.createObject(spaceId, createParams);
-
-          // 2. Resolve and assign tags if present
-          const tagNames = (params.tags || []) as string[];
-          const objectType = (params.type_key || 'bookmark') as string;
-
-          if (Array.isArray(tagNames) && tagNames.length > 0 && result.id) {
-            try {
-              // Discover the tag property ID for this space
-              const tagPropertyId = await (tagService as any)['resolvePropertyId'](spaceId, objectType);
-
-              // Get all existing tags for this space
-              const existingTags = await tagService.getTags(spaceId, objectType);
-
-              const tagIds: string[] = [];
-              for (const tagName of tagNames) {
-                if (typeof tagName !== 'string') continue;
-
-                const existingTag = existingTags.find(t => t.name.toLowerCase() === tagName.toLowerCase());
-                if (existingTag) {
-                  tagIds.push(existingTag.id);
-                } else {
-                  // Create new tag
-                  const newTag = await tagService.createTag(spaceId, objectType, tagName);
-                  tagIds.push(newTag.id);
-                }
-              }
-
-              if (tagPropertyId && tagIds.length > 0) {
-                const properties = [
-                  {
-                    key: tagPropertyId,
-                    objects: tagIds
-                  }
-                ];
-
-                console.log(`[CMD_CAPTURE_BOOKMARK] Updating object ${result.id} with properties:`, properties);
-
-                await apiClient.updateObject(spaceId, result.id, properties);
-
-                console.log(`[CMD_CAPTURE_BOOKMARK] Tags assigned successfully`);
-              }
-
-            } catch (tagError) {
-              console.error('[CMD_CAPTURE_BOOKMARK] Tag assignment failed:', tagError);
-            }
-          }
+          const result = await bookmarkCaptureService.captureBookmark(
+            spaceId,
+            metadata,
+            userNote,
+            tags,
+            type_key
+          );
 
           sendResponse({ success: true, data: result });
+          break;
+        }
+
+        case 'CMD_EXTRACT_METADATA': {
+          const metadata = await handleExtractMetadata();
+          sendResponse({ success: true, data: metadata });
+          break;
+        }
+
+        case 'CMD_EXTRACT_ARTICLE': {
+          const articleData = await handleExtractArticle();
+          sendResponse({ success: true, data: articleData });
           break;
         }
 

@@ -1,0 +1,206 @@
+
+> anytype-clipper@0.1.0 test
+> jest
+
+FAIL tests/integration/api-client-highlight.test.ts
+  ● AnytypeApiClient Integration › createObject handles highlight type correctly
+
+    expect(received).toContain(expected) // indexOf
+
+    Expected substring: "Tags: test"
+    Received string:    "> This is a quote·
+    *Context: ...Before **This is a quote** After...*"
+
+      44 |         expect(callBody.body).toContain('> This is a quote');
+      45 |         expect(callBody.body).toContain('*Context: ...Before **This is a quote** After...*');
+    > 46 |         expect(callBody.body).toContain('Tags: test');
+         |                               ^
+      47 |         expect(callBody.name).toBe('Test Highlight');
+      48 |     });
+      49 |
+
+      at Object.<anonymous> (tests/integration/api-client-highlight.test.ts:46:31)
+
+FAIL tests/integration/tag-management.test.ts
+  ● Console
+
+    console.error
+      Error fetching tags for property "tag": NetworkError: Network error: Cannot read properties of undefined (reading 'ok')
+          at AnytypeApiClient.request (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/api/client.ts:441:23) {
+        status: undefined,
+        originalError: TypeError: Cannot read properties of undefined (reading 'ok')
+            at AnytypeApiClient.request (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/api/client.ts:412:31)
+      }
+
+      116 |
+      117 |             // Log full error for diagnostic purposes
+    > 118 |             console.error(`Error fetching tags for property "${propertyId}":`, error);
+          |                     ^
+      119 |
+      120 |             if (isNotFoundError) {
+      121 |                 const fallbackPropertyId = propertyId === 'tag' ? 'tags' : 'tag';
+
+      at TagService.fetchTagsWithFallback (src/lib/tags/tag-service.ts:118:21)
+      at TagService.getTags (src/lib/tags/tag-service.ts:69:20)
+      at Object.<anonymous> (tests/integration/tag-management.test.ts:128:23)
+
+    console.error
+      Failed to fetch tags: NetworkError: Network error: Cannot read properties of undefined (reading 'ok')
+          at AnytypeApiClient.request (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/api/client.ts:441:23) {
+        status: undefined,
+        originalError: TypeError: Cannot read properties of undefined (reading 'ok')
+            at AnytypeApiClient.request (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/api/client.ts:412:31)
+      }
+
+      69 |             return await this.fetchTagsWithFallback(spaceId, propertyId, tagCache, objectTypeId);
+      70 |         } catch (error) {
+    > 71 |             console.error('Failed to fetch tags:', error);
+         |                     ^
+      72 |             // Rethrow to let UI handle it
+      73 |             throw error;
+      74 |         }
+
+      at TagService.getTags (src/lib/tags/tag-service.ts:71:21)
+      at Object.<anonymous> (tests/integration/tag-management.test.ts:128:23)
+
+  ● Tag Management Integration (Simulated) › should complete a full tag selection and creation flow with caching
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 2
+
+      76 |         const tags = await tagService.getTags('space-1', 'Bookmark');
+      77 |         expect(tags).toHaveLength(2);
+    > 78 |         expect(global.fetch).toHaveBeenCalledTimes(1);
+         |                              ^
+      79 |         expect(global.fetch).toHaveBeenCalledWith(
+      80 |             expect.stringContaining('/v1/spaces/space-1/properties/tag/tags'),
+      81 |             expect.anything()
+
+      at Object.<anonymous> (tests/integration/tag-management.test.ts:78:30)
+
+  ● Tag Management Integration (Simulated) › should handle space switches by maintaining separate caches
+
+    NetworkError: Network error: Cannot read properties of undefined (reading 'ok')
+
+      439 |
+      440 |                 // Handle network errors
+    > 441 |                 throw new NetworkError(
+          |                       ^
+      442 |                     `Network error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      443 |                     error instanceof Error ? error : undefined
+      444 |                 );
+
+      at AnytypeApiClient.request (src/lib/api/client.ts:441:23)
+
+PASS src/lib/tags/tag-service.test.ts
+  ● Console
+
+    console.warn
+      Dynamic property discovery failed, falling back to guesses: TypeError: Cannot read properties of undefined (reading 'data')
+          at TagService.resolvePropertyId (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:234:36)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:48:28)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.test.ts:56:26)
+
+      253 |             }
+      254 |         } catch (error) {
+    > 255 |             console.warn('Dynamic property discovery failed, falling back to guesses:', error);
+          |                     ^
+      256 |         }
+      257 |
+      258 |         // 3. Fallback: Check hardcoded constants (default guesses)
+
+      at TagService.resolvePropertyId (src/lib/tags/tag-service.ts:255:21)
+      at TagService.getTags (src/lib/tags/tag-service.ts:48:28)
+      at Object.<anonymous> (src/lib/tags/tag-service.test.ts:56:26)
+
+    console.warn
+      Dynamic property discovery failed, falling back to guesses: TypeError: Cannot read properties of undefined (reading 'data')
+          at TagService.resolvePropertyId (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:234:36)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:48:28)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.test.ts:78:26)
+
+      253 |             }
+      254 |         } catch (error) {
+    > 255 |             console.warn('Dynamic property discovery failed, falling back to guesses:', error);
+          |                     ^
+      256 |         }
+      257 |
+      258 |         // 3. Fallback: Check hardcoded constants (default guesses)
+
+      at TagService.resolvePropertyId (src/lib/tags/tag-service.ts:255:21)
+      at TagService.getTags (src/lib/tags/tag-service.ts:48:28)
+      at Object.<anonymous> (src/lib/tags/tag-service.test.ts:78:26)
+
+    console.log
+      Dynamic discovery: Found likely tag property "My Tags" with ID "custom-tag-id"
+
+      at TagService.resolvePropertyId (src/lib/tags/tag-service.ts:250:25)
+
+    console.warn
+      Dynamic property discovery failed, falling back to guesses: TypeError: Cannot read properties of undefined (reading 'data')
+          at TagService.resolvePropertyId (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:234:36)
+          at TagService.createTag (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:162:28)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.test.ts:134:28)
+
+      253 |             }
+      254 |         } catch (error) {
+    > 255 |             console.warn('Dynamic property discovery failed, falling back to guesses:', error);
+          |                     ^
+      256 |         }
+      257 |
+      258 |         // 3. Fallback: Check hardcoded constants (default guesses)
+
+      at TagService.resolvePropertyId (src/lib/tags/tag-service.ts:255:21)
+      at TagService.createTag (src/lib/tags/tag-service.ts:162:28)
+      at Object.<anonymous> (src/lib/tags/tag-service.test.ts:134:28)
+
+    console.error
+      Error fetching tags for property "tag": { status: 404 }
+
+      116 |
+      117 |             // Log full error for diagnostic purposes
+    > 118 |             console.error(`Error fetching tags for property "${propertyId}":`, error);
+          |                     ^
+      119 |
+      120 |             if (isNotFoundError) {
+      121 |                 const fallbackPropertyId = propertyId === 'tag' ? 'tags' : 'tag';
+
+      at TagService.fetchTagsWithFallback (src/lib/tags/tag-service.ts:118:21)
+      at TagService.getTags (src/lib/tags/tag-service.ts:69:20)
+      at Object.<anonymous> (src/lib/tags/tag-service.test.ts:167:26)
+
+    console.warn
+      Property ID "tag" failed, trying "tags" fallback...
+
+      120 |             if (isNotFoundError) {
+      121 |                 const fallbackPropertyId = propertyId === 'tag' ? 'tags' : 'tag';
+    > 122 |                 console.warn(`Property ID "${propertyId}" failed, trying "${fallbackPropertyId}" fallback...`);
+          |                         ^
+      123 |                 try {
+      124 |                     const response = await this.apiClient.listTags(spaceId, fallbackPropertyId);
+      125 |                     const tags = this.extractTags(response);
+
+      at TagService.fetchTagsWithFallback (src/lib/tags/tag-service.ts:122:25)
+      at TagService.getTags (src/lib/tags/tag-service.ts:69:20)
+      at Object.<anonymous> (src/lib/tags/tag-service.test.ts:167:26)
+
+PASS tests/unit/metadata-extractor.test.ts
+PASS tests/unit/opengraph-extractor.test.ts
+PASS tests/unit/url-normalizer.test.ts
+PASS tests/unit/favicon-extractor.test.ts
+PASS tests/unit/schema-org-extractor.test.ts
+PASS tests/unit/language-detector.test.ts
+PASS tests/unit/html-decoder.test.ts
+PASS tests/unit/twitter-card-extractor.test.ts
+PASS tests/unit/reading-time-calculator.test.ts
+PASS tests/unit/date-parser.test.ts
+PASS src/lib/api/client.test.ts
+PASS tests/unit/highlight-capture.test.ts
+
+Test Suites: 2 failed, 13 passed, 15 total
+Tests:       3 failed, 85 passed, 88 total
+Snapshots:   0 total
+Time:        1.121 s
+Ran all test suites.

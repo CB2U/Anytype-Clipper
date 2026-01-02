@@ -80,6 +80,10 @@
             <label for="input-title">Title</label>
             <input type="text" id="input-title" placeholder="Page Title">
           </div>
+          <div id="metadata-preview" class="metadata-preview hidden">
+            <span id="meta-author" class="meta-item"></span>
+            <span id="meta-site" class="meta-item"></span>
+          </div>
         </div>
 
         <div class="form-group">
@@ -95,8 +99,9 @@
           <div id="tag-chips" class="tag-chips-container"></div>
         </div>
 
-        <div class="form-actions" style="margin-top: 8px;">
+        <div class="form-actions" style="margin-top: 8px; display: flex; gap: 8px;">
           <button id="btn-save" class="btn btn-primary">Save Bookmark</button>
+          <button id="btn-save-article" class="btn btn-secondary hidden">Save as Article</button>
         </div>
 
         <p id="save-status" class="status-message hidden"></p>

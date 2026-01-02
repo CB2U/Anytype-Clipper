@@ -16,6 +16,17 @@
         "service_worker": "src/background/service-worker.ts",
         "type": "module"
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "src/content/metadata-script.ts"
+            ],
+            "run_at": "document_end"
+        }
+    ],
     "action": {
         "default_popup": "src/popup/popup.html",
         "default_icon": {

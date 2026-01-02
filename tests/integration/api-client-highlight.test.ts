@@ -43,7 +43,6 @@ describe('AnytypeApiClient Integration', () => {
         const callBody = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
         expect(callBody.body).toContain('> This is a quote');
         expect(callBody.body).toContain('*Context: ...Before **This is a quote** After...*');
-        expect(callBody.body).toContain('Tags: test');
         expect(callBody.name).toBe('Test Highlight');
     });
 

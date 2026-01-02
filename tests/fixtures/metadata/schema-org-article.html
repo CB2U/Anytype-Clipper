@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Schema.org JSON-LD Test</title>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": "Why Structured Data Matters for Local PKM",
+      "image": [
+        "https://example.com/photos/1x1/photo.jpg",
+        "https://example.com/photos/4x3/photo.jpg",
+        "https://example.com/photos/16x9/photo.jpg"
+       ],
+      "datePublished": "2025-12-31T09:00:00+08:00",
+      "dateModified": "2026-01-01T10:00:00+08:00",
+      "author": [{
+          "@type": "Person",
+          "name": "Jane Doe",
+          "url": "https://example.com/profile/jane"
+        }],
+      "publisher": {
+        "@type": "Organization",
+        "name": "PKM Weekly",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://example.com/logo.png"
+        }
+      },
+      "description": "An exploration of how structured data simplifies knowledge management in local-first apps like Anytype."
+    }
+    </script>
+</head>
+
+<body>
+    <h1>Why Structured Data Matters for Local PKM</h1>
+    <article>
+        <p>This page tests the extraction of NewsArticle data from JSON-LD.</p>
+    </article>
+</body>
+
+</html>

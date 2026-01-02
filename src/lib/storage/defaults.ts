@@ -15,4 +15,5 @@ export const DEFAULTS: StorageSchema = {
     auth: DEFAULT_AUTH_DATA,
     tagCache: {},
     tagPropertyMappings: {},
+    metadataPropertyMappings: {},
 };

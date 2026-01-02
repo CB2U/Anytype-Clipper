@@ -107,8 +107,6 @@ export interface CreateObjectParams {
  * Request body for POST /v1/objects/create
  */
 export interface CreateObjectRequest {
-    /** ID of the space to create the object in - extracted from URL by API but included for clarity */
-    spaceId: string;
     /** Object title */
     name: string;
     /** Object content (Markdown) */
