@@ -10,14 +10,19 @@ It points to the spec folder for the current work and links to the product docs.
 - Constitution: constitution.md (or .specify/memory/constitution.md)
 
 ## Current Focus
-**Current Focus:** [Image Handling](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/spec.md) (Epic 4.3)
+**Current Focus:** None (Epic 4.4 Completed)
 
-**Status:** In Progress
+**Status:** Idle
+
+**Recent Fixes:**
+- Completed [Table Preservation](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/spec.md) (Epic 4.4).
+- Fixed "Incorrect Headers" bug for complex tables (Worldometer).
+- Added JSON Data Table export option.
 
 **Quick Links:**
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/tasks.md)
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/015-offline-queue/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/tasks.md)
 
 ## Notes
 - Keep this file short. Do not paste large requirements here.

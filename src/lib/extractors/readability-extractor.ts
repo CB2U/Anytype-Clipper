@@ -2,17 +2,23 @@ import { Readability } from '@mozilla/readability';
 import { ArticleExtractionResult, ExtractionQuality, ExtractionLevel } from '../../types/article';
 import { convertToMarkdown } from '../converters/markdown-converter';
 
+export interface ReadabilityOptions {
+    timeoutMs?: number;
+    includeJSONForDataTables?: boolean;
+}
+
 /**
  * Extract article content from the current document using Mozilla Readability
  * 
  * @param doc - Optional document to extract from (defaults to window.document)
- * @param timeoutMs - Timeout in milliseconds (default: 5000)
+ * @param options - Extraction options
  * @returns Promise resolving to extraction result
  */
 export async function extractReadability(
     doc: Document = document,
-    timeoutMs: number = 5000
+    options: ReadabilityOptions = {}
 ): Promise<ArticleExtractionResult> {
+    const { timeoutMs = 5000, includeJSONForDataTables = false } = options;
     const startTime = performance.now();
 
     try {
@@ -29,6 +35,10 @@ export async function extractReadability(
         // Create extraction promise
         const extractionPromise = new Promise<ArticleExtractionResult>((resolve) => {
             try {
+                // Epic 4.4 Fix: Pre-process table headers to prevent Readability from stripping custom elements
+                // like <button> inside <th> which are common in sortable tables (e.g. Worldometer).
+                flattenTableHeaders(clone);
+
                 const reader = new Readability(clone);
                 const article = reader.parse();
                 const endTime = performance.now();
@@ -54,7 +64,7 @@ export async function extractReadability(
                 const articleContent = article.content || '';
 
                 // Convert to Markdown
-                convertToMarkdown(articleContent, 2000).then(conversionResult => {
+                convertToMarkdown(articleContent, { timeoutMs: 2000, includeJSONForDataTables }).then(conversionResult => {
                     // Determine quality
                     const quality = textContent.length > 200
                         ? ExtractionQuality.SUCCESS
@@ -139,5 +149,27 @@ export async function extractReadability(
             },
             error: error instanceof Error ? error.message : String(error)
         };
+    }
+}
+
+/**
+ * Helper: Flattens complex table headers to simple text.
+ * Readability often strips <button> and <svg> elements, which can cause 
+ * headers wrapped in sortable buttons to disappear.
+ */
+function flattenTableHeaders(doc: Document) {
+    try {
+        const headers = doc.querySelectorAll('th');
+        headers.forEach(th => {
+            // Only flatten if it contains potential 'strip-able' elements
+            if (th.querySelector('button, svg, input, select')) {
+                const text = th.textContent || '';
+                if (text.trim().length > 0) {
+                    th.textContent = text.trim();
+                }
+            }
+        });
+    } catch (e) {
+        console.warn('Error flattening table headers:', e);
     }
 }

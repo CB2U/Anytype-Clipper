@@ -3,6 +3,11 @@ import { MetadataExtractor } from './metadata-extractor';
 import { extractReadability } from './readability-extractor';
 import { convertToMarkdown } from '../converters/markdown-converter';
 
+
+export interface FallbackOptions {
+    includeJSONForDataTables?: boolean;
+}
+
 export interface FallbackExtractionResult {
     success: boolean;
     level: ExtractionLevel;
@@ -25,7 +30,11 @@ export interface FallbackExtractionResult {
  * Tries each level in sequence until one succeeds.
  * Total timeout: 10 seconds (enforced by caller or cumulative internal timeouts)
  */
-export async function extractWithFallback(doc: Document = document): Promise<FallbackExtractionResult> {
+export async function extractWithFallback(
+    doc: Document = document,
+    options: FallbackOptions = {}
+): Promise<FallbackExtractionResult> {
+    const { includeJSONForDataTables = false } = options;
     const startTime = performance.now();
     const levelTimes: Partial<Record<ExtractionLevel, number>> = {};
 
@@ -34,7 +43,7 @@ export async function extractWithFallback(doc: Document = document): Promise<Fal
     try {
         console.debug('Fallback Chain: Starting Level 1 (Readability)...');
         // extractReadability already has internal timeout, but we wrap it for consistent metrics
-        const l1Result = await extractReadability(doc, 5000);
+        const l1Result = await extractReadability(doc, { timeoutMs: 5000, includeJSONForDataTables });
 
         const l1Time = performance.now() - l1Start;
         levelTimes[ExtractionLevel.READABILITY] = l1Time;
@@ -76,7 +85,7 @@ export async function extractWithFallback(doc: Document = document): Promise<Fal
             console.debug(`Fallback Chain: Level 2 Success (${l2Time.toFixed(1)}ms)`);
 
             // Convert to Markdown
-            const mdResult = await convertToMarkdown(l2Html);
+            const mdResult = await convertToMarkdown(l2Html, { includeJSONForDataTables });
 
             return {
                 success: true,
@@ -114,7 +123,7 @@ export async function extractWithFallback(doc: Document = document): Promise<Fal
         if (l3Html) {
             console.debug(`Fallback Chain: Level 3 Success (${l3Time.toFixed(1)}ms)`);
             // Convert to Markdown
-            const mdResult = await convertToMarkdown(l3Html);
+            const mdResult = await convertToMarkdown(l3Html, { includeJSONForDataTables });
 
             return {
                 success: true,

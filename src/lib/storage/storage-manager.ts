@@ -120,4 +120,18 @@ export class StorageManager {
     public async setImageHandlingSettings(settings: import('./schema').ImageHandlingSettings): Promise<void> {
         await this.set('imageHandlingSettings', settings);
     }
+
+    /**
+     * Get extension settings.
+     */
+    public async getExtensionSettings(): Promise<import('./schema').ExtensionSettings> {
+        return (await this.get('extensionSettings')) as import('./schema').ExtensionSettings;
+    }
+
+    /**
+     * Set extension settings.
+     */
+    public async setExtensionSettings(settings: import('./schema').ExtensionSettings): Promise<void> {
+        await this.set('extensionSettings', settings);
+    }
 }

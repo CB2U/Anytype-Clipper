@@ -15,7 +15,13 @@ All notable changes to this project will be documented in this file.
     - `listTags` and `createTag` methods added to `AnytypeApiClient`.
 - **Infrastructure:**
     - Extension storage schema updated to support tag caching and mappings.
+
     - Performance optimizations with a 5-minute tag cache TTL.
+- **Table Preservation:**
+    - Intelligent classification of tables (Simple, Complex, Data).
+    - Conversion of simple tables to clean Markdown.
+    - HTML preservation for complex tables (merged cells, nested).
+    - JSON/CSV extraction for data tables.
 
 ### Fixed
 - **Tag Assignment:** Fixed critical bugs preventing tags from being saved (API payload structure).

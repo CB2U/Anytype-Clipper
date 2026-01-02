@@ -4,19 +4,26 @@ import { StorageManager } from '../storage/storage-manager';
 import { ImageHandler } from './image-handler';
 import { PageMetadata } from '../../types/metadata';
 
+
+
+export interface ExtractionOptions {
+    includeJSONForDataTables?: boolean;
+}
+
 /**
  * Extract article content from the current document using the Fallback Chain (Epic 4.2).
  * 
  * @param doc - Optional document to extract from (defaults to window.document)
- * @param timeoutMs - Timeout in milliseconds (default: 5000)
+ * @param options - Extraction options
  * @returns Promise resolving to extraction result
  */
 export async function extractArticle(
-    doc: Document = document
+    doc: Document = document,
+    options: ExtractionOptions = {}
 ): Promise<ArticleExtractionResult> {
     try {
         // extractWithFallback handles its own timeouts internally for each level
-        const result = await extractWithFallback(doc);
+        const result = await extractWithFallback(doc, options);
 
         let markdown = result.content.markdown || '';
         let html = result.content.html || '';

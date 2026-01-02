@@ -4,13 +4,22 @@ import { ImageHandlingSettings } from '../types/image';
 // Restore options from storage
 async function restoreOptions() {
     try {
-        const settings = await StorageManager.getInstance().getImageHandlingSettings();
+        const storageManager = StorageManager.getInstance();
+        const imageSettings = await storageManager.getImageHandlingSettings();
+        const extensionSettings = await storageManager.getExtensionSettings();
 
         const prefSelect = document.getElementById('imagePreference') as HTMLSelectElement;
         const maxInput = document.getElementById('maxImages') as HTMLInputElement;
 
-        if (prefSelect) prefSelect.value = settings.preference;
-        if (maxInput) maxInput.value = String(settings.maxEmbeddedImages);
+        // Restore Image Settings
+        if (prefSelect) prefSelect.value = imageSettings.preference;
+        if (maxInput) maxInput.value = String(imageSettings.maxEmbeddedImages);
+
+        // Restore Table Settings
+        const includeJSON = extensionSettings.includeJSONForDataTables || false;
+        const checkbox = document.getElementById('includeJSON') as HTMLInputElement;
+        if (checkbox) checkbox.checked = includeJSON;
+
     } catch (error) {
         console.error('Failed to load settings:', error);
     }
@@ -22,17 +31,29 @@ async function saveOptions() {
     const maxInput = document.getElementById('maxImages') as HTMLInputElement;
     const status = document.getElementById('status') as HTMLElement;
 
-    try {
-        // Get current defaults to merge (so we don't lose other props like threshold/quality which lack UI currently)
-        const current = await StorageManager.getInstance().getImageHandlingSettings();
+    // Get including JSON setting
+    const checkbox = document.getElementById('includeJSON') as HTMLInputElement;
+    const includeJSONForDataTables = checkbox?.checked || false;
 
-        const newSettings: ImageHandlingSettings = {
-            ...current,
+    try {
+        const storageManager = StorageManager.getInstance();
+
+        // Save Image Settings
+        const currentImage = await storageManager.getImageHandlingSettings();
+        const newImageSettings: ImageHandlingSettings = {
+            ...currentImage,
             preference: prefSelect.value as any,
             maxEmbeddedImages: parseInt(maxInput.value, 10) || 20,
         };
+        await storageManager.setImageHandlingSettings(newImageSettings);
 
-        await StorageManager.getInstance().setImageHandlingSettings(newSettings);
+        // Save Extension Settings (Table Options)
+        const currentExtension = await storageManager.getExtensionSettings();
+        const newExtensionSettings = {
+            ...currentExtension,
+            includeJSONForDataTables
+        };
+        await storageManager.setExtensionSettings(newExtensionSettings);
 
         // Update status to let user know options were saved.
         status.textContent = 'Options saved.';

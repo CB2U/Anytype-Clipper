@@ -33,7 +33,24 @@
                 <p class="help-text">Maximum number of images to embed per article (Max 100).</p>
             </div>
 
-            <!-- Future settings can go here -->
+            <!-- Table Preservation Options -->
+            <div class="space-y-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+                <h3 class="text-sm font-medium text-zinc-900 dark:text-zinc-100">Table Settings</h3>
+
+                <div class="space-y-3">
+                    <label class="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                        <input type="checkbox" id="includeJSON"
+                            class="text-blue-600 focus:ring-blue-500 bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 rounded">
+                        Include JSON for Data Tables
+                    </label>
+                    <p class="text-xs text-zinc-500 dark:text-zinc-400 ml-6">
+                        Data tables are converted to Markdown by default. Enable this to append a raw JSON
+                        representation.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Advanced Settings -->can go here -->
         </section>
 
         <div class="actions">

@@ -56,14 +56,13 @@ This document serves as the **central index** for all specifications in the Anyt
 
 ### BP3: Article Extraction (Weeks 7-8)
 
-| Roadmap Anchor | Epic Name                 | Spec Folder                      | Breakpoint | Status      | Next Task | Evidence                                                                                                       | Target ACs                               |
-| -------------- | ------------------------- | -------------------------------- | ---------- | ----------- | --------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| 4.0            | Readability Integration   | `specs/040-readability/`         | BP3        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/040-readability/spec.md#evidence)     | FR5.1, FR5.10, NFR1.2, PERF-2, US1       |
-| 4.1            | Markdown Conversion       | `specs/041-markdown-conversion/` | BP3        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md#evidence) | FR5.2, FR5.3, FR5.4, AC4, AC16           |
-| 4.2            | Fallback Extraction Chain | `specs/042-fallback-chain/`      | BP3        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/spec.md#evidence)                                           | FR5.1, FR5.10, FR5.11, AC9, ERR-7, REL-8 |
-| 4.3            | Image Handling            | `specs/043-image-handling/`      | BP3        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/spec.md#evidence) | FR5.6, AC10, PERF-6, NFR1.7, NET-3       |
-| 4.4            | Table Preservation        | `specs/044-table-preservation/`  | BP3        | Not Started | N/A       | N/A                                                                                                            | FR5.5, AC11                              |
-
+| Roadmap Anchor | Epic Name                 | Spec Folder                      | Breakpoint | Status | Next Task | Evidence                                                                                                       | Target ACs                               |
+| -------------- | ------------------------- | -------------------------------- | ---------- | ------ | --------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| 4.0            | Readability Integration   | `specs/040-readability/`         | BP3        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/040-readability/spec.md#evidence)     | FR5.1, FR5.10, NFR1.2, PERF-2, US1       |
+| 4.1            | Markdown Conversion       | `specs/041-markdown-conversion/` | BP3        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/041-markdown-conversion/spec.md#evidence) | FR5.2, FR5.3, FR5.4, AC4, AC16           |
+| 4.2            | Fallback Extraction Chain | `specs/042-fallback-chain/`      | BP3        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/042-fallback-chain/spec.md#evidence) | FR5.1, FR5.10, FR5.11, AC9, ERR-7, REL-8 |
+| 4.3            | Image Handling            | `specs/043-image-handling/`      | BP3        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/043-image-handling/spec.md#evidence) | FR5.6, AC10, PERF-6, NFR1.7, NET-3       |
+| 4.4            | Table Preservation        | `specs/044-table-preservation/`  | BP3        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/044-table-preservation/spec.md#evidence) | FR5.5, AC11                              |
 
 ### BP4: Queue & Reliability (Weeks 9-10)
 
@@ -201,9 +200,11 @@ specs/NNN-slug/
 
 - **Total Epics:** 32
 
-- **Not Started:** 20
+- **Not Started:** 19
 
-- **In Progress:** 1
+- **In Progress:** 0
+
+- **Draft:** 1
 
 - **Approved:** 0
 
@@ -224,9 +225,9 @@ specs/NNN-slug/
 
 - **BP1 (Authentication):** 3/3 complete
 
-- **BP2 (Basic Capture):** 2/3 complete
+- **BP2 (Basic Capture):** 3/3 complete
 
-- **BP3 (Article Extraction):** 1/5 complete
+- **BP3 (Article Extraction):** 4/5 complete (1 in draft)
 
 - **BP4 (Queue & Reliability):** 0/4 complete
 

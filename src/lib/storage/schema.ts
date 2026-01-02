@@ -31,11 +31,18 @@ export const ImageHandlingSettingsSchema = z.object({
     fetchTimeout: z.number().int().positive(),
 });
 
+export const ExtensionSettingsSchema = z.object({
+    debug: z.boolean().optional(),
+    errorReportingEnabled: z.boolean().optional(),
+    includeJSONForDataTables: z.boolean().optional(),
+});
+
 // Root schema including metadata
 export const StorageSchemaValidator = z.object({
     _version: z.number().int(),
     settings: AppSettingsSchema,
     imageHandlingSettings: ImageHandlingSettingsSchema.optional(), // Optional for backward compat / initial load
+    extensionSettings: ExtensionSettingsSchema.optional(),
     auth: AuthDataSchema,
     tagCache: z.record(z.string(), TagCacheEntrySchema).optional(),
     tagPropertyMappings: z.record(z.string(), z.record(z.string(), z.string())).optional(),
@@ -46,6 +53,7 @@ export const StorageSchemaValidator = z.object({
 export type AppSettings = z.infer<typeof AppSettingsSchema>;
 export type AuthData = z.infer<typeof AuthDataSchema>;
 export type ImageHandlingSettings = z.infer<typeof ImageHandlingSettingsSchema>;
+export type ExtensionSettings = z.infer<typeof ExtensionSettingsSchema>;
 export type StorageSchema = z.infer<typeof StorageSchemaValidator>;
 
 // Keys type helper
