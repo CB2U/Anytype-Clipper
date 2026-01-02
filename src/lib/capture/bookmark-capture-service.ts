@@ -1,10 +1,10 @@
-import { AnytypeApiClient } from '../api/client';
+import { AnytypeApiClient, checkHealth } from '../api';
 import { TagService } from '../tags/tag-service';
 import { StorageManager } from '../storage/storage-manager';
 import { PageMetadata } from '../../types/metadata';
 import { METADATA_PROPERTY_LOOKUP } from '../utils/constants';
 import { QueueManager } from '../../background/queue-manager';
-import { QueueStatus } from '../../types/queue';
+import { QueueStatus, QueueItem } from '../../types/queue';
 
 /**
  * Service for orchestrating the capture of bookmarks and articles with metadata.
@@ -47,7 +47,19 @@ export class BookmarkCaptureService {
         if (!auth || !auth.apiKey) throw new Error('Not authenticated');
         this.apiClient.setApiKey(auth.apiKey);
 
-        // 2. Prepare basic creation params
+        // 2. Proactive Health Check (T5, T6)
+        const settings = await this.storage.get('settings');
+        const port = settings?.apiPort || 31009;
+
+        console.debug(`[BookmarkCaptureService] Performing health check on port ${port}...`);
+        const isHealthy = await checkHealth(port, 2000);
+
+        if (!isHealthy) {
+            console.info('[BookmarkCaptureService] Anytype unavailable via health check. Queuing immediately.');
+            return this.queueCapture(spaceId, metadata, userNote, tags, typeKey, quote);
+        }
+
+        // 3. Prepare basic creation params
         const createParams: any = {
             title: metadata.title,
             description: userNote || metadata.description,
@@ -84,12 +96,12 @@ export class BookmarkCaptureService {
         }
 
         try {
-            // 3. Create the object
+            // 4. Create the object
             console.log('[BookmarkCaptureService] Creating object:', createParams);
             const result = await this.apiClient.createObject(spaceId, createParams);
             if (!result.id) throw new Error('Failed to create object: No ID returned');
 
-            // 4. Resolve and update advanced properties (metadata + tags)
+            // 5. Resolve and update advanced properties (metadata + tags)
             const updateProperties = await this.prepareProperties(spaceId, typeKey, metadata, tags);
 
             if (updateProperties.length > 0) {
@@ -101,43 +113,56 @@ export class BookmarkCaptureService {
         } catch (error) {
             if (QueueManager.shouldQueue(error)) {
                 console.info('[BookmarkCaptureService] API unavailable, adding to offline queue.', error);
-
-                // Construct Queue Item
-                const queueItem: import('../../types/queue').QueueItem = {
-                    id: crypto.randomUUID(),
-                    type: typeKey as any,
-                    payload: {
-                        spaceId,
-                        url: metadata.canonicalUrl || '',
-                        title: metadata.title || '',
-                        metadata,
-                        notes: userNote,
-                        tags,
-                        // Content for article/note
-                        content: (typeKey === 'article' || typeKey === 'note') ? (createParams.description || '') : '',
-                        // Additional fields for highlight if we want to support them in payload
-                        quote: quote || '',
-                        pageTitle: metadata.title || '',
-                    } as any,
-                    status: QueueStatus.Queued,
-                    timestamps: {
-                        created: Date.now()
-                    },
-                    retryCount: 0
-                };
-
-                await this.queueManager.add(queueItem);
-
-                return {
-                    queued: true,
-                    itemId: queueItem.id,
-                    type: typeKey
-                };
+                return this.queueCapture(spaceId, metadata, userNote, tags, typeKey, quote);
             }
 
             // Re-throw if not queueable
             throw error;
         }
+    }
+
+    /**
+     * Refactored queueing logic to avoid duplication between proactive health check and catch block.
+     */
+    private async queueCapture(
+        spaceId: string,
+        metadata: PageMetadata,
+        userNote?: string,
+        tags: string[] = [],
+        typeKey: string = 'bookmark',
+        quote?: string
+    ): Promise<any> {
+        // Construct Queue Item
+        const queueItem: QueueItem = {
+            id: crypto.randomUUID(),
+            type: typeKey as any,
+            payload: {
+                spaceId,
+                url: metadata.canonicalUrl || '',
+                title: metadata.title || '',
+                metadata,
+                notes: userNote,
+                tags,
+                // Content for article/note
+                content: (typeKey === 'article' || typeKey === 'note') ? (metadata.content || quote || '') : '',
+                // Additional fields for highlight if we want to support them in payload
+                quote: quote || '',
+                pageTitle: metadata.title || '',
+            } as any,
+            status: QueueStatus.Queued,
+            timestamps: {
+                created: Date.now()
+            },
+            retryCount: 0
+        };
+
+        await this.queueManager.add(queueItem);
+
+        return {
+            queued: true,
+            itemId: queueItem.id,
+            type: typeKey
+        };
     }
 
     /**

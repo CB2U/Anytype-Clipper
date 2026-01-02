@@ -167,7 +167,6 @@ describe('QueueManager - Basic Operations', () => {
                 })
             ]);
         });
-
         it('should mark as failed and store error message', async () => {
             const now = Date.now();
             jest.spyOn(Date, 'now').mockReturnValue(now);
@@ -184,6 +183,41 @@ describe('QueueManager - Basic Operations', () => {
                     })
                 })
             ]);
+        });
+    });
+
+    describe('resetSendingToQueued()', () => {
+        it('should reset all sending items to queued', async () => {
+            const items: QueueItem[] = [
+                { id: '1', status: QueueStatus.Sending, timestamps: { created: 1 } } as any,
+                { id: '2', status: QueueStatus.Queued, timestamps: { created: 2 } } as any,
+                { id: '3', status: QueueStatus.Sending, timestamps: { created: 3 } } as any,
+            ];
+            mockStorage.getQueue.mockResolvedValue(items);
+
+            const count = await queueManager.resetSendingToQueued();
+
+            expect(count).toBe(2);
+            expect(mockStorage.setQueue).toHaveBeenCalledWith(
+                expect.arrayContaining([
+                    expect.objectContaining({ id: '1', status: QueueStatus.Queued }),
+                    expect.objectContaining({ id: '3', status: QueueStatus.Queued }),
+                    expect.objectContaining({ id: '2', status: QueueStatus.Queued }),
+                ])
+            );
+        });
+
+        it('should return 0 if no sending items', async () => {
+            const items: QueueItem[] = [
+                { id: '1', status: QueueStatus.Queued } as any,
+                { id: '2', status: QueueStatus.Sent } as any,
+            ];
+            mockStorage.getQueue.mockResolvedValue(items);
+
+            const count = await queueManager.resetSendingToQueued();
+
+            expect(count).toBe(0);
+            expect(mockStorage.setQueue).not.toHaveBeenCalled();
         });
     });
 });

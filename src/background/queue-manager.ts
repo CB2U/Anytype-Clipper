@@ -186,6 +186,26 @@ export class QueueManager {
     }
 
     /**
+     * Resets all items with "sending" status back to "queued".
+     * Used for recovery on service worker startup.
+     */
+    public async resetSendingToQueued(): Promise<number> {
+        const queue = await this.storage.getQueue();
+        const sendingItems = queue.filter(item => item.status === QueueStatus.Sending);
+
+        if (sendingItems.length > 0) {
+            for (const item of sendingItems) {
+                item.status = QueueStatus.Queued;
+                item.timestamps.lastAttempt = Date.now();
+            }
+            await this.storage.setQueue(queue);
+            console.info(`[QueueManager] Reset ${sendingItems.length} items from 'sending' to 'queued'.`);
+        }
+
+        return sendingItems.length;
+    }
+
+    /**
      * Clear the entire queue.
      */
     public async clear(): Promise<void> {

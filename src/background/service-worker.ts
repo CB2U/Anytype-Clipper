@@ -60,7 +60,20 @@ async function syncAuthState() {
 
 // Initial sync and resume retries
 async function initialize() {
+  console.info('[Service Worker] Initializing...');
   await syncAuthState();
+
+  // Recover items stuck in 'sending' state before resuming retries
+  try {
+    console.info('[Service Worker] Checking for stuck items...');
+    const recoveredCount = await queueManager.resetSendingToQueued();
+    if (recoveredCount > 0) {
+      console.info(`[Service Worker] Recovered ${recoveredCount} stuck items.`);
+    }
+  } catch (error) {
+    console.error('[Service Worker] Recovery failed:', error);
+  }
+
   await retryScheduler.resumeRetries();
 }
 
