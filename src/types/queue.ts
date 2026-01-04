@@ -63,7 +63,7 @@ export interface QueueItem {
     /** Unique identifier (UUID) */
     id: string;
     /** Type of capture */
-    type: 'bookmark' | 'highlight' | 'article';
+    type: 'bookmark' | 'highlight' | 'article' | 'note';
     /** The capture data */
     payload: CapturePayload;
     /** Current status */
@@ -81,4 +81,6 @@ export interface QueueItem {
     retryCount: number;
     /** Error message from the last attempt */
     error?: string;
+    /** Keys for large data stored in separate vault entries */
+    vaultKeys?: string[];
 }

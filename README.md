@@ -13,6 +13,9 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 - **Context Menu Integration**: Right-click any selection and "Send selection to Anytype".
 - **Space Selection**: Choose which Anytype Space to save content into.
 - **Offline Support**: Queue captures when Anytype is offline (retry logic).
+- **Queue Status UI**: Real-time visibility of pending, sending, and failed captures in the popup.
+- **Badge Counter**: Extension icon badge showing the number of pending items at a glance.
+- **Manual Control**: Retry or delete failed/stalled captures from the queue UI.
 - **Markdown Support**: Articles are automatically converted to clean Markdown, preserving headings, lists, and code blocks.
 - **Offline Queue**: Persistent capture queue when Anytype is unavailable, surviving restarts.
 - **Table Preservation**: Intelligent handling of tables - Simple tables as Markdown, Complex as HTML, Data as JSON/CSV.
@@ -111,6 +114,6 @@ ISC
 
 ## Status
 
-🚧 **In Development** - Epic 5.1: Retry Logic (Planning)
+🚧 **In Development** - Epic 6.0: URL Deduplication (Not Started)
 
 See [SPECS.md](SPECS.md) for current progress.

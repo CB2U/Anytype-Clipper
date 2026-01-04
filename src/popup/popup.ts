@@ -1,5 +1,6 @@
 import { AuthManager, AuthStatus } from '../lib/auth/auth-manager';
 import { TagAutocomplete } from './components/tag-autocomplete';
+import { QueueStatusSection } from './components/QueueStatusSection';
 
 
 // DOM Elements
@@ -25,6 +26,7 @@ const mainElements = {
   btnDisconnect: document.getElementById('btn-disconnect') as HTMLButtonElement,
   spaceSelector: document.getElementById('space-selector') as HTMLSelectElement,
   formContainer: document.getElementById('bookmark-form-placeholder'),
+  queuePlaceholder: document.getElementById('queue-status-placeholder') as HTMLDivElement,
 
   // Form Elements
   inputTitle: document.getElementById('input-title') as HTMLInputElement,
@@ -55,6 +57,8 @@ let currentTab: chrome.tabs.Tab | null = null;
 let currentHighlight: any = null;
 let currentMetadata: any = null;
 let tagAutocomplete: TagAutocomplete | null = null;
+let queueSection: QueueStatusSection | null = null;
+let queueUpdateTimer: any = null;
 
 // --- Space Management ---
 
@@ -74,11 +78,17 @@ async function loadSpaces() {
     }
 
     const spaces: Space[] = response.data;
+    const isCached = !!response.cached;
 
     // 2. Clear loading state
     if (mainElements.spaceSelector) {
       mainElements.spaceSelector.innerHTML = '';
       mainElements.spaceSelector.disabled = false;
+
+      if (isCached) {
+        console.info('[Popup] Using cached spaces (offline mode)');
+        // Optional: show a small info indicator
+      }
     }
 
     if (spaces.length === 0) {
@@ -546,9 +556,77 @@ async function init() {
   }
 }
 
+// --- Queue Management ---
+
+async function loadQueue() {
+  if (queueUpdateTimer) {
+    clearTimeout(queueUpdateTimer);
+  }
+
+  queueUpdateTimer = setTimeout(async () => {
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'CMD_GET_QUEUE' });
+      if (response && response.success && queueSection) {
+        queueSection.updateProps({
+          items: response.data,
+          onRetry: handleRetryQueueItem,
+          onDelete: handleDeleteQueueItem
+        });
+      }
+    } catch (error) {
+      console.warn('Failed to load queue:', error);
+    } finally {
+      queueUpdateTimer = null;
+    }
+  }, 100);
+}
+
+async function handleRetryQueueItem(id: string) {
+  try {
+    await chrome.runtime.sendMessage({
+      type: 'CMD_RETRY_QUEUE_ITEM',
+      payload: { id }
+    });
+    await loadQueue();
+  } catch (error) {
+    console.error('Retry failed:', error);
+  }
+}
+
+async function handleDeleteQueueItem(id: string) {
+  try {
+    await chrome.runtime.sendMessage({
+      type: 'CMD_DELETE_QUEUE_ITEM',
+      payload: { id }
+    });
+    await loadQueue();
+  } catch (error) {
+    console.error('Delete failed:', error);
+  }
+}
+
+function initQueueUI() {
+  if (mainElements.queuePlaceholder) {
+    queueSection = new QueueStatusSection(mainElements.queuePlaceholder, {
+      items: [],
+      onRetry: handleRetryQueueItem,
+      onDelete: handleDeleteQueueItem
+    });
+    loadQueue();
+
+    // Subscribe to storage changes for queue
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes.queue) {
+        loadQueue();
+      }
+    });
+  }
+}
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
   init();
+  initQueueUI();
   authElements.btnConnect?.addEventListener('click', handleConnect);
   authElements.btnVerify?.addEventListener('click', handleVerify);
   mainElements.btnDisconnect?.addEventListener('click', handleDisconnect);

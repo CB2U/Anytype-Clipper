@@ -85,7 +85,10 @@ export class RetryScheduler {
             return;
         }
 
-        if (item.retryCount >= RetryScheduler.MAX_RETRY_ATTEMPTS) {
+        // Hydrate item if it has vaulted data
+        const hydratedItem = await this.queueManager.hydrate(item);
+
+        if (hydratedItem.retryCount >= RetryScheduler.MAX_RETRY_ATTEMPTS) {
             console.error(`[RetryScheduler] Item ${queueItemId} exceeded max retry attempts (${RetryScheduler.MAX_RETRY_ATTEMPTS}). Marking as failed.`);
             await this.queueManager.markFailed(queueItemId, 'Max retry attempts exceeded');
             await chrome.alarms.clear(`retry-${queueItemId}`);
@@ -107,15 +110,15 @@ export class RetryScheduler {
                 title: '',
             };
 
-            if (item.type === 'bookmark') {
-                const payload = item.payload as BookmarkPayload;
+            if (hydratedItem.type === 'bookmark') {
+                const payload = hydratedItem.payload as BookmarkPayload;
                 spaceId = payload.spaceId;
                 params.title = payload.title;
                 params.description = payload.notes || '';
                 params.type_key = 'bookmark';
                 params.source = payload.url;
-            } else if (item.type === 'highlight') {
-                const payload = item.payload as HighlightPayload;
+            } else if (hydratedItem.type === 'highlight') {
+                const payload = hydratedItem.payload as HighlightPayload;
                 spaceId = payload.spaceId;
                 params.title = payload.pageTitle;
                 params.type_key = 'highlight';
@@ -123,15 +126,15 @@ export class RetryScheduler {
                 params.contextBefore = payload.contextBefore;
                 params.contextAfter = payload.contextAfter;
                 params.source = payload.url;
-            } else if (item.type === 'article') {
-                const payload = item.payload as ArticlePayload;
+            } else if (hydratedItem.type === 'article' || hydratedItem.type === 'note') {
+                const payload = hydratedItem.payload as ArticlePayload;
                 spaceId = payload.spaceId;
                 params.title = payload.title;
                 params.description = payload.content;
-                params.type_key = 'article';
+                params.type_key = 'note';
                 params.source = payload.url;
             } else {
-                throw new Error(`Unsupported item type for retry: ${item.type}`);
+                throw new Error(`Unsupported item type for retry: ${hydratedItem.type}`);
             }
 
             // Attempt to send via API client

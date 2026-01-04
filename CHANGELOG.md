@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Queue UI & Status (Epic 5.3):**
+    - New `QueueStatusSection` in the popup for real-time queue visibility.
+    - Extension icon badge counter showing pending capture count.
+    - Support for manual retry and deletion of queue items.
+    - Color-coded status badges (Queued, Sending, Sent, Failed).
+    - Relative timestamp display for queue items.
+    - Multi-component UI architecture for queue management.
 - **Tag Management Integration:**
     - New `TagService` for managing and caching Anytype tags.
     - Custom `TagAutocomplete` UI component with keyboard navigation.

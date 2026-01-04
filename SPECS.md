@@ -72,7 +72,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | 5.0            | Offline Queue System     | `specs/050-offline-queue/` | BP4        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/050-offline-queue/spec.md#evidence) | FR6.1, FR6.2, FR6.4, FR6.6, FR6.9, FR6.10, AC5, AC8, DATA-1, DATA-3, DATA-4, US3 |
 | 5.1            | Retry Logic with Backoff | `specs/051-retry-logic/`   | BP4        | Done   | T17       | [Evidence](specs/051-retry-logic/spec.md#evidence)                                                            | FR6.3, FR6.5, NFR2.3, REL-4, REL-7                                               |
 | 5.2            | Health Check & Recovery  | `specs/052-health-check/`  | BP4        | Testing     | Manual    | [Evidence](specs/052-health-check/spec.md#evidence)                                                      | FR6.7, NFR2.2, NFR2.4, NFR2.5, REL-2, REL-3, REL-5                               |
-| 5.3            | Queue UI & Status        | `specs/018-queue-ui/`      | BP4        | Not Started | -         | -                                                                                                             | FR6.2, FR6.5, AC5, US3                                                           |
+| 5.3            | Queue UI & Status        | `specs/053-queue-ui/`      | BP4        | Done        | N/A       | [Evidence](specs/053-queue-ui/spec.md#evidence)                                                               | FR6.2, FR6.5, AC5, US3                                                           |
 
 ### BP5: Deduplication & Tagging (Weeks 11-12)
 
@@ -203,7 +203,7 @@ specs/NNN-slug/
 
 - **Not Started:** 18
 
-- **In Progress:** 1
+- **In Progress:** 0
 
 - **Draft:** 0
 
@@ -217,8 +217,8 @@ specs/NNN-slug/
 
 - **Testing:** 0
 
-- **Done:** 12
-  **Completion:** 37% (12/32 complete)
+- **Done:** 13
+  **Completion:** 41% (13/32 complete)
   
   ### Breakpoint Progress
 
@@ -230,7 +230,7 @@ specs/NNN-slug/
 
 - **BP3 (Article Extraction):** 4/5 complete (1 in draft)
 
-- **BP4 (Queue & Reliability):** 1/4 complete
+- **BP4 (Queue & Reliability):** 2/4 complete
 
 - **BP5 (Deduplication & Tagging):** 0/3 complete
 

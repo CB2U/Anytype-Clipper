@@ -40,7 +40,7 @@ export const ExtensionSettingsSchema = z.object({
 
 export const QueueItemSchema = z.object({
     id: z.string().uuid().or(z.string()), // Support both UUID and simple IDs for tests
-    type: z.enum(['bookmark', 'highlight', 'article']),
+    type: z.enum(['bookmark', 'highlight', 'article', 'note']),
     payload: z.any(),
     status: z.nativeEnum(QueueStatus),
     timestamps: z.object({
@@ -50,7 +50,8 @@ export const QueueItemSchema = z.object({
     }),
     retryCount: z.number().int().min(0),
     error: z.string().optional(),
-});
+    vaultKeys: z.array(z.string()).optional(),
+}).passthrough();
 
 // Root schema including metadata
 export const StorageSchemaValidator = z.object({

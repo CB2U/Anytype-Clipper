@@ -53,6 +53,7 @@ export class BookmarkCaptureService {
 
         console.debug(`[BookmarkCaptureService] Performing health check on port ${port}...`);
         const isHealthy = await checkHealth(port, 2000);
+        console.log(`[BookmarkCaptureService] Health check result: ${isHealthy ? 'ONLINE' : 'OFFLINE'}`);
 
         if (!isHealthy) {
             console.info('[BookmarkCaptureService] Anytype unavailable via health check. Queuing immediately.');
@@ -132,15 +133,27 @@ export class BookmarkCaptureService {
         typeKey: string = 'bookmark',
         quote?: string
     ): Promise<any> {
+        const queueId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : `q-${Date.now()}-${Math.random().toString(36).substring(2, 11)}-${Math.random().toString(36).substring(2, 11)}`;
+
+        // De-duplicate: metadata often contains content which is already in payload.content
+        const cleanMetadata = { ...metadata };
+        if (cleanMetadata.content) {
+            // Keep a small snippet or just remove it to save space in the main queue key
+            delete cleanMetadata.content;
+            if (cleanMetadata.textContent) delete cleanMetadata.textContent;
+        }
+
         // Construct Queue Item
         const queueItem: QueueItem = {
-            id: crypto.randomUUID(),
+            id: queueId,
             type: typeKey as any,
             payload: {
                 spaceId,
                 url: metadata.canonicalUrl || '',
                 title: metadata.title || '',
-                metadata,
+                metadata: cleanMetadata,
                 notes: userNote,
                 tags,
                 // Content for article/note
@@ -156,13 +169,16 @@ export class BookmarkCaptureService {
             retryCount: 0
         };
 
+        console.log(`[BookmarkCaptureService] Queuing item ${queueItem.id} (type: ${typeKey})`);
         await this.queueManager.add(queueItem);
 
-        return {
+        const result = {
             queued: true,
             itemId: queueItem.id,
             type: typeKey
         };
+        console.log(`[BookmarkCaptureService] Item ${queueItem.id} queued successfully. Returning result to popup.`);
+        return result;
     }
 
     /**

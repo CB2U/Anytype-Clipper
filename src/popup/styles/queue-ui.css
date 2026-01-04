@@ -1,0 +1,218 @@
+/* Queue UI styling */
+
+.queue-status-section {
+    border-top: 1px solid var(--border-color);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+}
+
+.queue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: var(--spacing-xs) 0;
+    user-select: none;
+}
+
+.queue-header:hover h2 {
+    color: var(--text-primary);
+}
+
+.queue-header h2 {
+    font-size: 13px;
+    margin: 0;
+    transition: color 0.15s;
+}
+
+.pending-count {
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: var(--spacing-sm);
+}
+
+.chevron {
+    transition: transform 0.2s;
+    color: var(--text-tertiary);
+}
+
+.chevron.expanded {
+    transform: rotate(180deg);
+}
+
+.queue-content {
+    margin-top: var(--spacing-sm);
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-hover) transparent;
+}
+
+.queue-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.queue-content::-webkit-scrollbar-thumb {
+    background-color: var(--border-hover);
+    border-radius: 4px;
+}
+
+.empty-state {
+    padding: var(--spacing-md);
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Queue Item Styling */
+.queue-item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-sm);
+    transition: border-color 0.15s;
+}
+
+.queue-item:hover {
+    border-color: var(--border-hover);
+}
+
+.item-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+}
+
+.item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.item-title {
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.item-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 10px;
+    color: var(--text-tertiary);
+}
+
+/* Status Badges */
+.status-badge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-queued {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #60A5FA;
+}
+
+.badge-sending {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+}
+
+.badge-sent {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+}
+
+.badge-failed {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #F87171;
+}
+
+/* Spinner */
+.spinner-tiny {
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid currentColor;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: rotation 1s linear infinite;
+}
+
+/* Error Message */
+.error-text {
+    font-size: 10px;
+    color: var(--error-text);
+    margin-top: 4px;
+    padding: 4px 6px;
+    background-color: rgba(239, 68, 68, 0.05);
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+/* Actions */
+.item-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+    justify-content: flex-end;
+}
+
+.btn-icon-text {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-icon-text:hover:not(:disabled) {
+    background-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.btn-icon-text.danger:hover:not(:disabled) {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--error-text);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.btn-icon-text:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -8,7 +8,9 @@
         "activeTab",
         "contextMenus",
         "scripting",
-        "notifications"
+        "notifications",
+        "alarms",
+        "unlimitedStorage"
     ],
     "host_permissions": [
         "http://localhost/*"

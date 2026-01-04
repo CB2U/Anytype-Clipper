@@ -29,12 +29,15 @@ import { ExtensionMessage, MessageResponse, HighlightCapturedMessage } from '../
 import { ArticleExtractionResult, ExtractionQuality } from '../types/article';
 import { QueueManager } from './queue-manager';
 import { RetryScheduler } from './retry-scheduler';
+import { BadgeManager } from './badge-manager';
+import { QueueStatus } from '../types/queue';
 
 // Initialize API Client and Services
 const apiClient = new AnytypeApiClient();
 const bookmarkCaptureService = BookmarkCaptureService.getInstance();
 const queueManager = QueueManager.getInstance();
 const retryScheduler = RetryScheduler.getInstance(queueManager, apiClient);
+const badgeManager = BadgeManager.getInstance(queueManager);
 
 // T8: Register Alarm Listener for retries
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -78,6 +81,7 @@ async function initialize() {
 }
 
 initialize();
+badgeManager.init();
 
 // Listen for storage changes to keep API key in sync (e.g. login/logout)
 chrome.storage.onChanged.addListener((changes, area) => {
@@ -330,17 +334,27 @@ chrome.runtime.onMessage.addListener((
           try {
             const result = await apiClient.getSpaces();
             console.log('Spaces fetched successfully:', result);
+            // Cache spaces for offline use
+            await chrome.storage.local.set({ cachedSpaces: result.spaces });
             sendResponse({ success: true, data: result.spaces });
           } catch (e) {
-            console.error('API Error in CMD_GET_SPACES:', e);
-            throw e; // Let the catch block below handle formatting
+            if (QueueManager.shouldQueue(e)) {
+              console.log('[Service Worker] Anytype offline, attempting to load cached spaces...');
+              const data = await chrome.storage.local.get('cachedSpaces');
+              if (data.cachedSpaces) {
+                sendResponse({ success: true, data: data.cachedSpaces, cached: true });
+                return;
+              }
+            }
+            console.warn('API Error in CMD_GET_SPACES:', e);
+            throw e;
           }
           break;
         }
 
         case 'CMD_CAPTURE_BOOKMARK': {
           const { spaceId, metadata, userNote, tags, type_key, isHighlightCapture, quote } = message.payload;
-          console.log('[Service Worker] Capturing object with metadata...');
+          console.log(`[Service Worker] CMD_CAPTURE_BOOKMARK: type=${type_key}, space=${spaceId}, title="${metadata.title}"`);
 
           const result = await bookmarkCaptureService.captureBookmark(
             spaceId,
@@ -352,7 +366,16 @@ chrome.runtime.onMessage.addListener((
             quote
           );
 
+          console.log(`[Service Worker] Capture result: queued=${result.queued}, id=${result.itemId || 'N/A'}`);
           sendResponse({ success: true, data: result });
+
+          // If queued, trigger immediate scheduling of first retry
+          if (result.queued) {
+            const item = await queueManager.get(result.itemId);
+            if (item) {
+              await retryScheduler.scheduleRetry(item);
+            }
+          }
           break;
         }
 
@@ -382,12 +405,62 @@ chrome.runtime.onMessage.addListener((
           break;
         }
 
+        case 'CMD_GET_QUEUE': {
+          const items = await queueManager.getAll();
+          sendResponse({ success: true, data: items });
+          break;
+        }
+
+        case 'CMD_RETRY_QUEUE_ITEM': {
+          const { id } = message.payload;
+          // Reset retry count and mark as queued
+          await queueManager.updateRetryCount(id, 0);
+          await queueManager.updateStatus(id, QueueStatus.Queued);
+          // Trigger immediate retry
+          await retryScheduler.processRetry(id);
+          sendResponse({ success: true });
+          break;
+        }
+
+        case 'CMD_DELETE_QUEUE_ITEM': {
+          const { id } = message.payload;
+          await queueManager.delete(id);
+          sendResponse({ success: true });
+          break;
+        }
+
+        case 'CMD_DIAGNOSTIC': {
+          console.log('[Service Worker] Running Storage Diagnostic...');
+          const allData = await chrome.storage.local.get(null) as any;
+          const queue = allData.queue || [];
+          const vaultKeys = Object.keys(allData).filter(k => k.startsWith('vault:'));
+
+          console.log(`[Diagnostic] Queue size: ${queue.length}`);
+          console.log(`[Diagnostic] Queue IDs: ${queue.map((i: any) => i.id).join(', ')}`);
+          console.log(`[Diagnostic] Vault entries: ${vaultKeys.length}`);
+
+          sendResponse({
+            success: true,
+            data: {
+              queueLength: queue.length,
+              queueIds: queue.map((i: any) => i.id),
+              vaultCount: vaultKeys.length,
+              storageUsage: JSON.stringify(allData).length // Rough byte count
+            }
+          });
+          break;
+        }
+
         default:
           console.warn('Unknown message type:', (message as any).type);
           sendResponse({ success: false, error: 'Unknown message type' });
       }
     } catch (error) {
-      console.error('Message handler error:', error);
+      if (QueueManager.shouldQueue(error)) {
+        console.info(`[Service Worker] Message ${message.type} failed (Anytype offline): ${error instanceof Error ? error.message : 'Network error'}`);
+      } else {
+        console.error('Message handler error:', error);
+      }
       sendResponse({
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'

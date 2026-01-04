@@ -10,7 +10,11 @@ export type MessageType =
     | 'CMD_CHECK_AUTH'
     | 'CMD_HIGHLIGHT_CAPTURED'
     | 'CMD_EXTRACT_METADATA'
-    | 'CMD_EXTRACT_ARTICLE';
+    | 'CMD_EXTRACT_ARTICLE'
+    | 'CMD_GET_QUEUE'
+    | 'CMD_RETRY_QUEUE_ITEM'
+    | 'CMD_DELETE_QUEUE_ITEM'
+    | 'CMD_DIAGNOSTIC';
 
 export interface BaseMessage {
     type: MessageType;
@@ -67,10 +71,33 @@ export type ExtensionMessage =
     | CheckAuthMessage
     | HighlightCapturedMessage
     | ExtractMetadataMessage
-    | ExtractArticleMessage;
+    | ExtractArticleMessage
+    | GetQueueMessage
+    | RetryQueueItemMessage
+    | DeleteQueueItemMessage
+    | DiagnosticMessage;
+
+export interface GetQueueMessage extends BaseMessage {
+    type: 'CMD_GET_QUEUE';
+}
+
+export interface RetryQueueItemMessage extends BaseMessage {
+    type: 'CMD_RETRY_QUEUE_ITEM';
+    payload: { id: string };
+}
+
+export interface DeleteQueueItemMessage extends BaseMessage {
+    type: 'CMD_DELETE_QUEUE_ITEM';
+    payload: { id: string };
+}
+
+export interface DiagnosticMessage extends BaseMessage {
+    type: 'CMD_DIAGNOSTIC';
+}
 
 export interface MessageResponse<T = unknown> {
     success: boolean;
     data?: T;
     error?: string;
+    cached?: boolean;
 }
