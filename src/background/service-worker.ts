@@ -39,6 +39,10 @@ const queueManager = QueueManager.getInstance();
 const retryScheduler = RetryScheduler.getInstance(queueManager, apiClient);
 const badgeManager = BadgeManager.getInstance(queueManager);
 
+// Import deduplication service
+import { deduplicationService } from '../lib/services/deduplication-service';
+
+
 // T8: Register Alarm Listener for retries
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name.startsWith('retry-')) {
@@ -353,9 +357,53 @@ chrome.runtime.onMessage.addListener((
         }
 
         case 'CMD_CAPTURE_BOOKMARK': {
-          const { spaceId, metadata, userNote, tags, type_key, isHighlightCapture, quote } = message.payload;
+          const { spaceId, metadata, userNote, tags, type_key, isHighlightCapture, quote, skipDeduplication } = message.payload;
           console.log(`[Service Worker] CMD_CAPTURE_BOOKMARK: type=${type_key}, space=${spaceId}, title="${metadata.title}"`);
+          console.log(`[Service Worker] Metadata URL: ${metadata.url}, Canonical: ${metadata.canonicalUrl}`);
 
+          // T3: Deduplication check (only for bookmarks, skip if explicitly requested or if it's a note/highlight)
+          // Regular bookmarks don't set type_key, so we check if it's NOT 'note' (which is used for articles/highlights)
+          const bookmarkUrl = metadata.url || metadata.canonicalUrl;
+          if (type_key !== 'note' && !skipDeduplication && !isHighlightCapture && bookmarkUrl) {
+            try {
+              // Get API key from storage for deduplication search
+              const authData = await chrome.storage.local.get('auth');
+              const apiKey = (authData as any).auth?.apiKey;
+
+              if (apiKey) {
+                console.log('[Service Worker] Checking for duplicate URL...');
+                const duplicateResult = await deduplicationService.searchByUrl(
+                  bookmarkUrl,
+                  spaceId,
+                  apiKey
+                );
+
+                // If duplicate found, return it to popup for user decision
+                if (duplicateResult.found && duplicateResult.object) {
+                  console.log(`[Service Worker] Duplicate found: ${duplicateResult.object.id}`);
+                  sendResponse({
+                    success: true,
+                    data: {
+                      duplicate: true,
+                      existingObject: duplicateResult.object
+                    }
+                  });
+                  return; // Don't proceed with capture
+                }
+
+                console.log('[Service Worker] No duplicate found, proceeding with capture');
+              } else {
+                console.log('[Service Worker] No API key, skipping deduplication');
+              }
+            } catch (dedupError) {
+              // Log error but continue with capture (graceful degradation)
+              console.error('[Service Worker] Deduplication check failed:', dedupError);
+            }
+          } else {
+            console.log(`[Service Worker] Skipping deduplication: type=${type_key}, skip=${skipDeduplication}, highlight=${isHighlightCapture}, url=${bookmarkUrl}`);
+          }
+
+          // Proceed with bookmark capture
           const result = await bookmarkCaptureService.captureBookmark(
             spaceId,
             metadata,
@@ -378,6 +426,7 @@ chrome.runtime.onMessage.addListener((
           }
           break;
         }
+
 
         case 'CMD_EXTRACT_METADATA': {
           const metadata = await handleExtractMetadata();

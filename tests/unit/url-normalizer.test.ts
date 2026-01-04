@@ -54,6 +54,11 @@ describe('URL Normalizer', () => {
             expect(cleanUrlForDeduplication('https://example.com/q?b=2&a=1')).toBe('https://example.com/q?a=1&b=2');
         });
 
+        it('should remove www prefix', () => {
+            expect(cleanUrlForDeduplication('https://www.example.com')).toBe('https://example.com/');
+            expect(cleanUrlForDeduplication('https://WWW.EXAMPLE.COM/path')).toBe('https://example.com/path');
+        });
+
         it('should strip fragments', () => {
             expect(cleanUrlForDeduplication('https://example.com/page#section-1')).toBe('https://example.com/page');
         });

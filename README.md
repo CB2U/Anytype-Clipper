@@ -12,6 +12,7 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 - **Highlight Capture**: Capture selected text from any page with surrounding context (50 chars before/after).
 - **Context Menu Integration**: Right-click any selection and "Send selection to Anytype".
 - **Space Selection**: Choose which Anytype Space to save content into.
+- **URL Deduplication**: Detects duplicate bookmarks by URL and offers options to skip or create anyway.
 - **Offline Support**: Queue captures when Anytype is offline (retry logic).
 - **Queue Status UI**: Real-time visibility of pending, sending, and failed captures in the popup.
 - **Badge Counter**: Extension icon badge showing the number of pending items at a glance.
@@ -114,6 +115,8 @@ ISC
 
 ## Status
 
-🚧 **In Development** - Epic 6.0: URL Deduplication (Not Started)
+✅ **Epic 6.0: URL Deduplication** - Complete (Tests Pending)
+
+🚧 **Next:** Epic 6.1 (Smart Tagging Engine) or Epic 6.2 (Append Mode)
 
 See [SPECS.md](SPECS.md) for current progress.

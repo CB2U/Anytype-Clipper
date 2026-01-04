@@ -287,7 +287,7 @@ async function handleSaveArticle() {
   await handleSave(true);
 }
 
-async function handleSave(isArticle: boolean = false) {
+async function handleSave(isArticle: boolean = false, skipDeduplication: boolean = false) {
   if (!currentTab || !currentTab.url) {
     showStatus('Error: No active tab found', true);
     return;
@@ -332,7 +332,8 @@ async function handleSave(isArticle: boolean = false) {
       metadata: currentMetadata,
       userNote: note,
       tags: tags,
-      isHighlightCapture: isHighlight
+      isHighlightCapture: isHighlight,
+      skipDeduplication: skipDeduplication // Pass skipDeduplication flag
     };
 
     if (isArticle) {
@@ -360,6 +361,33 @@ async function handleSave(isArticle: boolean = false) {
     });
 
     if (response && response.success) {
+      // T5: Handle duplicate detection response
+      if (response.data?.duplicate && response.data?.existingObject) {
+        const existing = response.data.existingObject;
+        const createdDate = new Date(existing.createdAt).toLocaleDateString();
+
+        // Show duplicate warning with user choices
+        const message = `⚠️ This URL was already saved:\n\n"${existing.title}"\nSaved on ${createdDate}\n\nWhat would you like to do?`;
+
+        // Use confirm dialog for now (can be enhanced with custom UI later)
+        const userChoice = confirm(
+          message + '\n\nClick OK to create anyway, or Cancel to skip.'
+        );
+
+        if (userChoice) {
+          // User chose "Create Anyway" - retry with skipDeduplication flag
+          console.log('[Popup] User chose: Create Anyway');
+          await handleSave(isArticle, true); // Retry with skipDeduplication=true
+          return;
+        } else {
+          // User chose "Skip"
+          console.log('[Popup] User chose: Skip');
+          showStatus('Capture cancelled (duplicate URL)', false);
+          return;
+        }
+      }
+
+      // Normal success flow
       if (response.data?.queued) {
         showStatus('Saved offline! Will sync when Anytype is back. 📶', false);
       } else {

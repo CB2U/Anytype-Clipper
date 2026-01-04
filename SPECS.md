@@ -4,7 +4,7 @@
 **Project:** Anytype Clipper Extension 
 **Version:** 1.0 
 **Status:** Active 
-**Last Updated:** 2026-01-02 
+**Last Updated:** 2026-01-04 
 **PRD Reference:** PRD.md v2.0 
 **Constitution Reference:** constitution.md v1.0 
 **Roadmap Reference:** roadmap.md v1.0
@@ -70,17 +70,17 @@ This document serves as the **central index** for all specifications in the Anyt
 | Roadmap Anchor | Epic Name                | Spec Folder                | Breakpoint | Status | Next Task | Evidence                                                                                                      | Target ACs                                                                       |
 | -------------- | ------------------------ | -------------------------- | ---------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | 5.0            | Offline Queue System     | `specs/050-offline-queue/` | BP4        | Done   | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/050-offline-queue/spec.md#evidence) | FR6.1, FR6.2, FR6.4, FR6.6, FR6.9, FR6.10, AC5, AC8, DATA-1, DATA-3, DATA-4, US3 |
-| 5.1            | Retry Logic with Backoff | `specs/051-retry-logic/`   | BP4        | Done   | T17       | [Evidence](specs/051-retry-logic/spec.md#evidence)                                                            | FR6.3, FR6.5, NFR2.3, REL-4, REL-7                                               |
-| 5.2            | Health Check & Recovery  | `specs/052-health-check/`  | BP4        | Testing     | Manual    | [Evidence](specs/052-health-check/spec.md#evidence)                                                      | FR6.7, NFR2.2, NFR2.4, NFR2.5, REL-2, REL-3, REL-5                               |
+| 5.1            | Retry Logic with Backoff | `specs/051-retry-logic/`   | BP4        | Done   | N/A       | [Evidence](specs/051-retry-logic/spec.md#evidence)                                                            | FR6.3, FR6.5, NFR2.3, REL-4, REL-7                                               |
+| 5.2            | Health Check & Recovery  | `specs/052-health-check/`  | BP4        | Testing     | Manual Verification    | [Evidence](specs/052-health-check/spec.md#evidence)                                                      | FR6.7, NFR2.2, NFR2.4, NFR2.5, REL-2, REL-3, REL-5                               |
 | 5.3            | Queue UI & Status        | `specs/053-queue-ui/`      | BP4        | Done        | N/A       | [Evidence](specs/053-queue-ui/spec.md#evidence)                                                               | FR6.2, FR6.5, AC5, US3                                                           |
 
 ### BP5: Deduplication & Tagging (Weeks 11-12)
 
-| Roadmap Anchor | Epic Name            | Spec Folder                | Breakpoint | Status      | Target ACs                                                 |
-| -------------- | -------------------- | -------------------------- | ---------- | ----------- | ---------------------------------------------------------- |
-| 6.0            | URL Deduplication    | `specs/019-deduplication/` | BP5        | Not Started | FR7.1, FR7.2, FR7.3, FR7.6, AC6, AC14, DATA-7, PERF-7, US7 |
-| 6.1            | Smart Tagging Engine | `specs/020-smart-tagging/` | BP5        | Not Started | FR8.1, FR8.2, FR8.4, FR8.6, FR8.7, AC12, US5               |
-| 6.2            | Append Mode          | `specs/021-append-mode/`   | BP5        | Not Started | FR2.4, FR4.9, FR7.4, FR7.5, AC17, US2, US7                 |
+| Roadmap Anchor | Epic Name            | Spec Folder                        | Breakpoint | Status | Next Task | Evidence                                                                                                          | Target ACs                                                 |
+| -------------- | -------------------- | ---------------------------------- | ---------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| 6.0            | URL Deduplication    | `specs/060-url-deduplication/`     | BP5        | Done   | -         | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/060-url-deduplication/spec.md#evidence) | FR7.1, FR7.2, FR7.3, FR7.6, AC6, AC14, DATA-7, PERF-7, US7 |
+| 6.1            | Smart Tagging Engine | `specs/020-smart-tagging/`         | BP5        | Not Started  |           |                                                                                                                   | FR8.1, FR8.2, FR8.4, FR8.6, FR8.7, AC12, US5               |
+| 6.2            | Append Mode          | `specs/021-append-mode/`           | BP5        | Not Started  |           |                                                                                                                   | FR2.4, FR4.9, FR7.4, FR7.5, AC17, US2, US7                 |
 
 ### BP6: UI & Integration (Weeks 13-14)
 
@@ -217,8 +217,8 @@ specs/NNN-slug/
 
 - **Testing:** 0
 
-- **Done:** 13
-  **Completion:** 41% (13/32 complete)
+- **Done:** 18
+  **Completion:** 56% (18/32 complete)
   
   ### Breakpoint Progress
 

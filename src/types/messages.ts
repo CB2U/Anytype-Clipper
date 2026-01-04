@@ -38,8 +38,10 @@ export interface CaptureBookmarkMessage extends BaseMessage {
         contextBefore?: string;
         contextAfter?: string;
         url?: string;
+        skipDeduplication?: boolean; // Skip duplicate detection (for "Create Anyway" action)
     };
 }
+
 
 export interface ExtractMetadataMessage extends BaseMessage {
     type: 'CMD_EXTRACT_METADATA';

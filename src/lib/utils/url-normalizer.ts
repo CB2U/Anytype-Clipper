@@ -50,6 +50,11 @@ export function cleanUrlForDeduplication(url: string): string {
         // Lowercase hostname
         u.hostname = u.hostname.toLowerCase();
 
+        // Remove www prefix for normalization
+        if (u.hostname.startsWith('www.')) {
+            u.hostname = u.hostname.substring(4);
+        }
+
         // Remove trailing slash from pathname
         if (u.pathname.endsWith('/') && u.pathname.length > 1) {
             u.pathname = u.pathname.slice(0, -1);
