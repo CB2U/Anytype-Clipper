@@ -1,5 +1,7 @@
 import { AuthManager, AuthStatus } from '../lib/auth/auth-manager';
 import { TagAutocomplete } from './components/tag-autocomplete';
+import { SuggestedTags } from './components/suggested-tags';
+import { TagSuggestionService } from '../lib/services/tag-suggestion-service';
 import { QueueStatusSection } from './components/QueueStatusSection';
 
 
@@ -57,6 +59,8 @@ let currentTab: chrome.tabs.Tab | null = null;
 let currentHighlight: any = null;
 let currentMetadata: any = null;
 let tagAutocomplete: TagAutocomplete | null = null;
+let suggestedTags: SuggestedTags | null = null;
+let tagSuggestionService: TagSuggestionService | null = null;
 let queueSection: QueueStatusSection | null = null;
 let queueUpdateTimer: any = null;
 
@@ -213,6 +217,9 @@ async function loadCurrentTab() {
           };
           updateMetadataUI();
 
+          // Generate tag suggestions
+          await generateTagSuggestions();
+
           // Show Save as Article button
           if (mainElements.btnSaveArticle) {
             mainElements.btnSaveArticle.classList.remove('hidden');
@@ -223,6 +230,7 @@ async function loadCurrentTab() {
           if (metaResponse && metaResponse.success) {
             currentMetadata = metaResponse.data;
             updateMetadataUI();
+            await generateTagSuggestions();
           }
         }
       } catch (e) {
@@ -236,6 +244,7 @@ async function loadCurrentTab() {
           if (metaResponse && metaResponse.success) {
             currentMetadata = metaResponse.data;
             updateMetadataUI();
+            await generateTagSuggestions();
           }
         } catch (ignored) { }
       }
@@ -280,6 +289,23 @@ function updateMetadataUI() {
     } else {
       mainElements.metadataPreview.classList.add('hidden');
     }
+  }
+}
+
+/**
+ * Generate and display tag suggestions based on current metadata and URL
+ */
+async function generateTagSuggestions() {
+  if (!tagSuggestionService || !suggestedTags || !currentMetadata || !currentTab?.url) {
+    return;
+  }
+
+  try {
+    const result = await tagSuggestionService.suggestTags(currentMetadata, currentTab.url);
+    suggestedTags.setSuggestions(result.suggestions);
+  } catch (error) {
+    console.error('[Popup] Error generating tag suggestions:', error);
+    // Silently fail - suggestions are optional
   }
 }
 
@@ -676,5 +702,12 @@ document.addEventListener('DOMContentLoaded', () => {
       mainElements.tagContainer,
       mainElements.tagChips
     );
+  }
+
+  // Initialize tag suggestion service and UI
+  tagSuggestionService = new TagSuggestionService();
+  const suggestedTagsContainer = document.getElementById('suggested-tags');
+  if (suggestedTagsContainer && tagAutocomplete) {
+    suggestedTags = new SuggestedTags(suggestedTagsContainer, tagAutocomplete);
   }
 });

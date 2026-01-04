@@ -76,11 +76,11 @@ This document serves as the **central index** for all specifications in the Anyt
 
 ### BP5: Deduplication & Tagging (Weeks 11-12)
 
-| Roadmap Anchor | Epic Name            | Spec Folder                        | Breakpoint | Status | Next Task | Evidence                                                                                                          | Target ACs                                                 |
-| -------------- | -------------------- | ---------------------------------- | ---------- | ------ | --------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| 6.0            | URL Deduplication    | `specs/060-url-deduplication/`     | BP5        | Done   | -         | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/060-url-deduplication/spec.md#evidence) | FR7.1, FR7.2, FR7.3, FR7.6, AC6, AC14, DATA-7, PERF-7, US7 |
-| 6.1            | Smart Tagging Engine | `specs/020-smart-tagging/`         | BP5        | Not Started  |           |                                                                                                                   | FR8.1, FR8.2, FR8.4, FR8.6, FR8.7, AC12, US5               |
-| 6.2            | Append Mode          | `specs/021-append-mode/`           | BP5        | Not Started  |           |                                                                                                                   | FR2.4, FR4.9, FR7.4, FR7.5, AC17, US2, US7                 |
+| Roadmap Anchor | Epic Name            | Spec Folder                        | Breakpoint | Status      | Next Task | Evidence                                                                                                          | Target ACs                                                 |
+| -------------- | -------------------- | ---------------------------------- | ---------- | ----------- | --------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| 6.0            | URL Deduplication    | `specs/060-url-deduplication/`     | BP5        | Done        | -         | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/060-url-deduplication/spec.md#evidence) | FR7.1, FR7.2, FR7.3, FR7.6, AC6, AC14, DATA-7, PERF-7, US7 |
+| 6.1            | Smart Tagging Engine | `specs/061-smart-tagging/`         | BP5        | Done        | -         | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/061-smart-tagging/spec.md#evidence)     | FR8.1, FR8.2, FR8.4, FR8.6, FR8.7, AC12, US5               |
+| 6.2            | Append Mode          | `specs/021-append-mode/`           | BP5        | Not Started | -         |                                                                                                                   | FR2.4, FR4.9, FR7.4, FR7.5, AC17, US2, US7                 |
 
 ### BP6: UI & Integration (Weeks 13-14)
 

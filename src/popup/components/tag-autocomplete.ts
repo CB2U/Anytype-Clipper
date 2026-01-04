@@ -71,6 +71,34 @@ export class TagAutocomplete {
         this.render();
     }
 
+    /**
+     * Add a tag by name (creates if doesn't exist, selects if it does)
+     * Public API for programmatic tag addition
+     */
+    public async addTagByName(name: string): Promise<void> {
+        if (!name || !this.spaceId) return;
+
+        // Load tags if not already loaded
+        if (this.allTags.length === 0) {
+            await this.loadTags();
+        }
+
+        // Check if tag already exists
+        const existingTag = this.allTags.find(t => t.name.toLowerCase() === name.toLowerCase());
+
+        if (existingTag) {
+            // Tag exists, just select it
+            this.selectTag(existingTag);
+        } else {
+            // Tag doesn't exist, create it
+            await this.createTag(name);
+        }
+
+        // Hide dropdown and blur input for better UX when adding programmatically
+        this.hideDropdown();
+        this.input.blur();
+    }
+
     private initEvents() {
         this.input.addEventListener('focus', () => this.handleFocus());
         this.input.addEventListener('input', () => this.handleInput());

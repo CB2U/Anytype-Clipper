@@ -113,10 +113,14 @@ See `constitution.md` for complete development standards.
 
 ISC
 
-## Status
+## 🚀 Current Status
 
-✅ **Epic 6.0: URL Deduplication** - Complete (Tests Pending)
+**Latest Epic:** 6.1 Smart Tagging Engine - Complete ✅  
+**Next:** Epic 6.2 (Append Mode) or Epic 7.0 (Advanced Features)
 
-🚧 **Next:** Epic 6.1 (Smart Tagging Engine) or Epic 6.2 (Append Mode)
+### Recent Completions
+- ✅ Epic 6.0: URL Deduplication (Complete - Tests Pending)
+- ✅ Epic 6.1: Smart Tagging Engine (Complete - Tests Deferred)
+- ✅ Epic 5.0-5.3: Offline Queue System (Complete)
 
 See [SPECS.md](SPECS.md) for current progress.
