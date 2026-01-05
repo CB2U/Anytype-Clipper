@@ -170,4 +170,54 @@ describe('Fallback Extractor', () => {
             expect(result.content.metadata.extractionFailed).toBe(true);
         });
     });
+
+    describe('Edge Cases', () => {
+        it('handles large content gracefully', () => {
+            const largeText = 'word '.repeat(50000); // ~250KB
+            document.body.innerHTML = `<article><p>${largeText}</p></article>`;
+
+            const start = performance.now();
+            const result = extractSimplifiedDOM();
+            const end = performance.now();
+
+            expect(result).not.toBeNull();
+            expect(result?.length).toBeGreaterThan(1000);
+            expect(end - start).toBeLessThan(500); // Should be reasonably fast
+        });
+
+        it('handles unicode characters', () => {
+            const filler = 'word '.repeat(200);
+            const unicodeText = 'Hello 🌍, this is a test with unicode: 🚀, 🐱, 中文';
+            document.body.innerHTML = `<article><p>${unicodeText} ${filler}</p></article>`;
+            const result = extractSimplifiedDOM();
+            expect(result).not.toBeNull();
+            expect(result).toContain(unicodeText);
+        });
+
+        it('handles deeply nested structures', () => {
+            let nested = 'Content '.repeat(200);
+            for (let i = 0; i < 50; i++) {
+                nested = `<div>${nested}</div>`;
+            }
+            document.body.innerHTML = `<article>${nested}</article>`;
+
+            const result = extractSimplifiedDOM();
+            expect(result).not.toBeNull();
+            expect(result).toContain('Content');
+        });
+
+        it('handles malformed HTML in body', () => {
+            const text = 'Unclosed paragraph '.repeat(200);
+            document.body.innerHTML = `
+                <article>
+                    <p>${text}
+                    <div>Broken div
+                    <br>
+                </article>
+            `;
+            const result = extractSimplifiedDOM();
+            expect(result).not.toBeNull();
+            expect(result).toContain('Unclosed paragraph');
+        });
+    });
 });

@@ -51,4 +51,14 @@ describe('TwitterCardExtractor', () => {
         const metadata = extractor.extract(document, baseUrl);
         expect(metadata.card).toBeUndefined();
     });
+
+    it('should ignore empty content strings', () => {
+        document.head.innerHTML = `
+            <meta name="twitter:title" content="">
+            <meta name="twitter:creator" content=" ">
+        `;
+        const metadata = extractor.extract(document, baseUrl);
+        expect(metadata.title).toBeUndefined();
+        expect(metadata.creator).toBeUndefined();
+    });
 });

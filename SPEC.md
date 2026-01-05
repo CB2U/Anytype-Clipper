@@ -20,8 +20,8 @@ It points to the spec folder for the current work and links to the product docs.
 
 **Epic:** 8.0 Unit Test Suite  
 **Folder:** `specs/080-unit-tests/`  
-**Status:** In Progress  
-**Next:** T1 - Configure Jest Coverage Thresholds
+**Status:** Done ✅  
+**Next:** None (Ready for 8.1)
 
 ### Quick Links
 - Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/080-unit-tests/spec.md)

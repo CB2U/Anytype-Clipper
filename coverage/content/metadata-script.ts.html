@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -96,7 +96,7 @@
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -104,32 +104,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { MetadataExtractor } from '../lib/extractors/metadata-extractor';</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { MetadataExtractor } from '../lib/extractors/metadata-extractor';
 &nbsp;
 &nbsp;
 /**
@@ -137,31 +137,31 @@
  * Listens for requests from the background script.
  */
 &nbsp;
-const metadataExtractor = <span class="cstat-no" title="statement not covered" >new MetadataExtractor();</span>
+const metadataExtractor = new MetadataExtractor();
 &nbsp;
 &nbsp;
 // Handle messages from the background script/popup
-<span class="cstat-no" title="statement not covered" >chrome.runtime.onMessage.addListener(<span class="fstat-no" title="function not covered" >(m</span>essage, _sender, sendResponse) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (message.type === 'CMD_EXTRACT_METADATA') {</span>
-<span class="cstat-no" title="statement not covered" >        console.log('[Anytype Clipper] Extracting metadata...');</span>
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) =&gt; {
+    if (message.type === 'CMD_EXTRACT_METADATA') {
+        console.log('[Anytype Clipper] Extracting metadata...');
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        metadataExtractor.extract(window.document, window.location.href)</span>
-            .then(<span class="fstat-no" title="function not covered" >metadata </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >                console.log('[Anytype Clipper] Metadata extracted:', metadata);</span>
-<span class="cstat-no" title="statement not covered" >                sendResponse({ success: true, data: metadata });</span>
+        metadataExtractor.extract(window.document, window.location.href)
+            .then(metadata =&gt; {
+                console.log('[Anytype Clipper] Metadata extracted:', metadata);
+                sendResponse({ success: true, data: metadata });
             })
-            .catch(<span class="fstat-no" title="function not covered" >error </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >                console.error('[Anytype Clipper] Metadata extraction failed:', error);</span>
-<span class="cstat-no" title="statement not covered" >                sendResponse({ success: false, error: String(error) });</span>
+            .catch(error =&gt; {
+                console.error('[Anytype Clipper] Metadata extraction failed:', error);
+                sendResponse({ success: false, error: String(error) });
             });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return true;</span>
+        return true;
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return undefined; </span>// Let other listeners handle other messages
+    return undefined; // Let other listeners handle other messages
 });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >console.log('[Anytype Clipper] Metadata extraction script loaded');</span>
+console.log('[Anytype Clipper] Metadata extraction script loaded');
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -169,7 +169,7 @@ const metadataExtractor = <span class="cstat-no" title="statement not covered" >
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-05T17:52:29.505Z
+                at 2026-01-05T20:41:04.939Z
             </div>
         <script src="../prettify.js"></script>
         <script>

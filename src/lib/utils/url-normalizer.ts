@@ -22,6 +22,11 @@ export function normalizeUrl(url: string | null | undefined, baseUrl: string): s
             return trimmedUrl;
         }
 
+        // Security: Block javascript: / vbscript:
+        if (/^(javascript|vbscript):/i.test(trimmedUrl)) {
+            return null;
+        }
+
         // 2. Handle protocol-relative URLs (//example.com)
         if (trimmedUrl.startsWith('//')) {
             const base = new URL(baseUrl);

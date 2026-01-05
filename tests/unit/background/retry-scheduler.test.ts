@@ -1,7 +1,7 @@
-import { RetryScheduler } from '../../src/background/retry-scheduler';
-import { QueueManager } from '../../src/background/queue-manager';
-import { AnytypeApiClient } from '../../src/lib/api/client';
-import { QueueStatus } from '../../src/types/queue';
+import { RetryScheduler } from '../../../src/background/retry-scheduler';
+import { QueueManager } from '../../../src/background/queue-manager';
+import { AnytypeApiClient } from '../../../src/lib/api/client';
+import { QueueStatus } from '../../../src/types/queue';
 
 describe('RetryScheduler', () => {
     let scheduler: RetryScheduler;
@@ -11,6 +11,7 @@ describe('RetryScheduler', () => {
     beforeEach(() => {
         mockQueueManager = {
             get: jest.fn(),
+            getPending: jest.fn(),
             updateStatus: jest.fn(),
             updateRetryCount: jest.fn(),
             updateErrorMessage: jest.fn(),
@@ -30,9 +31,7 @@ describe('RetryScheduler', () => {
     describe('calculateBackoff', () => {
         it('should return 1s for the first retry (attempt 0 or 1)', () => {
             expect(scheduler.calculateBackoff(0)).toBe(1000);
-            expect(scheduler.calculateBackoff(1)).toBe(5000); // Wait, BACKOFF_INTERVALS[1] is 5s. 
-            // T2 goal says: Attempt 1: 1s, Attempt 2: 5s.
-            // So calculateBackoff(0) is 1s, calculateBackoff(1) is 5s.
+            expect(scheduler.calculateBackoff(1)).toBe(5000);
         });
 
         it('should return 30s for the third retry (attempt 2)', () => {
@@ -174,6 +173,114 @@ describe('RetryScheduler', () => {
             expect(mockQueueManager.markFailed).toHaveBeenCalledWith('item-1', expect.stringContaining('Max retry attempts exceeded'));
             expect(chrome.alarms.clear).toHaveBeenCalledWith('retry-item-1');
         });
+
+        it('should handle highlight item type', async () => {
+            const mockItem = {
+                id: 'item-h',
+                status: QueueStatus.Queued,
+                retryCount: 0,
+                type: 'highlight',
+                payload: { spaceId: 'space-1', pageTitle: 'Page', quote: 'Quote', url: 'http://test.com' },
+            };
+            mockQueueManager.get.mockResolvedValue(mockItem as any);
+            mockApiClient.createObject.mockResolvedValue({ id: 'obj-h' } as any);
+
+            await scheduler.processRetry('item-h');
+
+            expect(mockApiClient.createObject).toHaveBeenCalledWith('space-1', expect.objectContaining({
+                type_key: 'highlight',
+                quote: 'Quote',
+                title: 'Page'
+            }));
+        });
+
+        it('should handle article item type', async () => {
+            const mockItem = {
+                id: 'item-a',
+                status: QueueStatus.Queued,
+                retryCount: 0,
+                type: 'article',
+                payload: { spaceId: 'space-1', title: 'Article', content: 'Content', url: 'http://test.com' },
+            };
+            mockQueueManager.get.mockResolvedValue(mockItem as any);
+            mockApiClient.createObject.mockResolvedValue({ id: 'obj-a' } as any);
+
+            await scheduler.processRetry('item-a');
+
+            expect(mockApiClient.createObject).toHaveBeenCalledWith('space-1', expect.objectContaining({
+                type_key: 'note',
+                description: 'Content',
+                title: 'Article'
+            }));
+        });
+
+        it('should fail if item not found', async () => {
+            mockQueueManager.get.mockResolvedValue(null);
+            await scheduler.processRetry('missing');
+            expect(chrome.alarms.clear).toHaveBeenCalledWith('retry-missing');
+            expect(mockApiClient.createObject).not.toHaveBeenCalled();
+        });
+
+        it('should fail if item status is not Queued', async () => {
+            mockQueueManager.get.mockResolvedValue({ id: 'i', status: QueueStatus.Sending } as any);
+            await scheduler.processRetry('i');
+            expect(chrome.alarms.clear).toHaveBeenCalledWith('retry-i');
+            expect(mockApiClient.createObject).not.toHaveBeenCalled();
+        });
+
+        it('should handle missing spaceId error', async () => {
+            const mockItem = {
+                id: 'item-err',
+                status: QueueStatus.Queued,
+                retryCount: 0,
+                type: 'bookmark',
+                payload: { title: 'Test', url: 'http://test.com' }, // Missing spaceId
+            };
+            mockQueueManager.get.mockResolvedValue(mockItem as any);
+
+            await scheduler.processRetry('item-err');
+
+            expect(mockQueueManager.updateErrorMessage).toHaveBeenCalledWith('item-err', 'Missing spaceId in payload');
+            expect(chrome.alarms.create).toHaveBeenCalled(); // Reschedules
+        });
+    });
+
+    describe('resumeRetries', () => {
+        it('should reschedule pending items that are under max retries', async () => {
+            const items = [
+                { id: '1', retryCount: 0, status: QueueStatus.Queued },
+                { id: '2', retryCount: 5, status: QueueStatus.Queued },
+            ];
+            mockQueueManager.getPending.mockResolvedValue(items as any);
+
+            await scheduler.resumeRetries();
+
+            expect(chrome.alarms.create).toHaveBeenCalledWith('retry-1', expect.anything());
+            expect(chrome.alarms.create).toHaveBeenCalledWith('retry-2', expect.anything());
+        });
+
+        it('should mark items as failed if over max retries', async () => {
+            const items = [
+                { id: '3', retryCount: 10, status: QueueStatus.Queued },
+            ];
+            mockQueueManager.getPending.mockResolvedValue(items as any);
+
+            await scheduler.resumeRetries();
+
+            expect(mockQueueManager.markFailed).toHaveBeenCalledWith('3', expect.stringContaining('Max retry attempts exceeded'));
+            expect(chrome.alarms.clear).toHaveBeenCalledWith('retry-3');
+            expect(chrome.alarms.create).not.toHaveBeenCalled();
+        });
+
+        it('should handle errors gracefully', async () => {
+            mockQueueManager.getPending.mockRejectedValue(new Error('Storage failure'));
+            const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+
+            await scheduler.resumeRetries();
+
+            expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to resume retries'), expect.anything());
+            consoleSpy.mockRestore();
+        });
     });
 
     describe('manualRetry', () => {
@@ -187,6 +294,17 @@ describe('RetryScheduler', () => {
             expect(mockQueueManager.updateStatus).toHaveBeenCalledWith('item-1', QueueStatus.Queued);
             expect(chrome.alarms.clear).toHaveBeenCalledWith('retry-item-1');
             expect(chrome.alarms.create).toHaveBeenCalled();
+        });
+
+        it('should log warning if item not found', async () => {
+            mockQueueManager.get.mockResolvedValue(null);
+            const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+            await scheduler.manualRetry('missing');
+
+            expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('not found for manual retry'));
+            expect(mockQueueManager.updateRetryCount).not.toHaveBeenCalled();
+            consoleSpy.mockRestore();
         });
     });
 

@@ -384,61 +384,48 @@ export class AnytypeApiClient {
             requestOptions.body = JSON.stringify(body);
         }
 
+        // Create abort controller for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
         try {
-            // Create abort controller for timeout
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+            const response = await fetch(url, {
+                ...requestOptions,
+                signal: controller.signal,
+            });
 
-            try {
-                const response = await fetch(url, {
-                    ...requestOptions,
-                    signal: controller.signal,
-                });
+            clearTimeout(timeoutId);
 
-                clearTimeout(timeoutId);
-
-                // Handle HTTP errors
-                if (!response.ok) {
-                    const errorText = await response.text().catch(() => 'Unknown error');
-                    throw classifyHttpError(
-                        response.status,
-                        `HTTP ${response.status}: ${errorText}`,
-                        new Error(errorText)
-                    );
-                }
-
-                // Parse JSON response
-                const data = await response.json();
-                return data as T;
-            } catch (error) {
-                clearTimeout(timeoutId);
-
-                // Re-throw if already an ApiError
-                if (error instanceof ApiError) {
-                    throw error;
-                }
-
-                // Handle abort (timeout)
-                if (error instanceof Error && error.name === 'AbortError') {
-                    throw new NetworkError(
-                        `Request timeout after ${timeoutMs}ms`,
-                        error
-                    );
-                }
-
-                // Handle network errors
-                throw new NetworkError(
-                    `Network error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-                    error instanceof Error ? error : undefined
+            // Handle HTTP errors
+            if (!response.ok) {
+                const errorText = await response.text().catch(() => 'Unknown error');
+                throw classifyHttpError(
+                    response.status,
+                    `HTTP ${response.status}: ${errorText}`,
+                    new Error(errorText)
                 );
             }
+
+            // Parse JSON response
+            const data = await response.json();
+            return data as T;
         } catch (error) {
+            clearTimeout(timeoutId);
+
             // Re-throw if already an ApiError
             if (error instanceof ApiError) {
                 throw error;
             }
 
-            // Wrap any other errors as NetworkError
+            // Handle abort (timeout)
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new NetworkError(
+                    `Request timeout after ${timeoutMs}ms`,
+                    error
+                );
+            }
+
+            // Handle network errors or other runtime errors
             throw new NetworkError(
                 `Request failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
                 error instanceof Error ? error : undefined

@@ -108,4 +108,15 @@ describe('Markdown Converter', () => {
         expect(result.metadata.conversionTime).toBeGreaterThanOrEqual(0);
         expect(result.metadata.characterCount).toBeGreaterThan(0);
     });
+    test('Test 16: Unicode characters preserved', async () => {
+        const html = '<p>Hello 🌍 中文</p>';
+        const result = await convertToMarkdown(html);
+        expect(result.markdown).toContain('Hello 🌍 中文');
+    });
+
+    test('Test 17: Malformed HTML handled gracefully', async () => {
+        const html = '<div><p>Unclosed standard tags';
+        const result = await convertToMarkdown(html);
+        expect(result.markdown).toContain('Unclosed standard tags');
+    });
 });

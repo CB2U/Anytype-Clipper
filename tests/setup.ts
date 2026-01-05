@@ -123,6 +123,7 @@ chrome.alarms.clearAll.mockImplementation((callback) => {
     setTitle: jest.fn().mockImplementation(() => Promise.resolve()),
     getBadgeText: jest.fn().mockImplementation(() => Promise.resolve('')),
     getBadgeBackgroundColor: jest.fn().mockImplementation(() => Promise.resolve([0, 0, 0, 0])),
+    openPopup: jest.fn().mockImplementation(() => Promise.resolve()),
 };
 
 // Mock chrome.tabs

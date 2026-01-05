@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -103,79 +103,79 @@
 <a name='L38'></a><a href='#L38'>38</a>
 <a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Content script entry point
 // Will be extended with text selection and page extraction in Epic 3.1
-<span class="cstat-no" title="statement not covered" >console.log('Anytype Clipper content script loaded');</span>
+console.log('Anytype Clipper content script loaded');
 &nbsp;
-<span class="cstat-no" title="statement not covered" >import { extractArticle } from '../lib/extractors/article-extractor';</span>
-<span class="cstat-no" title="statement not covered" >import { StorageManager } from '../lib/storage/storage-manager';</span>
+import { extractArticle } from '../lib/extractors/article-extractor';
+import { StorageManager } from '../lib/storage/storage-manager';
 &nbsp;
 // Listen for messages from service worker
-<span class="cstat-no" title="statement not covered" >chrome.runtime.onMessage.addListener(<span class="fstat-no" title="function not covered" >(r</span>equest, _sender, sendResponse) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (request.type === 'CMD_EXTRACT_ARTICLE') {</span>
-<span class="cstat-no" title="statement not covered" >        console.log('[Content Script] Received extract article request');</span>
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) =&gt; {
+    if (request.type === 'CMD_EXTRACT_ARTICLE') {
+        console.log('[Content Script] Received extract article request');
 &nbsp;
         // Use setTimeout to ensure async response works in all browser contexts
         // and to not block the listener return
 &nbsp;
         // Fetch settings first
-<span class="cstat-no" title="statement not covered" >        StorageManager.getInstance().getExtensionSettings()</span>
-            .then(<span class="fstat-no" title="function not covered" >settings </span>=&gt; {
-                const includeJSONForDataTables = <span class="cstat-no" title="statement not covered" >settings.includeJSONForDataTables || false;</span>
-<span class="cstat-no" title="statement not covered" >                return extractArticle(document, { includeJSONForDataTables });</span>
+        StorageManager.getInstance().getExtensionSettings()
+            .then(settings =&gt; {
+                const includeJSONForDataTables = settings.includeJSONForDataTables || false;
+                return extractArticle(document, { includeJSONForDataTables });
             })
-            .then(<span class="fstat-no" title="function not covered" >result </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >                console.log('[Content Script] Extraction complete:', result.quality);</span>
-<span class="cstat-no" title="statement not covered" >                sendResponse(result);</span>
+            .then(result =&gt; {
+                console.log('[Content Script] Extraction complete:', result.quality);
+                sendResponse(result);
             })
-            .catch(<span class="fstat-no" title="function not covered" >error </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >                console.error('[Content Script] Extraction failed:', error);</span>
-<span class="cstat-no" title="statement not covered" >                sendResponse({</span>
+            .catch(error =&gt; {
+                console.error('[Content Script] Extraction failed:', error);
+                sendResponse({
                     success: false,
                     error: String(error)
                 });
             });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return true; </span>// Keep channel open for async response
+        return true; // Keep channel open for async response
     }
     // Explicitly return undefined for other messages
-<span class="cstat-no" title="statement not covered" >    return undefined;</span>
+    return undefined;
 });
 &nbsp;</pre></td></tr></table></pre>
 
@@ -184,7 +184,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-05T17:52:29.505Z
+                at 2026-01-05T20:41:04.939Z
             </div>
         <script src="../prettify.js"></script>
         <script>

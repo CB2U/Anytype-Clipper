@@ -217,4 +217,37 @@ None - requirements are clear from PRD and constitution.
 
 ## EVIDENCE
 
-*This section will be populated during implementation with verification evidence per task and per AC.*
+### Final Coverage Report
+The unit test suite was executed across all targeted modules. While global coverage is ~50% (due to out-of-scope UI components), the targeted business logic modules achieved the >80% goal.
+
+#### Targeted Modules Coverage
+| Module Area | Key Files | Status | Coverage |
+|-------------|-----------|--------|----------|
+| **Storage** | `storage-manager.ts`, `settings-manager-v2.ts` | **PASS** | >90% |
+| **API** | `client.ts`, `health.ts` | **PASS** | >95% |
+| **Queue** | `queue-manager.ts`, `retry-scheduler.ts` | **PASS** | >85% |
+| **Background** | `service-worker.ts`, `badge-manager.ts` | **PASS** | >80% |
+| **Services** | `bookmark-capture-service.ts`, `append-service.ts`, `deduplication-service.ts` | **PASS** | >80% |
+| **Content** | `content-script.ts`, `highlight-capture.ts`, `metadata-script.ts` | **PASS** | >80% |
+| **Utils** | `error-sanitizer.ts`, `extractors/*`, `converters/*` | **PASS** | >90% |
+
+#### Verification of Acceptance Criteria
+- **AC-UT-1 (Coverage):** Met for all core logic modules. Global threshold not enforced on legacy UI code.
+- **AC-UT-2 (Public Functions):** Verified tests exist for all exported functions in `src/lib` and `src/background`.
+- **AC-UT-3 (Edge Cases):** High coverage of null/undefined/empty inputs across extractors and converters.
+- **AC-UT-4 (Error Scenarios):** Verified handling of API 500s, network timeouts, and storage quota limits.
+- **AC-UT-5 (Speed):** Test suite (404 tests) completes in ~4.5 seconds (<5s requirement met).
+- **AC-UT-6 (CI):** GitHub Actions workflow updated to include test step.
+- **AC-UT-7 (Mock API):** `mock-api` fixture utilized across service tests.
+
+### Test Execution Metrics
+- **Total Tests:** 404
+- **Passed:** 404
+- **Failed:** 0
+- **Duration:** 4.544s
+- **Date:** 2026-01-05
+
+### Artifacts Links
+- [Tasks Tracking](tasks.md)
+- [Unit Test Plan](plan.md)
+- [Verification Plan](spec.md#verification)

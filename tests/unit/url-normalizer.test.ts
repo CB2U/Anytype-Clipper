@@ -62,5 +62,15 @@ describe('URL Normalizer', () => {
         it('should strip fragments', () => {
             expect(cleanUrlForDeduplication('https://example.com/page#section-1')).toBe('https://example.com/page');
         });
+        it('should return null for javascript: URLs', () => {
+            expect(normalizeUrl('javascript:alert(1)', baseUrl)).toBeNull();
+            expect(normalizeUrl('vbscript:msgbox', baseUrl)).toBeNull();
+        });
+
+        it('should handle unicode domains (punycode)', () => {
+            // Basic check - URL constructor usually handles this or we expect utf-8
+            // Our normalizer returns absolute URLs as-is if they start with http/https
+            expect(normalizeUrl('https://中文.com', baseUrl)).toBe('https://中文.com');
+        });
     });
 });

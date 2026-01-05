@@ -117,4 +117,23 @@ describe('SchemaOrgExtractor', () => {
         const metadata = extractor.extract(document, baseUrl);
         expect(metadata).toEqual({});
     });
+
+    it('should handle null values in JSON', () => {
+        const json = {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            'headline': null,
+            'description': null,
+            'author': null
+        };
+
+        const script = document.createElement('script');
+        script.type = 'application/ld+json';
+        script.textContent = JSON.stringify(json);
+        document.head.appendChild(script);
+
+        const metadata = extractor.extract(document, baseUrl);
+        expect(metadata.headline).toBeUndefined();
+        expect(metadata.author).toBeUndefined();
+    });
 });

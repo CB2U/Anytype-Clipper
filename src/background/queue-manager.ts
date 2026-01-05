@@ -318,6 +318,9 @@ export class QueueManager {
             if (sendingItems.length > 0) {
                 for (const item of sendingItems) {
                     item.status = QueueStatus.Queued;
+                    if (!item.timestamps) {
+                        item.timestamps = { created: Date.now() };
+                    }
                     item.timestamps.lastAttempt = Date.now();
                 }
                 await this.storage.setQueue(queue);

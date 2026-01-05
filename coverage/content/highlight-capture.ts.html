@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -100,30 +100,28 @@
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a>
 <a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -131,33 +129,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentScriptMessage } from './types';
-<span class="cstat-no" title="statement not covered" >import { extractContext } from './utils';</span>
+import { extractContext } from './utils';
 &nbsp;
-<span class="cstat-no" title="statement not covered" >console.log('[Anytype Clipper] Highlight capture script injected');</span>
+console.log('[Anytype Clipper] Highlight capture script injected');
 &nbsp;
-function <span class="fstat-no" title="function not covered" >extractHighlight(</span>) {
-    const selection = <span class="cstat-no" title="statement not covered" >window.getSelection();</span>
-<span class="cstat-no" title="statement not covered" >    if (!selection || selection.rangeCount === 0) {</span>
-<span class="cstat-no" title="statement not covered" >        return;</span>
+function extractHighlight() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+        return;
     }
 &nbsp;
-    const quote = <span class="cstat-no" title="statement not covered" >selection.toString();</span>
-<span class="cstat-no" title="statement not covered" >    if (!quote.trim()) {</span>
-<span class="cstat-no" title="statement not covered" >        return;</span>
+    const quote = selection.toString();
+    if (!quote.trim()) {
+        return;
     }
 &nbsp;
-    const range = <span class="cstat-no" title="statement not covered" >selection.getRangeAt(0);</span>
-    const container = <span class="cstat-no" title="statement not covered" >range.commonAncestorContainer;</span>
-    const fullText = <span class="cstat-no" title="statement not covered" >container.textContent || '';</span>
+    const range = selection.getRangeAt(0);
+    const container = range.commonAncestorContainer;
+    const fullText = container.textContent || <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
 &nbsp;
-    const context = <span class="cstat-no" title="statement not covered" >extractContext(quote, fullText);</span>
+    const context = extractContext(quote, fullText);
 &nbsp;
-    const message: ContentScriptMessage = <span class="cstat-no" title="statement not covered" >{</span>
+    const message: ContentScriptMessage = {
         type: 'CAPTURE_HIGHLIGHT',
         data: {
             ...context,
@@ -167,10 +167,10 @@ function <span class="fstat-no" title="function not covered" >extractHighlight(<
         }
     };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    chrome.runtime.sendMessage(message);</span>
+    chrome.runtime.sendMessage(message);
 }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >extractHighlight();</span>
+extractHighlight();
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -178,7 +178,7 @@ function <span class="fstat-no" title="function not covered" >extractHighlight(<
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-05T17:52:29.505Z
+                at 2026-01-05T20:41:04.939Z
             </div>
         <script src="../prettify.js"></script>
         <script>

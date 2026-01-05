@@ -161,4 +161,26 @@ describe('TableConverter', () => {
             expect(markdown).not.toContain('Column 1');
         });
     });
+
+    it('should handle unicode characters', () => {
+        const html = `<table><tr><td>🚀</td><td>你好</td></tr></table>`;
+        const table = createTable(html);
+        const md = TableConverter.toMarkdown(table);
+        expect(md).toContain('| 🚀 | 你好 |');
+    });
+
+    it('should handle colspan/rowspan (flattened or preserved)', () => {
+        const html = `
+                <table>
+                    <tr><td colspan="2">Wide Content</td></tr>
+                    <tr><td>A</td><td>B</td></tr>
+                </table>
+             `;
+        const table = createTable(html);
+        const md = TableConverter.toMarkdown(table);
+        // Turndown/tables usually renders colspan by adding empty cells or just as is.
+        // We verify it doesn't crash and contains content.
+        expect(md).toContain('Wide Content');
+        expect(md).toContain('| A | B |');
+    });
 });

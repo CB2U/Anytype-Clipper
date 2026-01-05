@@ -35,6 +35,10 @@ export class TwitterCardExtractor {
         // Twitter cards sometimes use property attribute instead of name
         const meta = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`);
         const content = meta?.getAttribute('content');
-        return content ? decodeHtml(content.trim()) : undefined;
+
+        if (!content) return undefined;
+
+        const trimmed = content.trim();
+        return trimmed ? decodeHtml(trimmed) : undefined;
     }
 }

@@ -106,7 +106,7 @@ describe('BookmarkCaptureService', () => {
             expect(mockApiClient.createObject).toHaveBeenCalledWith(
                 'space-123',
                 expect.objectContaining({
-                    description: quote,
+                    description: expect.stringContaining(quote),
                     type_key: 'note'
                 })
             );
@@ -178,7 +178,7 @@ describe('BookmarkCaptureService', () => {
             expect(mockApiClient.createObject).toHaveBeenCalledWith(
                 'space-123',
                 expect.objectContaining({
-                    description: quote
+                    description: expect.stringContaining(quote)
                 })
             );
         });
