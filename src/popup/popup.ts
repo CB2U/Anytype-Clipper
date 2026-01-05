@@ -392,25 +392,9 @@ async function handleSave(isArticle: boolean = false, skipDeduplication: boolean
         const existing = response.data.existingObject;
         const createdDate = new Date(existing.createdAt).toLocaleDateString();
 
-        // Show duplicate warning with user choices
-        const message = `⚠️ This URL was already saved:\n\n"${existing.title}"\nSaved on ${createdDate}\n\nWhat would you like to do?`;
-
-        // Use confirm dialog for now (can be enhanced with custom UI later)
-        const userChoice = confirm(
-          message + '\n\nClick OK to create anyway, or Cancel to skip.'
-        );
-
-        if (userChoice) {
-          // User chose "Create Anyway" - retry with skipDeduplication flag
-          console.log('[Popup] User chose: Create Anyway');
-          await handleSave(isArticle, true); // Retry with skipDeduplication=true
-          return;
-        } else {
-          // User chose "Skip"
-          console.log('[Popup] User chose: Skip');
-          showStatus('Capture cancelled (duplicate URL)', false);
-          return;
-        }
+        // Show custom 3-button duplicate dialog
+        showDuplicateDialog(existing, createdDate, isArticle, skipDeduplication);
+        return;
       }
 
       // Normal success flow
@@ -453,6 +437,180 @@ function showStatus(msg: string, isError: boolean) {
     mainElements.statusMsg.classList.remove('hidden');
   }
 }
+
+/**
+ * Show custom 3-button duplicate detection dialog
+ */
+function showDuplicateDialog(existing: any, createdDate: string, isArticle: boolean, skipDeduplication: boolean) {
+  // Create modal overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  `;
+
+  // Create dialog
+  const dialog = document.createElement('div');
+  dialog.style.cssText = `
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  `;
+
+  dialog.innerHTML = `
+    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600;">⚠️ Duplicate Detected</h3>
+    <p style="margin: 0 0 8px 0; font-size: 14px; color: #666;">
+      This URL already exists in your Anytype:
+    </p>
+    <p style="margin: 0 0 16px 0; font-size: 14px; font-weight: 500;">
+      "${existing.title}"<br>
+      <span style="font-size: 12px; color: #999;">Saved on ${createdDate}</span>
+    </p>
+    <p style="margin: 0 0 16px 0; font-size: 14px; color: #666;">
+      What would you like to do?
+    </p>
+    <div style="display: flex; gap: 8px; flex-direction: column;">
+      <button id="btn-append" class="btn btn-primary" style="width: 100%;">Append to Existing</button>
+      <button id="btn-create-anyway" class="btn btn-secondary" style="width: 100%;">Create Anyway</button>
+      <button id="btn-skip" class="btn btn-secondary" style="width: 100%;">Skip</button>
+    </div>
+  `;
+
+  overlay.appendChild(dialog);
+  document.body.appendChild(overlay);
+
+  // Handle button clicks
+  const btnAppend = dialog.querySelector('#btn-append') as HTMLButtonElement;
+  const btnCreateAnyway = dialog.querySelector('#btn-create-anyway') as HTMLButtonElement;
+  const btnSkip = dialog.querySelector('#btn-skip') as HTMLButtonElement;
+
+  btnAppend.addEventListener('click', async () => {
+    document.body.removeChild(overlay);
+    console.log('[Popup] User chose: Append to Existing');
+    await handleAppend(existing.id, isArticle);
+  });
+
+  btnCreateAnyway.addEventListener('click', async () => {
+    document.body.removeChild(overlay);
+    console.log('[Popup] User chose: Create Anyway');
+    await handleSave(isArticle, true); // Retry with skipDeduplication=true
+  });
+
+  btnSkip.addEventListener('click', () => {
+    document.body.removeChild(overlay);
+    console.log('[Popup] User chose: Skip');
+    showStatus('Capture cancelled (duplicate URL)', false);
+
+    // Re-enable buttons
+    if (mainElements.btnSave) {
+      mainElements.btnSave.disabled = false;
+      mainElements.btnSave.textContent = currentHighlight ? 'Save Highlight' : 'Save Bookmark';
+    }
+    if (mainElements.btnSaveArticle) {
+      mainElements.btnSaveArticle.disabled = false;
+      mainElements.btnSaveArticle.textContent = 'Save as Article';
+    }
+  });
+}
+
+/**
+ * Handle appending content to existing object
+ */
+async function handleAppend(objectId: string, isArticle: boolean) {
+  if (!currentTab || !currentTab.url) {
+    showStatus('Error: No active tab found', true);
+    return;
+  }
+
+  const spaceId = mainElements.spaceSelector?.value;
+  if (!spaceId) {
+    showStatus('Please select a space', true);
+    return;
+  }
+
+  try {
+    // Prepare content to append
+    let content = '';
+    const isHighlight = !!currentHighlight;
+
+    if (isHighlight) {
+      // For highlights, format as blockquote with context
+      content = `"${currentHighlight.quote}"`;
+      if (currentHighlight.contextBefore || currentHighlight.contextAfter) {
+        content += `\n\n**Context:** ${currentHighlight.contextBefore || ''}**[HIGHLIGHT]**${currentHighlight.contextAfter || ''}`;
+      }
+      const userNote = mainElements.inputNote?.value;
+      if (userNote) {
+        content += `\n\n**Note:** ${userNote}`;
+      }
+    } else if (isArticle && currentMetadata?.content) {
+      // For articles, use full markdown content
+      content = currentMetadata.content;
+      const userNote = mainElements.inputNote?.value;
+      if (userNote) {
+        content = `${userNote}\n\n${content}`;
+      }
+    } else {
+      // For bookmarks, use note
+      content = mainElements.inputNote?.value || 'Bookmark saved';
+    }
+
+    // Prepare metadata
+    const metadata = {
+      url: currentTab.url,
+      pageTitle: mainElements.inputTitle?.value || currentTab.title || 'Untitled',
+      timestamp: new Date().toISOString(),
+      captureType: (isHighlight ? 'highlight' : (isArticle ? 'article' : 'bookmark')) as 'highlight' | 'article' | 'bookmark'
+    };
+
+    // Send append command to service worker
+    const response = await chrome.runtime.sendMessage({
+      type: 'CMD_APPEND_TO_OBJECT',
+      payload: {
+        spaceId,
+        objectId,
+        content,
+        metadata
+      }
+    });
+
+    if (response && response.success) {
+      showStatus(
+        isHighlight ? 'Highlight Appended! 🎉' :
+          (isArticle ? 'Article Appended! 🎉' : 'Content Appended! 🎉'),
+        false
+      );
+    } else {
+      throw new Error(response?.error || 'Append failed');
+    }
+
+  } catch (error) {
+    console.error('Append failed:', error);
+    showStatus(`Error: ${error instanceof Error ? error.message : 'Append failed'}`, true);
+  } finally {
+    // Re-enable buttons
+    if (mainElements.btnSave) {
+      mainElements.btnSave.disabled = false;
+      mainElements.btnSave.textContent = currentHighlight ? 'Save Highlight' : 'Save Bookmark';
+    }
+    if (mainElements.btnSaveArticle) {
+      mainElements.btnSaveArticle.disabled = false;
+      mainElements.btnSaveArticle.textContent = 'Save as Article';
+    }
+  }
+}
+
 
 
 // Listen for changes

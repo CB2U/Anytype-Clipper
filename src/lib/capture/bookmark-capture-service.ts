@@ -65,7 +65,7 @@ export class BookmarkCaptureService {
             title: metadata.title,
             description: userNote || metadata.description,
             type_key: typeKey,
-            source_url: metadata.canonicalUrl,
+            source: metadata.canonicalUrl,
         };
 
         // If it's an article or note, include the content with safety limits

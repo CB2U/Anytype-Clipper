@@ -113,6 +113,8 @@ export interface CreateObjectRequest {
     body?: string;
     /** ID of the object type (e.g., "bookmark", "page") */
     type_key: string;
+    /** Source URL for bookmarks (used for deduplication) */
+    source?: string;
     /** Object properties - Array of key-value pairs (flattened value) */
     properties?: {
         key: string;

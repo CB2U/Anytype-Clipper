@@ -14,7 +14,8 @@ export type MessageType =
     | 'CMD_GET_QUEUE'
     | 'CMD_RETRY_QUEUE_ITEM'
     | 'CMD_DELETE_QUEUE_ITEM'
-    | 'CMD_DIAGNOSTIC';
+    | 'CMD_DIAGNOSTIC'
+    | 'CMD_APPEND_TO_OBJECT';
 
 export interface BaseMessage {
     type: MessageType;
@@ -77,7 +78,8 @@ export type ExtensionMessage =
     | GetQueueMessage
     | RetryQueueItemMessage
     | DeleteQueueItemMessage
-    | DiagnosticMessage;
+    | DiagnosticMessage
+    | AppendToObjectMessage;
 
 export interface GetQueueMessage extends BaseMessage {
     type: 'CMD_GET_QUEUE';
@@ -95,6 +97,21 @@ export interface DeleteQueueItemMessage extends BaseMessage {
 
 export interface DiagnosticMessage extends BaseMessage {
     type: 'CMD_DIAGNOSTIC';
+}
+
+export interface AppendToObjectMessage extends BaseMessage {
+    type: 'CMD_APPEND_TO_OBJECT';
+    payload: {
+        spaceId: string;
+        objectId: string;
+        content: string;
+        metadata: {
+            url: string;
+            pageTitle: string;
+            timestamp: string;
+            captureType: 'bookmark' | 'article' | 'highlight';
+        };
+    };
 }
 
 export interface MessageResponse<T = unknown> {

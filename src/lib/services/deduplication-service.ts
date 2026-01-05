@@ -104,6 +104,18 @@ export class DeduplicationService {
 
                 console.log(`[Deduplication] API response data:`, JSON.stringify(data, null, 2));
                 console.log(`[Deduplication] Found ${data.data?.length || 0} results`);
+                console.log(`[Deduplication] Search took ${duration}ms`);
+
+                // Debug: Log each result's properties
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach((obj, idx) => {
+                        console.log(`[Deduplication] Result ${idx}:`, {
+                            id: obj.id,
+                            name: obj.name,
+                            properties: obj.properties.map(p => ({ key: p.key, value: p }))
+                        });
+                    });
+                }
 
                 // Check if duplicate found
                 if (data.data && data.data.length > 0) {

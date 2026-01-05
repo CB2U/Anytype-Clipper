@@ -42,6 +42,9 @@ const badgeManager = BadgeManager.getInstance(queueManager);
 // Import deduplication service
 import { deduplicationService } from '../lib/services/deduplication-service';
 
+// Import append service
+import { AppendService } from '../lib/services/append-service';
+
 
 // T8: Register Alarm Listener for retries
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -361,10 +364,10 @@ chrome.runtime.onMessage.addListener((
           console.log(`[Service Worker] CMD_CAPTURE_BOOKMARK: type=${type_key}, space=${spaceId}, title="${metadata.title}"`);
           console.log(`[Service Worker] Metadata URL: ${metadata.url}, Canonical: ${metadata.canonicalUrl}`);
 
-          // T3: Deduplication check (only for bookmarks, skip if explicitly requested or if it's a note/highlight)
-          // Regular bookmarks don't set type_key, so we check if it's NOT 'note' (which is used for articles/highlights)
+          // Deduplication check (skip if explicitly requested or if it's a highlight)
+          // Now includes both bookmarks AND articles (notes)
           const bookmarkUrl = metadata.url || metadata.canonicalUrl;
-          if (type_key !== 'note' && !skipDeduplication && !isHighlightCapture && bookmarkUrl) {
+          if (!skipDeduplication && !isHighlightCapture && bookmarkUrl) {
             try {
               // Get API key from storage for deduplication search
               const authData = await chrome.storage.local.get('auth');
@@ -400,7 +403,7 @@ chrome.runtime.onMessage.addListener((
               console.error('[Service Worker] Deduplication check failed:', dedupError);
             }
           } else {
-            console.log(`[Service Worker] Skipping deduplication: type=${type_key}, skip=${skipDeduplication}, highlight=${isHighlightCapture}, url=${bookmarkUrl}`);
+            console.log(`[Service Worker] Skipping deduplication: skip=${skipDeduplication}, highlight=${isHighlightCapture}, url=${bookmarkUrl}`);
           }
 
           // Proceed with bookmark capture
@@ -497,6 +500,39 @@ chrome.runtime.onMessage.addListener((
               storageUsage: JSON.stringify(allData).length // Rough byte count
             }
           });
+          break;
+        }
+
+        case 'CMD_APPEND_TO_OBJECT': {
+          const { spaceId, objectId, content, metadata } = message.payload;
+          console.log(`[Service Worker] CMD_APPEND_TO_OBJECT: object=${objectId}, space=${spaceId}`);
+
+          // Get API key from storage
+          const authData = await chrome.storage.local.get('auth');
+          const apiKey = (authData as any).auth?.apiKey;
+
+          if (!apiKey) {
+            throw new Error('Not authenticated');
+          }
+
+
+          // Use AppendService (imported at top of file)
+          const appendService = new AppendService();
+
+          const result = await appendService.appendToObject(
+            spaceId,
+            objectId,
+            content,
+            metadata,
+            apiKey
+          );
+
+          if (result.success) {
+            console.log(`[Service Worker] Append successful: ${objectId}`);
+            sendResponse({ success: true, data: result });
+          } else {
+            throw new Error(result.error || 'Append failed');
+          }
           break;
         }
 

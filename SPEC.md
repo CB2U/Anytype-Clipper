@@ -18,20 +18,22 @@ Working on **Epic 6.0: URL Deduplication** (Breakpoint 5).
 
 ## Active Specification
 
-**Epic:** 6.1 Smart Tagging Engine  
-**Folder:** `specs/061-smart-tagging/`  
+**Epic:** 6.2 Append Mode  
+**Folder:** `specs/062-append-mode/`  
 **Status:** Done ✅  
 **Completed:** 2026-01-04
 
 ### Quick Links
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/061-smart-tagging/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/061-smart-tagging/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/061-smart-tagging/tasks.md)
-- [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/061-smart-tagging/spec.md#evidence)
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/062-append-mode/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/062-append-mode/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/062-append-mode/tasks.md)
+- [Walkthrough](file:///home/chris/.gemini/antigravity/brain/622b4fd9-f7ff-4894-b548-86df997cb668/walkthrough.md)
 
-### Next Epic Options
-- Epic 6.2: Append Mode
-- Epic 7.0: Advanced Features
+### Previous Epic
+- Epic 6.1: Smart Tagging Engine (Complete ✅)
+
+### Next Epic
+- Epic 7.1: Context Menu Integration (BP6)
 
 
 ## Notes
