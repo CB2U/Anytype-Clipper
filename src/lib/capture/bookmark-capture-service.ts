@@ -73,8 +73,14 @@ export class BookmarkCaptureService {
             let articleBody = '';
 
             if (isHighlightCapture && quote) {
-                console.log('[BookmarkCaptureService] Using quote for highlight description');
-                articleBody = quote;
+                console.log('[BookmarkCaptureService] Formatting quote as markdown blockquote');
+                // Format as markdown blockquote
+                articleBody = `> ${quote.replace(/\n/g, '\n> ')}`;
+
+                // Add context if available (from metadata)
+                if (metadata.description) {
+                    articleBody += `\n\n**Context:** ${metadata.description}`;
+                }
             } else {
                 // Content is now pre-converted to Markdown in the content script
                 articleBody = metadata.content || '';
