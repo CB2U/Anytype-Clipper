@@ -168,15 +168,28 @@ const handleExtractMetadata = async () => {
   const activeTab = tabs[0];
   if (!activeTab?.id) throw new Error('No active tab found');
 
-  // 2. Send message to content script
-  console.log('[Service Worker] Requesting metadata from content script in tab', activeTab.id);
-  const response = await chrome.tabs.sendMessage(activeTab.id, { type: 'CMD_EXTRACT_METADATA' });
+  // 2. Send message to content script with error handling
+  try {
+    console.log('[Service Worker] Requesting metadata from content script in tab', activeTab.id);
+    const response = await chrome.tabs.sendMessage(activeTab.id, { type: 'CMD_EXTRACT_METADATA' });
 
-  if (!response || !response.success) {
-    throw new Error(response?.error || 'Failed to extract metadata from page');
+    if (!response || !response.success) {
+      throw new Error(response?.error || 'Failed to extract metadata from page');
+    }
+
+    return response.data;
+  } catch (err) {
+    // Content script not ready or page doesn't support it
+    const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+    console.warn('[Service Worker] Metadata extraction failed, using fallback:', errorMsg);
+
+    // Return minimal fallback metadata
+    return {
+      title: activeTab.title || 'Untitled',
+      canonicalUrl: activeTab.url,
+      source: 'fallback'
+    };
   }
-
-  return response.data;
 };
 
 // T8: Quality Indicators
@@ -242,9 +255,6 @@ const handleExtractArticle = async (targetTabId?: number) => {
 
     if (!response || (!response.success && response.quality === ExtractionQuality.FAILURE)) {
       // Only treat as error if COMPLETELY failed (FAILURE)
-      // Levels 2,3,4 (PARTIAL, FALLBACK) are considered "success: true" by the fallbacker mostly, 
-      // but let's check the fields.
-      // Fallback chain always returns success=true for L4 unless catastrophic error.
       const errorMsg = response?.error || 'Failed to extract article from page';
       console.error('[Service Worker] Extraction failed:', errorMsg);
 
@@ -292,6 +302,25 @@ const handleExtractArticle = async (targetTabId?: number) => {
 
     return result;
   } catch (err) {
+    const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+
+    // Check if it's a connection error (content script not ready)
+    if (errorMsg.includes('Receiving end does not exist') || errorMsg.includes('Could not establish connection')) {
+      console.warn('[Service Worker] Content script not ready, returning fallback metadata');
+
+      // Return minimal fallback - let popup handle gracefully
+      return {
+        success: true,
+        quality: ExtractionQuality.FALLBACK,
+        article: null,
+        metadata: {
+          title: activeTab.title || 'Untitled',
+          url: activeTab.url,
+          source: 'fallback'
+        }
+      };
+    }
+
     console.error('[Service Worker] Communication error:', err);
     throw err;
   }

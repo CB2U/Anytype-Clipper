@@ -11,28 +11,28 @@ It points to the spec folder for the current work and links to the product docs.
 
 ## Current Focus
 **Recent Completions:**
+- Completed [Epic 7.2: Options Page](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/072-options-page/spec.md) ✅
+- Completed [Epic 7.1: Context Menu Integration](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md) ✅
 - Completed [Retry Logic with Backoff](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/051-retry-logic/spec.md)
 - Completed [Queue UI & Status](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/053-queue-ui/spec.md)
 
-Working on **Epic 6.0: URL Deduplication** (Breakpoint 5).
-
 ## Active Specification
 
-**Epic:** 7.1 Context Menu Integration  
-**Folder:** `specs/071-context-menu/`  
-**Status:** Done ✅  
-**Completed:** 2026-01-04
+**Epic:** 7.3 Notifications System  
+**Folder:** `specs/025-notifications/`  
+**Status:** Not Started  
+**Next:** Awaiting specification
 
 ### Quick Links
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/tasks.md)
+- Specification: TBD
+- Implementation Plan: TBD
+- Tasks: TBD
 
 ### Previous Epic
-- Epic 6.2: Append Mode (Complete ✅)
+- Epic 7.2: Options Page (Complete ✅ - 2026-01-05)
 
 ### Next Epic
-- Epic 7.2: Options Page (BP6)
+- Epic 8.0: Polish & Testing (BP7)
 
 
 ## Notes

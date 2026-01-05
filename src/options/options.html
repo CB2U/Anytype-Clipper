@@ -11,53 +11,203 @@
     <div class="container">
         <h1>Anytype Clipper Settings</h1>
 
+        <!-- Default Spaces Section -->
+        <section class="section">
+            <h2>Default Spaces</h2>
+            <p class="section-description">Configure default Spaces for each content type. Leave as "No default" to
+                choose manually each time.</p>
+
+            <div class="form-group">
+                <label for="defaultSpaceBookmark">Bookmark:</label>
+                <select id="defaultSpaceBookmark" aria-label="Default Space for bookmarks">
+                    <option value="">No default</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="defaultSpaceHighlight">Highlight:</label>
+                <select id="defaultSpaceHighlight" aria-label="Default Space for highlights">
+                    <option value="">No default</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="defaultSpaceArticle">Article:</label>
+                <select id="defaultSpaceArticle" aria-label="Default Space for articles">
+                    <option value="">No default</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="defaultSpaceNote">Note:</label>
+                <select id="defaultSpaceNote" aria-label="Default Space for notes">
+                    <option value="">No default</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="defaultSpaceTask">Task:</label>
+                <select id="defaultSpaceTask" aria-label="Default Space for tasks">
+                    <option value="">No default</option>
+                </select>
+            </div>
+
+            <button id="refreshSpaces" class="secondary">Refresh Spaces</button>
+            <span id="spacesStatus" class="status"></span>
+        </section>
+
+        <!-- Retry Behavior Section -->
+        <section class="section">
+            <h2>Retry Behavior</h2>
+            <p class="section-description">Configure how the extension retries failed captures when Anytype is
+                unavailable.</p>
+
+            <div class="form-group">
+                <label for="maxAttempts">Max Retry Attempts:</label>
+                <input type="number" id="maxAttempts" min="1" max="20" aria-label="Maximum retry attempts">
+                <p class="help-text">Number of times to retry a failed capture (1-20).</p>
+            </div>
+
+            <div class="form-group">
+                <label>Retry Schedule:</label>
+                <p id="retrySchedule" class="readonly-value">1s, 5s, 30s, 5m</p>
+                <p class="help-text">Intervals between retry attempts (calculated automatically).</p>
+            </div>
+        </section>
+
+        <!-- Deduplication Section -->
+        <section class="section">
+            <h2>Deduplication</h2>
+            <p class="section-description">Prevent duplicate bookmarks by checking URLs before saving.</p>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="deduplicationEnabled" aria-label="Enable deduplication">
+                    Enable URL deduplication
+                </label>
+                <p class="help-text">When enabled, the extension will warn you if you're saving a URL that already
+                    exists.</p>
+            </div>
+        </section>
+
+        <!-- API Configuration Section -->
+        <section class="section">
+            <h2>API Configuration</h2>
+            <p class="section-description">Configure the connection to your local Anytype instance.</p>
+
+            <div class="form-group">
+                <label for="apiPort">Anytype API Port:</label>
+                <input type="number" id="apiPort" min="1" max="65535" aria-label="Anytype API port number">
+                <p class="help-text">Default: 31009. Only change if you've configured Anytype to use a different port.
+                </p>
+            </div>
+
+            <button id="testConnection" class="secondary">Test Connection</button>
+            <span id="connectionStatus" class="status"></span>
+        </section>
+
+        <!-- Image Handling Section -->
         <section class="section">
             <h2>Image Handling</h2>
+            <p class="section-description">Configure how images are handled when capturing articles.</p>
+
             <div class="form-group">
-                <label for="imagePreference">Embedding Preference:</label>
-                <select id="imagePreference">
-                    <option value="smart">Smart (Default)</option>
-                    <option value="always">Always Embed</option>
-                    <option value="never">Never Embed</option>
-                </select>
-                <p class="help-text">
-                    <strong>Smart:</strong> Embeds images &lt; 500KB and all featured images.<br>
-                    <strong>Always:</strong> Embeds all images (up to limit).<br>
-                    <strong>Never:</strong> Keeps all images as external links.
-                </p>
+                <label>Embedding Strategy:</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="imageStrategy" value="always" aria-label="Always embed images">
+                        <strong>Always Embed</strong> - Embed all images as base64 (up to limit)
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="imageStrategy" value="smart" aria-label="Smart image embedding">
+                        <strong>Smart (Default)</strong> - Embed images &lt;500KB and featured images
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="imageStrategy" value="never" aria-label="Never embed images">
+                        <strong>Never Embed</strong> - Keep all images as external links
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="maxImages">Max Embedded Images:</label>
-                <input type="number" id="maxImages" min="0" max="100">
-                <p class="help-text">Maximum number of images to embed per article (Max 100).</p>
+                <input type="number" id="maxImages" min="0" max="100" aria-label="Maximum embedded images per article">
+                <p class="help-text">Maximum number of images to embed per article (0-100).</p>
             </div>
 
             <!-- Table Preservation Options -->
-            <div class="space-y-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
-                <h3 class="text-sm font-medium text-zinc-900 dark:text-zinc-100">Table Settings</h3>
-
-                <div class="space-y-3">
-                    <label class="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-                        <input type="checkbox" id="includeJSON"
-                            class="text-blue-600 focus:ring-blue-500 bg-white dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 rounded">
-                        Include JSON for Data Tables
-                    </label>
-                    <p class="text-xs text-zinc-500 dark:text-zinc-400 ml-6">
-                        Data tables are converted to Markdown by default. Enable this to append a raw JSON
-                        representation.
-                    </p>
-                </div>
+            <div class="form-group">
+                <h3>Table Settings</h3>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="includeJSON" aria-label="Include JSON for data tables">
+                    Include JSON for Data Tables
+                </label>
+                <p class="help-text">Data tables are converted to Markdown by default. Enable this to append a raw JSON
+                    representation.</p>
             </div>
-
-            <!-- Advanced Settings -->can go here -->
         </section>
 
+        <!-- Privacy Section -->
+        <section class="section">
+            <h2>Privacy</h2>
+            <p class="section-description">Control what data the extension tracks and stores.</p>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="privacyMode" aria-label="Enable privacy mode">
+                    Enable Privacy Mode
+                </label>
+                <p class="help-text">When enabled, disables URL history tracking. Your captures will still be saved, but
+                    browsing history won't be logged.</p>
+            </div>
+        </section>
+
+        <!-- Data Management Section -->
+        <section class="section danger-section">
+            <h2>Data Management</h2>
+            <p class="section-description">Manage your extension data. Use with caution.</p>
+
+            <div class="form-group">
+                <button id="clearAllData" class="danger">⚠️ Clear All Data</button>
+                <p class="help-text">This will delete all extension data including API key, queue items, settings, and
+                    cached data. You will need to re-authenticate.</p>
+            </div>
+        </section>
+
+        <!-- Save Button and Status -->
         <div class="actions">
             <button id="save" class="primary">Save Settings</button>
             <span id="status" class="status"></span>
         </div>
     </div>
+
+    <!-- Confirmation Dialog for Clear All Data -->
+    <div id="confirmDialog" class="dialog-overlay" style="display: none;">
+        <div class="dialog">
+            <h2>⚠️ Clear All Data</h2>
+            <p>This action will permanently delete:</p>
+            <ul>
+                <li>API key and authentication</li>
+                <li>Queue items (pending and failed)</li>
+                <li>All settings and preferences</li>
+                <li>Cached data (Spaces, etc.)</li>
+            </ul>
+            <p><strong>This cannot be undone.</strong> You will need to re-authenticate with Anytype.</p>
+
+            <div class="dialog-actions">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="confirmClear">
+                    I understand this will delete all data
+                </label>
+            </div>
+
+            <div class="dialog-buttons">
+                <button id="cancelClear" class="secondary">Cancel</button>
+                <button id="confirmClearButton" class="danger" disabled>Clear All Data</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="options.ts"></script>
 </body>
 

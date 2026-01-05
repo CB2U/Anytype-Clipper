@@ -22,6 +22,7 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 - **Table Preservation**: Intelligent handling of tables - Simple tables as Markdown, Complex as HTML, Data as JSON/CSV.
 - **Tag Management**: Integrated autocomplete and selection of existing Anytype tags.
 - **Inline Tag Creation**: Create new tags directly within the popup UI.
+- **Options Page**: Comprehensive settings page for configuring default Spaces, retry behavior, deduplication, API port, image handling, and privacy mode.
 - **Privacy-First**: All data stays local, no cloud sync.
 
 ## Prerequisites
@@ -115,12 +116,15 @@ ISC
 
 ## 🚀 Current Status
 
-**Latest Epic:** 6.1 Smart Tagging Engine - Complete ✅  
-**Next:** Epic 6.2 (Append Mode) or Epic 7.0 (Advanced Features)
+**Latest Epic:** 7.2 Options Page - Complete ✅  
+**Next:** Epic 7.3 (Notifications System)
 
 ### Recent Completions
-- ✅ Epic 6.0: URL Deduplication (Complete - Tests Pending)
-- ✅ Epic 6.1: Smart Tagging Engine (Complete - Tests Deferred)
+- ✅ Epic 7.2: Options Page (Complete)
+- ✅ Epic 7.1: Context Menu Integration (Complete)
+- ✅ Epic 6.1: Smart Tagging Engine (Complete)
+- ✅ Epic 6.0: URL Deduplication (Complete)
 - ✅ Epic 5.0-5.3: Offline Queue System (Complete)
 
 See [SPECS.md](SPECS.md) for current progress.
+
