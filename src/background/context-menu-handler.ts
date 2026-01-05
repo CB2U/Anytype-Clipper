@@ -158,8 +158,8 @@ async function handleArticleCapture(
  * Captures current page as bookmark
  */
 async function handleBookmarkCapture(
-    info: chrome.contextMenus.OnClickData,
-    tab: chrome.tabs.Tab
+    _info: chrome.contextMenus.OnClickData,
+    _tab: chrome.tabs.Tab
 ): Promise<void> {
     console.log('[ContextMenu] Handling bookmark capture');
 
