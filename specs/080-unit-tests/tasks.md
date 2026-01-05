@@ -4,8 +4,8 @@
 
 ### T1: Configure Jest Coverage Thresholds
 - [x] Update `jest.config.js` to set 80% thresholds (currently 60%) <!-- id: 100 -->
-- [ ] Add `coveragePathIgnorePatterns` for types, fixtures, and generated files <!-- id: 101 -->
-- [/] Run `npm test -- --coverage` to verify configuration <!-- id: 102 -->
+- [x] Add `coveragePathIgnorePatterns` for types, fixtures, and generated files <!-- id: 101 -->
+- [x] Run `npm test -- --coverage` to verify configuration <!-- id: 102 -->
 
 ### T2: Create Global Test Setup
 - [x] Create `tests/setup.ts` with chrome mock initialization <!-- id: 200 -->

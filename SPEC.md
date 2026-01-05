@@ -18,21 +18,21 @@ It points to the spec folder for the current work and links to the product docs.
 
 ## Active Specification
 
-**Epic:** 8.0 Unit Test Suite  
-**Folder:** `specs/080-unit-tests/`  
-**Status:** Done ✅  
-**Next:** None (Ready for 8.1)
+**Epic:** 8.1 Integration Tests  
+**Folder:** `specs/081-integration-tests/`  
+**Status:** In Progress  
+**Next:** T1 - Configure Integration Test Infrastructure
 
 ### Quick Links
-- Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/080-unit-tests/spec.md)
-- Implementation Plan: [plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/080-unit-tests/plan.md)
-- Tasks: [tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/080-unit-tests/tasks.md)
+- Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/spec.md)
+- Implementation Plan: [plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/plan.md)
+- Tasks: [tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/tasks.md)
 
 ### Previous Epic
-- Epic 7.3: Notifications System (Complete ✅ - 2026-01-05)
+- Epic 8.0: Unit Test Suite (Complete ✅ - 2026-01-05)
 
 ### Next Epic
-- Epic 8.1: Integration Tests (BP7)
+- Epic 8.2: E2E Test Suite (BP7)
 
 
 ## Notes
