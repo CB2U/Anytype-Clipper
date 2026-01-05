@@ -1,6 +1,6 @@
-import { QueueManager } from '../../src/background/queue-manager';
-import { StorageManager } from '../../src/lib/storage/storage-manager';
-import { QueueStatus, QueueItem } from '../../src/types/queue';
+import { QueueManager } from '../../../src/background/queue-manager';
+import { StorageManager } from '../../../src/lib/storage/storage-manager';
+import { QueueStatus, QueueItem } from '../../../src/types/queue';
 
 describe('Queue Persistence Integration', () => {
     let storage: StorageManager;

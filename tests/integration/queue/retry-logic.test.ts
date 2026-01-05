@@ -1,8 +1,8 @@
-import { RetryScheduler } from '../../src/background/retry-scheduler';
-import { QueueManager } from '../../src/background/queue-manager';
-import { AnytypeApiClient } from '../../src/lib/api/client';
-import { QueueStatus } from '../../src/types/queue';
-import { StorageManager } from '../../src/lib/storage/storage-manager';
+import { RetryScheduler } from '../../../src/background/retry-scheduler';
+import { QueueManager } from '../../../src/background/queue-manager';
+import { AnytypeApiClient } from '../../../src/lib/api/client';
+import { QueueStatus } from '../../../src/types/queue';
+import { StorageManager } from '../../../src/lib/storage/storage-manager';
 
 describe('Retry Flow Integration', () => {
     let scheduler: RetryScheduler;

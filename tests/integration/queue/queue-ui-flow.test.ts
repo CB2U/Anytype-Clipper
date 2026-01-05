@@ -1,5 +1,5 @@
-import { QueueStatusSection } from '../../src/popup/components/QueueStatusSection';
-import { QueueStatus, QueueItem } from '../../src/types/queue';
+import { QueueStatusSection } from '../../../src/popup/components/QueueStatusSection';
+import { QueueStatus, QueueItem } from '../../../src/types/queue';
 
 // This integration test focuses on the coordination between components 
 // and the simulated background message flow.

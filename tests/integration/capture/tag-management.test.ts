@@ -1,6 +1,6 @@
 
-import { TagService } from '../../src/lib/tags/tag-service';
-import { StorageManager } from '../../src/lib/storage/storage-manager';
+import { TagService } from '../../../src/lib/tags/tag-service';
+import { StorageManager } from '../../../src/lib/storage/storage-manager';
 
 /**
  * Integration Test for Tag Management Flow

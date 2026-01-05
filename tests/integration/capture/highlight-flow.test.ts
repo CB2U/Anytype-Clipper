@@ -1,5 +1,5 @@
-import { AnytypeApiClient } from '../../src/lib/api/client';
-import { CreateObjectParams } from '../../src/lib/api/types';
+import { AnytypeApiClient } from '../../../src/lib/api/client';
+import { CreateObjectParams } from '../../../src/lib/api/types';
 
 // Mock fetch
 global.fetch = jest.fn();

@@ -1,7 +1,7 @@
 import 'expect-puppeteer';
 import { JSDOM } from 'jsdom';
-import { extractWithFallback } from '../../src/lib/extractors/fallback-extractor';
-import { ExtractionLevel, ExtractionQuality } from '../../src/types/article';
+import { extractWithFallback } from '../../../src/lib/extractors/fallback-extractor';
+import { ExtractionLevel, ExtractionQuality } from '../../../src/types/article';
 
 // Mock dependencies functionality if needed, but integration tests should run real logic mostly.
 // But we need to mock dependencies that fallback-extractor imports if they are not compatible with Node env

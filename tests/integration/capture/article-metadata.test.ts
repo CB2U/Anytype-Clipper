@@ -1,20 +1,20 @@
-import { BookmarkCaptureService } from '../../src/lib/capture/bookmark-capture-service';
-import { StorageManager } from '../../src/lib/storage/storage-manager';
-import { PageMetadata } from '../../src/types/metadata';
+import { BookmarkCaptureService } from '../../../src/lib/capture/bookmark-capture-service';
+import { StorageManager } from '../../../src/lib/storage/storage-manager';
+import { PageMetadata } from '../../../src/types/metadata';
 
 // Mock API Client
-jest.mock('../../src/lib/api/client', () => {
+jest.mock('../../../src/lib/api/client', () => {
     return {
         AnytypeApiClient: jest.fn().mockImplementation(() => ({
             setApiKey: jest.fn(),
-            createObject: jest.fn().mockResolvedValue({ id: 'new-bookmark-id' }),
-            updateObject: jest.fn().mockResolvedValue({ objectId: 'new-bookmark-id' }),
+            createObject: jest.fn().mockResolvedValue({ id: 'new-article-id' }),
+            updateObject: jest.fn().mockResolvedValue({ objectId: 'new-article-id' }),
             listProperties: jest.fn().mockResolvedValue({ data: [] })
         }))
     };
 });
 
-describe('Bookmark Metadata Integration', () => {
+describe('Article Metadata Integration', () => {
     let bookmarkService: BookmarkCaptureService;
     let storage: StorageManager;
 
@@ -47,31 +47,37 @@ describe('Bookmark Metadata Integration', () => {
         bookmarkService = BookmarkCaptureService.getInstance();
     });
 
-    it('should capture bookmark with extracted metadata', async () => {
+    it('should capture article with content and metadata', async () => {
         const spaceId = 'space-1';
         const metadata: PageMetadata = {
-            title: 'Test Title',
-            description: 'Test Description',
-            url: 'https://example.com',
-            canonicalUrl: 'https://example.com/canonical',
-            author: 'John Doe',
-            siteName: 'Example Site',
-            language: 'en',
+            title: 'Article Title',
+            description: 'Article Excerpt',
+            url: 'https://example.com/article',
+            canonicalUrl: 'https://example.com/article',
+            content: '# Article Content\n\nFull article text here.',
+            textContent: 'Full article text here.',
+            readingTime: 2,
             extractedAt: new Date().toISOString(),
             source: 'opengraph',
             keywords: []
         };
 
-        const result = await bookmarkService.captureBookmark(spaceId, metadata, 'User Note', ['test-tag']);
+        const result = await bookmarkService.captureBookmark(
+            spaceId,
+            metadata,
+            'User Note',
+            ['article'],
+            'article'
+        );
 
-        expect(result.id).toBe('new-bookmark-id');
+        expect(result.id).toBe('new-article-id');
 
-        // Check if API client was called correctly
+        // Check if API client was called correctly with article type and content (Markdown)
         const apiClient = (bookmarkService as any).apiClient;
         expect(apiClient.createObject).toHaveBeenCalledWith(spaceId, expect.objectContaining({
-            title: 'Test Title',
-            type_key: 'bookmark',
-            source_url: 'https://example.com/canonical'
+            title: 'Article Title',
+            type_key: 'article',
+            description: expect.stringContaining('# Article Content')
         }));
     });
 });

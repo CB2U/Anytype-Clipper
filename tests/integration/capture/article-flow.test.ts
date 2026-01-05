@@ -1,5 +1,5 @@
 import 'expect-puppeteer';
-import { convertToMarkdown } from '../../src/lib/converters/markdown-converter';
+import { convertToMarkdown } from '../../../src/lib/converters/markdown-converter';
 
 describe('Article Capture Integration', () => {
     beforeAll(async () => {

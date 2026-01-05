@@ -1,8 +1,8 @@
 import 'expect-puppeteer';
 import { JSDOM } from 'jsdom';
-import { extractArticle } from '../../src/lib/extractors/article-extractor';
-import { StorageManager } from '../../src/lib/storage/storage-manager';
-import { DEFAULT_IMAGE_SETTINGS } from '../../src/lib/storage/defaults';
+import { extractArticle } from '../../../src/lib/extractors/article-extractor';
+import { StorageManager } from '../../../src/lib/storage/storage-manager';
+import { DEFAULT_IMAGE_SETTINGS } from '../../../src/lib/storage/defaults';
 
 declare const page: any;
 

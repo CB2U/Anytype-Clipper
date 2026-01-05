@@ -1,7 +1,7 @@
-import { QueueManager } from '../../src/background/queue-manager';
-import { StorageManager } from '../../src/lib/storage/storage-manager';
-import { QueueStatus, QueueItem } from '../../src/types/queue';
-import { RetryScheduler } from '../../src/background/retry-scheduler';
+import { QueueManager } from '../../../src/background/queue-manager';
+import { StorageManager } from '../../../src/lib/storage/storage-manager';
+import { QueueStatus, QueueItem } from '../../../src/types/queue';
+import { RetryScheduler } from '../../../src/background/retry-scheduler';
 
 // Mock chrome APIs
 const mockStorageData: Record<string, any> = {};
@@ -57,7 +57,7 @@ const mockStorageData: Record<string, any> = {};
 };
 
 // Mock RetryScheduler
-jest.mock('../../src/background/retry-scheduler', () => ({
+jest.mock('../../../src/background/retry-scheduler', () => ({
     RetryScheduler: {
         getInstance: jest.fn().mockReturnValue({
             resumeRetries: jest.fn().mockResolvedValue(undefined),
