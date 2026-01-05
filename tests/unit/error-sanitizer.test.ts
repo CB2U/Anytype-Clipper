@@ -53,7 +53,7 @@ describe('ErrorSanitizer', () => {
 
         it('should remove API keys from error messages', () => {
             const error = new Error('Failed with api_key=sk_test_123456');
-            error.name = 'AuthError';
+            error.name = 'Error with api_key=sk_test_123456';
 
             const result = sanitizeError(error);
 
@@ -63,7 +63,7 @@ describe('ErrorSanitizer', () => {
 
         it('should remove tokens from error messages', () => {
             const error = new Error('Token: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
-            error.name = 'TokenError';
+            error.name = 'Error with bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
 
             const result = sanitizeError(error);
 

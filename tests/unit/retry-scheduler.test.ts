@@ -16,6 +16,8 @@ describe('RetryScheduler', () => {
             updateErrorMessage: jest.fn(),
             markSent: jest.fn(),
             markFailed: jest.fn(),
+            hydrate: jest.fn((item) => Promise.resolve(item)),
+            delete: jest.fn(),
         } as any;
         mockApiClient = {
             createObject: jest.fn(),

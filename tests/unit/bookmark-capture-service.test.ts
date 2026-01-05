@@ -3,18 +3,24 @@ import { BookmarkCaptureService } from '../../src/lib/capture/bookmark-capture-s
 import { AnytypeApiClient } from '../../src/lib/api/client';
 import { TagService } from '../../src/lib/tags/tag-service';
 import { StorageManager } from '../../src/lib/storage/storage-manager';
+import { QueueManager } from '../../src/background/queue-manager';
 import { PageMetadata } from '../../src/types/metadata';
 
 // Mock dependencies
 jest.mock('../../src/lib/api/client');
 jest.mock('../../src/lib/tags/tag-service');
 jest.mock('../../src/lib/storage/storage-manager');
+jest.mock('../../src/background/queue-manager');
+jest.mock('../../src/lib/api/health', () => ({
+    checkHealth: jest.fn().mockResolvedValue(true)
+}));
 
 describe('BookmarkCaptureService', () => {
     let service: BookmarkCaptureService;
     let mockApiClient: jest.Mocked<AnytypeApiClient>;
     let mockTagService: jest.Mocked<TagService>;
     let mockStorageManager: jest.Mocked<StorageManager>;
+    let mockQueueManager: jest.Mocked<QueueManager>;
 
     const mockMetadata: PageMetadata = {
         title: 'Test Page',
@@ -44,9 +50,19 @@ describe('BookmarkCaptureService', () => {
             get: jest.fn().mockResolvedValue({ apiKey: 'test-api-key' })
         } as unknown as jest.Mocked<StorageManager>;
 
+        mockQueueManager = {
+            add: jest.fn().mockResolvedValue(undefined),
+            get: jest.fn(),
+            getAll: jest.fn().mockResolvedValue([]),
+            updateStatus: jest.fn(),
+            markSent: jest.fn(),
+            markFailed: jest.fn(),
+        } as unknown as jest.Mocked<QueueManager>;
+
         // Setup static getInstance methods for mocks
         (TagService.getInstance as jest.Mock).mockReturnValue(mockTagService);
         (StorageManager.getInstance as jest.Mock).mockReturnValue(mockStorageManager);
+        (QueueManager.getInstance as jest.Mock).mockReturnValue(mockQueueManager);
 
         // Mock createObject to return a success result
         mockApiClient.createObject.mockResolvedValue({
@@ -70,6 +86,7 @@ describe('BookmarkCaptureService', () => {
         (service as any).apiClient = mockApiClient;
         (service as any).tagService = mockTagService;
         (service as any).storage = mockStorageManager;
+        (service as any).queueManager = mockQueueManager;
     });
 
     describe('captureBookmark - Highlight Logic', () => {
