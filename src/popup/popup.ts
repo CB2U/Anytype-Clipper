@@ -194,6 +194,19 @@ async function loadCurrentTab() {
 
       // Clear the temporary highlight from storage so it doesn't persist inappropriately
       await chrome.storage.local.remove('lastHighlight');
+
+      // T1-T2: Extract metadata and generate tag suggestions for highlights
+      try {
+        const metaResponse = await chrome.runtime.sendMessage({ type: 'CMD_EXTRACT_METADATA' });
+        if (metaResponse && metaResponse.success) {
+          currentMetadata = metaResponse.data;
+          await generateTagSuggestions();
+        }
+      } catch (error) {
+        console.warn('[Popup] Tag suggestion generation failed for highlight:', error);
+        // Silently fail - suggestions are optional
+      }
+
       return; // Exit early, no need for further extraction
     }
 

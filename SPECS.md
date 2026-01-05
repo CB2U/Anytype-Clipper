@@ -345,6 +345,7 @@ This section tracks bug fixes, chores, and unplanned changes that are not part o
 | N/A            | Fix Bookmark Creation 404   | `specs/034-fix-bookmark-404/` | Bug     | P0       | Done        | None      | [Evidence](specs/034-fix-bookmark-404/spec.md#evidence)                                                  | FR1, FR2                          |
 | N/A            | Tag Management Integration  | `specs/035-tag-management/`   | Feature | P1       | Done        | None      | [Evidence](specs/035-tag-management/spec.md#evidence)                                                    | AC-U1, AC-U2, AC-U3, AC-U4, AC-U5 |
 | N/A            | Fix Highlight Save Function | `specs/036-fix-highlight-save/` | Bug     | P0       | Done        | N/A       | [Evidence](specs/036-fix-highlight-save/spec.md#evidence)                                                | AC-U1, AC-U2, AC-U3, AC-U4        |
+| N/A            | Highlight Tag Suggestions   | `specs/074-highlight-tag-suggestions/` | Bug     | P1       | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/074-highlight-tag-suggestions/spec.md#evidence) | AC-U1, AC-U2, AC-U3               |
 
 ---
 

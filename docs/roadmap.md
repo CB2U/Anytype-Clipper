@@ -1162,6 +1162,7 @@ Future enhancements for the notification system (Epic 7.3):
 
 - **Input Code Authentication (P0):** `specs/031-input-code-auth/` - Feature to support manual code entry.
 - **Tag Management Integration (P1):** `specs/035-tag-management/` - Completed.
+- **Highlight Tag Suggestions (P1):** `specs/074-highlight-tag-suggestions/` - Bug fix to enable tag suggestions for highlight captures.
 
 This section tracks bug fixes, chores, and unplanned changes that are not part of the main roadmap.
   #### Epic 11.6: Collaboration Features
