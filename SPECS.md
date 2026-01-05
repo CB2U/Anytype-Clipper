@@ -89,7 +89,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | 7.0            | Popup UI                 | `specs/022-popup-ui/`      | BP6        | Done        | N/A       | -        | T1                                                                            |
 | 7.1            | Context Menu Integration | `specs/071-context-menu/`  | BP6        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md#evidence) | FR4.5, FR5.9, FR14.1, AC3                                                     |
 | 7.2            | Options Page             | `specs/072-options-page/`  | BP6        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/072-options-page/spec.md#evidence) | FR13.1, FR13.2, FR13.3, FR13.4, FR13.6, FR13.7, FR13.12, FR13.13, AC7, PRIV-4 |
-| 7.3            | Notifications System     | `specs/025-notifications/` | BP6        | Not Started | -         | -        | FR3.4, FR5.10, FR6.2, NFR4.3, NFR4.5, ERR-2, ERR-4                            |
+| 7.3            | Notifications System     | `specs/073-notifications/` | BP6        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/073-notifications/spec.md#evidence) | FR3.4, FR5.10, FR6.2, NFR4.3, NFR4.5, ERR-2, ERR-4                            |
 
 ### BP7: Testing & Polish (Weeks 15-16)
 
@@ -111,6 +111,18 @@ This document serves as the **central index** for all specifications in the Anyt
 ---
 
 ## Post-MVP Specifications (v1.1+)
+
+### Notification System Enhancements
+
+Future enhancements for Epic 7.3 (Notifications System):
+
+| Feature                      | Description                                                      | Priority | Complexity |
+| ---------------------------- | ---------------------------------------------------------------- | -------- | ---------- |
+| Settings Integration         | Add notification position preference to options page (top/bottom) | P2       | Low        |
+| Notification History         | Optional persistent log of past notifications with timestamps     | P3       | Medium     |
+| Custom Durations             | User-configurable auto-dismiss timers for different types         | P3       | Low        |
+| Sound Effects                | Optional audio feedback for notifications (success/error sounds)  | P4       | Low        |
+| Desktop Notifications        | Browser notification API integration for background notifications | P3       | Medium     |
 
 ### Phase 2: Enhanced Features (v1.1)
 

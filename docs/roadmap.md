@@ -1024,6 +1024,16 @@ From constitution.md - these apply to ALL epics:
 
 ## Post-MVP Roadmap
 
+### Notification System Enhancements
+
+Future enhancements for the notification system (Epic 7.3):
+
+- **Settings Integration:** Add notification position preference to options page (top/bottom)
+- **Notification History:** Optional persistent log of past notifications with timestamps
+- **Custom Durations:** User-configurable auto-dismiss timers for different notification types
+- **Sound Effects:** Optional audio feedback for notifications (success chime, error alert)
+- **Desktop Notifications:** Browser notification API integration for background notifications
+
 ### Phase 2: Enhanced Features (v1.1)
 
 #### Epic 10.0: Reading List / "Read Later" Mode

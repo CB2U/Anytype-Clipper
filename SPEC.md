@@ -19,14 +19,14 @@ It points to the spec folder for the current work and links to the product docs.
 ## Active Specification
 
 **Epic:** 7.3 Notifications System  
-**Folder:** `specs/025-notifications/`  
-**Status:** Not Started  
-**Next:** Awaiting specification
+**Folder:** `specs/073-notifications/`  
+**Status:** In Progress  
+**Next:** T1 - Create Notification Types and Interfaces
 
 ### Quick Links
-- Specification: TBD
-- Implementation Plan: TBD
-- Tasks: TBD
+- Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/073-notifications/spec.md)
+- Implementation Plan: [plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/073-notifications/plan.md)
+- Tasks: [tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/073-notifications/tasks.md)
 
 ### Previous Epic
 - Epic 7.2: Options Page (Complete ✅ - 2026-01-05)

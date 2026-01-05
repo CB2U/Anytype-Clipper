@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Notifications System (Epic 7.3):**
+    - Real-time notification system with color-coded feedback (green/red/yellow/blue).
+    - Success notifications for bookmark, article, and highlight captures with auto-dismiss (5s).
+    - Error notifications with sanitized messages and actionable next steps (manual dismiss).
+    - Queue status notifications when captures are saved offline.
+    - Full ARIA support with live regions for screen readers.
+    - Keyboard navigation (Escape to dismiss, Tab navigation, Enter for actions).
+    - High contrast mode and reduced motion support for accessibility.
+    - Security-compliant error sanitization (removes API keys, tokens, stack traces, PII).
+    - Notification positioning (top/bottom) support.
 - **Queue UI & Status (Epic 5.3):**
     - New `QueueStatusSection` in the popup for real-time queue visibility.
     - Extension icon badge counter showing pending capture count.

@@ -3,6 +3,8 @@ import { TagAutocomplete } from './components/tag-autocomplete';
 import { SuggestedTags } from './components/suggested-tags';
 import { TagSuggestionService } from '../lib/services/tag-suggestion-service';
 import { QueueStatusSection } from './components/QueueStatusSection';
+import { NotificationContainer } from './components/notification';
+import notificationService from '../lib/notifications/notification-service';
 
 
 // DOM Elements
@@ -63,6 +65,7 @@ let suggestedTags: SuggestedTags | null = null;
 let tagSuggestionService: TagSuggestionService | null = null;
 let queueSection: QueueStatusSection | null = null;
 let queueUpdateTimer: any = null;
+let notificationContainer: NotificationContainer | null = null;
 
 // --- Space Management ---
 
@@ -399,17 +402,32 @@ async function handleSave(isArticle: boolean = false, skipDeduplication: boolean
 
       // Normal success flow
       if (response.data?.queued) {
-        showStatus('Saved offline! Will sync when Anytype is back. 📶', false);
+        notificationService.createNotification({
+          id: crypto.randomUUID(),
+          type: 'info',
+          severity: 'low',
+          title: 'Capture queued',
+          message: 'Will sync when Anytype is available',
+          autoDismiss: 5000,
+          timestamp: Date.now(),
+        });
       } else {
         const imgStats = (isArticle && currentMetadata.imageCount)
           ? ` (${currentMetadata.embeddedImageCount}/${currentMetadata.imageCount} images embedded)`
           : '';
 
-        showStatus(
-          isHighlight ? 'Highlight Saved! 🎉' :
-            (isArticle ? `Article Saved! 🎉${imgStats}` : 'Bookmark Saved! 🎉'),
-          false
-        );
+        const title = isHighlight ? 'Highlight saved' :
+          (isArticle ? `Article saved${imgStats}` : 'Bookmark saved');
+
+        notificationService.createNotification({
+          id: crypto.randomUUID(),
+          type: 'success',
+          severity: 'low',
+          title,
+          message: 'Open Anytype to view your capture',
+          autoDismiss: 5000,
+          timestamp: Date.now(),
+        });
       }
     } else {
       throw new Error(response?.error || 'Unknown error');
@@ -417,7 +435,21 @@ async function handleSave(isArticle: boolean = false, skipDeduplication: boolean
 
   } catch (error) {
     console.error('Save failed:', error);
-    showStatus(`Error: ${error instanceof Error ? error.message : 'Save failed'}`, true);
+
+    // Use error sanitizer for user-friendly error messages
+    import('../lib/utils/error-sanitizer').then(({ sanitizeError }) => {
+      const sanitized = sanitizeError(error as Error);
+
+      notificationService.createNotification({
+        id: crypto.randomUUID(),
+        type: 'error',
+        severity: 'high',
+        title: sanitized.message,
+        message: sanitized.nextSteps,
+        autoDismiss: null, // Manual dismiss only for errors
+        timestamp: Date.now(),
+      });
+    });
   } finally {
     if (mainElements.btnSave) {
       mainElements.btnSave.disabled = false;
@@ -734,6 +766,28 @@ async function handleDisconnect() {
 async function init() {
   try {
     console.log('[Popup] Init start');
+
+    // Initialize notification container
+    notificationContainer = new NotificationContainer('top');
+    notificationContainer.mount(document.body);
+
+    // Subscribe to notification events
+    notificationService.subscribe((event) => {
+      if (event.type === 'notification:create' && notificationContainer) {
+        notificationContainer.addNotification(
+          event.payload,
+          (id) => notificationService.dismissNotification(id),
+          (id, action) => {
+            // Handle notification actions
+            console.log('[Popup] Notification action:', action, id);
+            notificationService.dismissNotification(id);
+          }
+        );
+      } else if (event.type === 'notification:dismiss' && notificationContainer) {
+        notificationContainer.removeNotification(event.payload.id);
+      }
+    });
+
     const state = await authManager.init();
     console.log('[Popup] Init state:', state);
 

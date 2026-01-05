@@ -23,6 +23,9 @@ Capture web content (bookmarks, highlights, articles) directly into your local A
 - **Tag Management**: Integrated autocomplete and selection of existing Anytype tags.
 - **Inline Tag Creation**: Create new tags directly within the popup UI.
 - **Options Page**: Comprehensive settings page for configuring default Spaces, retry behavior, deduplication, API port, image handling, and privacy mode.
+- **Notifications System**: Real-time feedback for all capture operations with color-coded notifications (green for success, red for errors, yellow for warnings, blue for info).
+- **Smart Error Handling**: User-friendly error messages with actionable next steps, automatically sanitized to remove sensitive data.
+- **Accessibility**: Full keyboard navigation (Escape to dismiss), ARIA live regions for screen readers, and high contrast mode support.
 - **Privacy-First**: All data stays local, no cloud sync.
 
 ## Prerequisites
