@@ -18,22 +18,21 @@ Working on **Epic 6.0: URL Deduplication** (Breakpoint 5).
 
 ## Active Specification
 
-**Epic:** 6.2 Append Mode  
-**Folder:** `specs/062-append-mode/`  
+**Epic:** 7.1 Context Menu Integration  
+**Folder:** `specs/071-context-menu/`  
 **Status:** Done ✅  
 **Completed:** 2026-01-04
 
 ### Quick Links
-- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/062-append-mode/spec.md)
-- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/062-append-mode/plan.md)
-- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/062-append-mode/tasks.md)
-- [Walkthrough](file:///home/chris/.gemini/antigravity/brain/622b4fd9-f7ff-4894-b548-86df997cb668/walkthrough.md)
+- [Specification](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md)
+- [Implementation Plan](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/plan.md)
+- [Tasks](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/tasks.md)
 
 ### Previous Epic
-- Epic 6.1: Smart Tagging Engine (Complete ✅)
+- Epic 6.2: Append Mode (Complete ✅)
 
 ### Next Epic
-- Epic 7.1: Context Menu Integration (BP6)
+- Epic 7.2: Options Page (BP6)
 
 
 ## Notes

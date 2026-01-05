@@ -87,7 +87,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | Roadmap Anchor | Epic Name                | Spec Folder                | Breakpoint | Status      | Target ACs                                                                    |
 | -------------- | ------------------------ | -------------------------- | ---------- | ----------- | ----------------------------------------------------------------------------- |
 | 7.0            | Popup UI                 | `specs/022-popup-ui/`      | BP6        | Done        | T1                                                                            |
-| 7.1            | Context Menu Integration | `specs/023-context-menu/`  | BP6        | Not Started | FR4.5, FR5.9, FR14.1, AC3                                                     |
+| 7.1            | Context Menu Integration | `specs/071-context-menu/`  | BP6        | Done        | -         | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md#evidence) | FR4.5, FR5.9, FR14.1, AC3                                                     |
 | 7.2            | Options Page             | `specs/024-options-page/`  | BP6        | Not Started | FR13.1, FR13.2, FR13.3, FR13.4, FR13.6, FR13.7, FR13.12, FR13.13, AC7, PRIV-4 |
 | 7.3            | Notifications System     | `specs/025-notifications/` | BP6        | Not Started | FR3.4, FR5.10, FR6.2, NFR4.3, NFR4.5, ERR-2, ERR-4                            |
 

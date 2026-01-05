@@ -1,6 +1,9 @@
 // Service worker entry point for Anytype Clipper Extension
 console.log('Anytype Clipper service worker loaded');
 
+// Import context menu handler
+import { registerContextMenus, handleContextMenuClick } from './context-menu-handler';
+
 // Extension installation handler
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
@@ -9,18 +12,13 @@ chrome.runtime.onInstalled.addListener((details) => {
     console.log('Anytype Clipper updated');
   }
 
-  // Register context menu for text selection
-  chrome.contextMenus.create({
-    id: 'send-selection-to-anytype',
-    title: 'Send selection to Anytype',
-    contexts: ['selection']
-  }, () => {
-    if (chrome.runtime.lastError) {
-      console.error('Error creating context menu:', chrome.runtime.lastError);
-    } else {
-      console.log('Context menu registered successfully');
-    }
-  });
+  // Register all context menu items
+  registerContextMenus();
+});
+
+// Context menu click handler
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  handleContextMenuClick(info, tab);
 });
 
 import { AnytypeApiClient } from '../lib/api/client';
