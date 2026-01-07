@@ -51,6 +51,12 @@ jobs:
       - name: Run linting
         run: npm run lint
 
+      - name: Run unit tests
+        run: npm run test
+
+      - name: Run integration tests
+        run: npm run test:integration -- --runInBand
+
       - name: Build extension
         run: npm run build
 

@@ -375,8 +375,9 @@ chrome.runtime.onMessage.addListener((
             if (QueueManager.shouldQueue(e)) {
               console.log('[Service Worker] Anytype offline, attempting to load cached spaces...');
               const data = await chrome.storage.local.get('cachedSpaces');
-              if (data.cachedSpaces) {
-                sendResponse({ success: true, data: data.cachedSpaces, cached: true });
+              const cached = data.cachedSpaces;
+              if (cached && Array.isArray(cached)) { // Assuming cachedSpaces should be an array
+                sendResponse({ success: true, data: cached, cached: true });
                 return;
               }
             }
@@ -544,7 +545,7 @@ chrome.runtime.onMessage.addListener((
 
 
           // Use AppendService (imported at top of file)
-          const appendService = new AppendService();
+          const appendService = AppendService.getInstance();
 
           const result = await appendService.appendToObject(
             spaceId,

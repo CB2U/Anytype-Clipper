@@ -486,7 +486,7 @@ function showStatus(msg: string, isError: boolean) {
 /**
  * Show custom 3-button duplicate detection dialog
  */
-function showDuplicateDialog(existing: any, createdDate: string, isArticle: boolean, skipDeduplication: boolean) {
+function showDuplicateDialog(existing: any, createdDate: string, isArticle: boolean, _skipDeduplication: boolean) {
   // Create modal overlay
   const overlay = document.createElement('div');
   overlay.style.cssText = `

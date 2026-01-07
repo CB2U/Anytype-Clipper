@@ -12,37 +12,64 @@ describe('Retry Flow Integration', () => {
 
     beforeEach(async () => {
         // Mock chrome.storage.local
-        const storage: Record<string, any> = {};
+        const mockStorage: Record<string, any> = {};
         (global as any).chrome = {
             storage: {
                 local: {
-                    get: jest.fn((key) => Promise.resolve({ [key]: storage[key] })),
-                    set: jest.fn((data) => {
-                        Object.assign(storage, data);
+                    get: jest.fn((keys, callback) => {
+                        const res: any = {};
+                        if (typeof keys === 'string') {
+                            res[keys] = mockStorage[keys];
+                        } else if (Array.isArray(keys)) {
+                            keys.forEach(k => res[k] = mockStorage[k]);
+                        } else if (keys === undefined || keys === null || typeof keys === 'object') { // If keys is undefined, null, or an object (default values), return all
+                            Object.assign(res, mockStorage);
+                        }
+                        if (callback) callback(res);
+                        return Promise.resolve(res);
+                    }),
+                    set: jest.fn((data, callback) => {
+                        Object.assign(mockStorage, data);
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
-                    remove: jest.fn((key) => {
-                        delete storage[key];
+                    remove: jest.fn((key, callback) => {
+                        delete mockStorage[key];
+                        if (callback) callback();
                         return Promise.resolve();
-                    }),
+                    })
                 },
+                onChanged: { addListener: jest.fn() }
             },
             alarms: {
                 create: jest.fn().mockResolvedValue(undefined),
                 clear: jest.fn().mockResolvedValue(true),
             },
+            runtime: { lastError: null }
         };
 
+        // Reset singletons
+        (StorageManager as any).instance = undefined;
+        (QueueManager as any).instance = undefined;
+        // @ts-ignore
+        RetryScheduler['instance'] = undefined;
+
         storageManager = StorageManager.getInstance();
+        await storageManager.set('settings', {
+            theme: 'system',
+            apiPort: 31009
+        });
+        await storageManager.set('auth', {
+            apiKey: 'test-api-key',
+            isAuthenticated: true
+        });
+
         queueManager = QueueManager.getInstance(storageManager);
         apiClient = new AnytypeApiClient();
 
         // Mock API client's internal call (fetch)
         (global as any).fetch = jest.fn();
 
-        // Reset singleton
-        // @ts-ignore
-        RetryScheduler['instance'] = undefined;
         scheduler = RetryScheduler.getInstance(queueManager, apiClient);
     });
 

@@ -14,18 +14,20 @@ describe('Quota Management Integration', () => {
             storage: {
                 local: {
                     QUOTA_BYTES: 5242880, // 5MB quota
-                    get: jest.fn((keys) => {
+                    get: jest.fn((keys, callback) => {
                         const res: any = {};
                         if (typeof keys === 'string') {
                             res[keys] = mockStorageData[keys];
                         } else if (Array.isArray(keys)) {
                             keys.forEach(k => res[k] = mockStorageData[k]);
                         }
+                        if (callback) callback(res);
                         return Promise.resolve(res);
                     }),
-                    set: jest.fn((data) => {
+                    set: jest.fn((data, callback) => {
                         Object.assign(mockStorageData, data);
                         mockBytesInUse = JSON.stringify(mockStorageData).length;
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
                     getBytesInUse: jest.fn(() => Promise.resolve(mockBytesInUse)),
@@ -65,7 +67,7 @@ describe('Quota Management Integration', () => {
         const largeData = 'x'.repeat(500000); // 500KB
 
         try {
-            await storage.set('largeItem', { data: largeData });
+            await storage.set('largeItem' as any, { data: largeData });
 
             // Check if quota exceeded
             const quotaInfo = await storage.checkQuota();
@@ -81,9 +83,9 @@ describe('Quota Management Integration', () => {
 
     it('should report accurate quota usage', async () => {
         // Add some data
-        await storage.set('item1', { value: 'test1' });
-        await storage.set('item2', { value: 'test2' });
-        await storage.set('item3', { value: 'test3' });
+        await storage.set('item1' as any, { value: 'test1' });
+        await storage.set('item2' as any, { value: 'test2' });
+        await storage.set('item3' as any, { value: 'test3' });
 
         const quotaInfo = await storage.checkQuota();
 

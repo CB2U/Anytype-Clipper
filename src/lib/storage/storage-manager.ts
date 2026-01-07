@@ -69,7 +69,6 @@ export class StorageManager {
             const parsed = fieldSchema.safeParse(value);
             if (!parsed.success) {
                 console.error(`[StorageManager] VALIDATION FAILED for key "${key}":`, parsed.error.format());
-                console.error(`[StorageManager] Failing object:`, value);
                 throw new Error(`Invalid value for storage key ${key}: ${parsed.error.message}`);
             }
         }
@@ -137,21 +136,22 @@ export class StorageManager {
     }
 
     /**
-     * Check quota constraints and log warnings.
+     * Check quota constraints and return usage statistics.
      */
-    public async checkQuota(): Promise<void> {
+    public async checkQuota(): Promise<{ bytesInUse: number; limit: number; percentUsed: number; }> {
         const used = await this.getBytesInUse();
-        // In MV3, storage.local defaults to 5MB but can be "unlimited" with permission.
-        // We assume standard 5MB for the warning logic unless "unlimitedStorage" is set.
-        // For PRD/NFR purpose, we just warn based on a constant for safety.
-
-        // Actually chrome.storage.local.QUOTA_BYTES might be available, but it's often 5MB.
         const limit = this.QUOTA_BYTES;
-        const ratio = used / limit;
+        const percentUsed = (used / limit) * 100;
 
-        if (ratio > this.QUOTA_WARNING_THRESHOLD) {
-            console.warn(`[StorageManager] Storage usage is high: ${Math.round(ratio * 100)}% (${used} / ${limit} bytes)`);
+        if (percentUsed > (this.QUOTA_WARNING_THRESHOLD * 100)) {
+            console.warn(`[StorageManager] Storage usage is high: ${Math.round(percentUsed)}% (${used} / ${limit} bytes)`);
         }
+
+        return {
+            bytesInUse: used,
+            limit,
+            percentUsed
+        };
     }
 
     /**

@@ -5,12 +5,13 @@
  * to existing objects since the Anytype API doesn't have a native append endpoint.
  */
 
-import type { AppendMetadata, AppendResult, AppendOptions } from '../../types/append';
+import type { AppendMetadata, AppendResult } from '../../types/append';
 
 /**
  * AppendService class for appending content to existing objects
  */
 export class AppendService {
+    private static instance: AppendService;
     private readonly apiBaseUrl: string;
     private readonly timeout: number;
 
@@ -19,9 +20,19 @@ export class AppendService {
      * @param apiBaseUrl - Base URL for Anytype API (e.g., "http://localhost:31009")
      * @param timeout - Request timeout in milliseconds (default: 5000ms)
      */
-    constructor(apiBaseUrl: string = 'http://localhost:31009', timeout: number = 5000) {
+    private constructor(apiBaseUrl: string = 'http://localhost:31009', timeout: number = 5000) {
         this.apiBaseUrl = apiBaseUrl;
         this.timeout = timeout;
+    }
+
+    /**
+     * Gets the singleton instance of AppendService
+     */
+    public static getInstance(apiBaseUrl?: string, timeout?: number): AppendService {
+        if (!AppendService.instance) {
+            AppendService.instance = new AppendService(apiBaseUrl, timeout);
+        }
+        return AppendService.instance;
     }
 
     /**
@@ -212,8 +223,4 @@ export class AppendService {
     }
 }
 
-/**
- * Singleton instance of AppendService
- * Can be configured with custom API base URL and timeout
- */
-export const appendService = new AppendService();
+export const appendService = AppendService.getInstance();

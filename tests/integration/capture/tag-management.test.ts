@@ -20,31 +20,44 @@ describe('Tag Management Integration (Simulated)', () => {
         (global as any).chrome = {
             storage: {
                 local: {
-                    get: jest.fn((keys) => {
+                    get: jest.fn((keys, callback) => {
                         const res: any = {};
                         if (typeof keys === 'string') {
                             res[keys] = mockStorage[keys];
                         } else if (Array.isArray(keys)) {
                             keys.forEach(k => res[k] = mockStorage[k]);
+                        } else if (keys === undefined || keys === null || typeof keys === 'object') {
+                            Object.assign(res, mockStorage);
                         }
+                        if (callback) callback(res);
                         return Promise.resolve(res);
                     }),
-                    set: jest.fn((data) => {
+                    set: jest.fn((data, callback) => {
                         Object.assign(mockStorage, data);
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
                     getBytesInUse: jest.fn(() => Promise.resolve(0)),
-                    remove: jest.fn((keys) => {
+                    remove: jest.fn((keys, callback) => {
                         if (typeof keys === 'string') delete mockStorage[keys];
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
-                    clear: jest.fn(() => {
+                    clear: jest.fn((callback) => {
                         Object.keys(mockStorage).forEach(k => delete mockStorage[k]);
+                        if (callback) callback();
                         return Promise.resolve();
                     })
-                }
-            }
+                },
+                onChanged: { addListener: jest.fn() }
+            },
+            runtime: { lastError: null },
+            alarms: { create: jest.fn(), onAlarm: { addListener: jest.fn() } }
         };
+
+        // Reset singletons
+        (StorageManager as any).instance = undefined;
+        (TagService as any).instance = undefined;
 
         storage = StorageManager.getInstance();
         await storage.clear();

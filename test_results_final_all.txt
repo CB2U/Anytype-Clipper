@@ -1,0 +1,1565 @@
+
+> anytype-clipper@0.1.0 test:integration
+> jest -c jest.integration.config.js --runInBand --detectOpenHandles
+
+PASS tests/integration/capture/article-with-images.test.ts
+  ● Console
+
+    console.debug
+      Fallback Chain: Starting Level 1 (Readability)...
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:44:17)
+
+    console.debug
+      Fallback Chain: Level 1 Success (40.2ms)
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:52:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: w3om3aa
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+PASS tests/integration/queue/service-worker-recovery.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: 3mx6cw9
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: 7apiejw
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.log
+      Anytype Clipper service worker loaded
+
+      at Object.<anonymous> (src/background/service-worker.ts:2:9)
+
+    console.log
+      [StorageManager] Initialized singleton instance: 9r944gd
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: coiscg9
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.info
+      [Service Worker] Initializing...
+
+      at initialize (src/background/service-worker.ts:71:11)
+
+    console.log
+      Service Worker: Clearing API Key
+
+      at syncAuthState (src/background/service-worker.ts:64:13)
+
+    console.info
+      [Service Worker] Checking for stuck items...
+
+      at initialize (src/background/service-worker.ts:76:13)
+
+    console.log
+      [QueueManager][coiscg9] Cache populated from storage. Size: 3
+
+      at QueueManager.ensureQueue (src/background/queue-manager.ts:72:21)
+
+    console.error
+      [BadgeManager] Failed to update badge: TypeError: chrome.action.setBadgeText is not a function
+          at BadgeManager.updateBadge (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/badge-manager.ts:37:37)
+
+      53 |             }
+      54 |         } catch (error) {
+    > 55 |             console.error('[BadgeManager] Failed to update badge:', error);
+         |                     ^
+      56 |         }
+      57 |     }
+      58 |
+
+      at BadgeManager.updateBadge (src/background/badge-manager.ts:55:21)
+
+    console.log
+      [StorageManager][9r944gd] Writing queue of size 3. IDs: stuck-1, stuck-2, normal-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:330:17
+
+
+    console.info
+      [QueueManager] Reset 2 items from 'sending' to 'queued'.
+
+      at src/background/queue-manager.ts:331:25
+
+    console.info
+      [Service Worker] Recovered 2 stuck items.
+
+      at initialize (src/background/service-worker.ts:79:15)
+
+PASS tests/integration/capture/bookmark-flow.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: 880hqn2
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: t6oit18
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/bookmark-flow.test.ts:57:9)
+
+
+    console.debug
+      [BookmarkCaptureService] Performing health check on port 31009...
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:54:17)
+
+    console.log
+      [BookmarkCaptureService] Health check result: ONLINE
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:56:17)
+
+    console.log
+      [BookmarkCaptureService] Creating object: {
+        title: 'Test Title',
+        description: 'User Note',
+        type_key: 'bookmark',
+        source: 'https://example.com/canonical'
+      }
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:107:21)
+
+    console.error
+      Error fetching tags for property "tag": TypeError: this.apiClient.listTags is not a function
+          at TagService.fetchTagsWithFallback (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:82:51)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:69:31)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at BookmarkCaptureService.prepareProperties (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:200:38)
+          at BookmarkCaptureService.captureBookmark (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:112:38)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/bookmark-flow.test.ts:77:24)
+
+      116 |
+      117 |             // Log full error for diagnostic purposes
+    > 118 |             console.error(`Error fetching tags for property "${propertyId}":`, error);
+          |                     ^
+      119 |
+      120 |             if (isNotFoundError) {
+      121 |                 const fallbackPropertyId = propertyId === 'tag' ? 'tags' : 'tag';
+
+      at TagService.fetchTagsWithFallback (src/lib/tags/tag-service.ts:118:21)
+      at TagService.getTags (src/lib/tags/tag-service.ts:69:31)
+      at BookmarkCaptureService.prepareProperties (src/lib/capture/bookmark-capture-service.ts:200:38)
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:112:38)
+      at Object.<anonymous> (tests/integration/capture/bookmark-flow.test.ts:77:24)
+
+    console.error
+      Failed to fetch tags: TypeError: this.apiClient.listTags is not a function
+          at TagService.fetchTagsWithFallback (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:82:51)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:69:31)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at BookmarkCaptureService.prepareProperties (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:200:38)
+          at BookmarkCaptureService.captureBookmark (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:112:38)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/bookmark-flow.test.ts:77:24)
+
+      69 |             return await this.fetchTagsWithFallback(spaceId, propertyId, tagCache, objectTypeId);
+      70 |         } catch (error) {
+    > 71 |             console.error('Failed to fetch tags:', error);
+         |                     ^
+      72 |             // Rethrow to let UI handle it
+      73 |             throw error;
+      74 |         }
+
+      at TagService.getTags (src/lib/tags/tag-service.ts:71:21)
+      at BookmarkCaptureService.prepareProperties (src/lib/capture/bookmark-capture-service.ts:200:38)
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:112:38)
+      at Object.<anonymous> (tests/integration/capture/bookmark-flow.test.ts:77:24)
+
+    console.warn
+      [BookmarkCaptureService] Failed to resolve tags: TypeError: this.apiClient.listTags is not a function
+          at TagService.fetchTagsWithFallback (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:82:51)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:69:31)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at BookmarkCaptureService.prepareProperties (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:200:38)
+          at BookmarkCaptureService.captureBookmark (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:112:38)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/bookmark-flow.test.ts:77:24)
+
+      218 |                 }
+      219 |             } catch (e) {
+    > 220 |                 console.warn('[BookmarkCaptureService] Failed to resolve tags:', e);
+          |                         ^
+      221 |             }
+      222 |         }
+      223 |
+
+      at BookmarkCaptureService.prepareProperties (src/lib/capture/bookmark-capture-service.ts:220:25)
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:112:38)
+      at Object.<anonymous> (tests/integration/capture/bookmark-flow.test.ts:77:24)
+
+    console.log
+      [BookmarkCaptureService] Updating properties: [
+        { key: 'author', text: 'John Doe' },
+        { key: 'source', text: 'https://example.com/canonical' }
+      ]
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:115:25)
+
+PASS tests/integration/queue/retry-logic.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: q3ft9c0
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/queue/retry-logic.test.ts:58:9)
+
+
+    console.log
+      [QueueManager] Initialized singleton instance: 22inuau
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/queue/retry-logic.test.ts:62:9)
+
+
+    console.log
+      [QueueManager][22inuau] Cache populated from storage. Size: 0
+
+      at QueueManager.ensureQueue (src/background/queue-manager.ts:72:21)
+
+    console.log
+      [QueueManager][22inuau] ADD START: item-1. Current queue IDs:
+
+      at src/background/queue-manager.ts:97:21
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:134:13
+
+
+    console.log
+      [QueueManager][22inuau] ADD SUCCESS: item-1. New queue IDs: item-1
+
+      at src/background/queue-manager.ts:135:21
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:234:17
+
+
+    console.log
+      [QueueManager][22inuau] Updated item-1: queued -> sending. Size: 1
+
+      at src/background/queue-manager.ts:236:25
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:289:17
+
+
+    console.debug
+      [QueueManager] Updated retry count (id: item-1, count: 1)
+
+      at src/background/queue-manager.ts:291:25
+
+    console.debug
+      [RetryScheduler] Retrying item item-1 (attempt 1/10)
+
+      at RetryScheduler.processRetry (src/background/retry-scheduler.ts:104:21)
+
+    console.error
+      [RetryScheduler] Retry failed for item item-1: HTTP 503: Service Unavailable
+
+      154 |         } catch (error) {
+      155 |             const sanitizedError = this.sanitizeErrorMessage(error);
+    > 156 |             console.error(`[RetryScheduler] Retry failed for item ${queueItemId}: ${sanitizedError}`);
+          |                     ^
+      157 |
+      158 |             // Revert status to 'queued' and schedule next retry
+      159 |             await this.queueManager.updateStatus(queueItemId, QueueStatus.Queued);
+
+      at RetryScheduler.processRetry (src/background/retry-scheduler.ts:156:21)
+      at Object.<anonymous> (tests/integration/queue/retry-logic.test.ts:95:9)
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:234:17
+
+
+    console.log
+      [QueueManager][22inuau] Updated item-1: sending -> queued. Size: 1
+
+      at src/background/queue-manager.ts:236:25
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:306:17
+
+
+    console.debug
+      [QueueManager][22inuau] Updated error message (id: item-1)
+
+      at src/background/queue-manager.ts:308:25
+
+    console.debug
+      [RetryScheduler] Scheduling retry for item item-1 (attempt 2/10, delay: 5000ms)
+
+      at RetryScheduler.scheduleRetry (src/background/retry-scheduler.ts:54:17)
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:234:17
+
+
+    console.log
+      [QueueManager][22inuau] Updated item-1: queued -> sending. Size: 1
+
+      at src/background/queue-manager.ts:236:25
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:289:17
+
+
+    console.debug
+      [QueueManager] Updated retry count (id: item-1, count: 2)
+
+      at src/background/queue-manager.ts:291:25
+
+    console.debug
+      [RetryScheduler] Retrying item item-1 (attempt 2/10)
+
+      at RetryScheduler.processRetry (src/background/retry-scheduler.ts:104:21)
+
+    console.info
+      [RetryScheduler] Retry succeeded for item item-1
+
+      at RetryScheduler.processRetry (src/background/retry-scheduler.ts:148:25)
+
+    console.log
+      [StorageManager][q3ft9c0] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:234:17
+
+
+    console.log
+      [QueueManager][22inuau] Updated item-1: sending -> sent. Size: 1
+
+      at src/background/queue-manager.ts:236:25
+
+    console.log
+      [StorageManager] Initialized singleton instance: s3zuqv4
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/queue/retry-logic.test.ts:58:9)
+
+
+    console.log
+      [QueueManager] Initialized singleton instance: oks376i
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/queue/retry-logic.test.ts:62:9)
+
+
+    console.log
+      [QueueManager][oks376i] Cache populated from storage. Size: 0
+
+      at QueueManager.ensureQueue (src/background/queue-manager.ts:72:21)
+
+    console.log
+      [QueueManager][oks376i] ADD START: item-failed. Current queue IDs:
+
+      at src/background/queue-manager.ts:97:21
+
+    console.log
+      [StorageManager][s3zuqv4] Writing queue of size 1. IDs: item-failed
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:134:13
+
+
+    console.log
+      [QueueManager][oks376i] ADD SUCCESS: item-failed. New queue IDs: item-failed
+
+      at src/background/queue-manager.ts:135:21
+
+    console.log
+      [StorageManager][s3zuqv4] Writing queue of size 1. IDs: item-failed
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:234:17
+
+
+    console.log
+      [QueueManager][oks376i] Updated item-failed: queued -> sending. Size: 1
+
+      at src/background/queue-manager.ts:236:25
+
+    console.log
+      [StorageManager][s3zuqv4] Writing queue of size 1. IDs: item-failed
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:289:17
+
+
+    console.debug
+      [QueueManager] Updated retry count (id: item-failed, count: 10)
+
+      at src/background/queue-manager.ts:291:25
+
+    console.debug
+      [RetryScheduler] Retrying item item-failed (attempt 10/10)
+
+      at RetryScheduler.processRetry (src/background/retry-scheduler.ts:104:21)
+
+    console.error
+      [RetryScheduler] Retry failed for item item-failed: HTTP 503: Service Unavailable
+
+      154 |         } catch (error) {
+      155 |             const sanitizedError = this.sanitizeErrorMessage(error);
+    > 156 |             console.error(`[RetryScheduler] Retry failed for item ${queueItemId}: ${sanitizedError}`);
+          |                     ^
+      157 |
+      158 |             // Revert status to 'queued' and schedule next retry
+      159 |             await this.queueManager.updateStatus(queueItemId, QueueStatus.Queued);
+
+      at RetryScheduler.processRetry (src/background/retry-scheduler.ts:156:21)
+      at Object.<anonymous> (tests/integration/queue/retry-logic.test.ts:133:9)
+
+    console.log
+      [StorageManager][s3zuqv4] Writing queue of size 1. IDs: item-failed
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:234:17
+
+
+    console.log
+      [QueueManager][oks376i] Updated item-failed: sending -> queued. Size: 1
+
+      at src/background/queue-manager.ts:236:25
+
+    console.log
+      [StorageManager][s3zuqv4] Writing queue of size 1. IDs: item-failed
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:306:17
+
+
+    console.debug
+      [QueueManager][oks376i] Updated error message (id: item-failed)
+
+      at src/background/queue-manager.ts:308:25
+
+    console.log
+      [StorageManager][s3zuqv4] Writing queue of size 1. IDs: item-failed
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:263:17
+
+
+    console.debug
+      [QueueManager][oks376i] Marked item as failed (id: item-failed)
+
+      at src/background/queue-manager.ts:265:25
+
+    console.log
+      [StorageManager] Initialized singleton instance: 2stmgz7
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/queue/retry-logic.test.ts:58:9)
+
+
+    console.log
+      [QueueManager] Initialized singleton instance: 136604m
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/queue/retry-logic.test.ts:62:9)
+
+
+    console.log
+      [QueueManager][136604m] Cache populated from storage. Size: 0
+
+      at QueueManager.ensureQueue (src/background/queue-manager.ts:72:21)
+
+    console.log
+      [QueueManager][136604m] ADD START: item-resumed. Current queue IDs:
+
+      at src/background/queue-manager.ts:97:21
+
+    console.log
+      [StorageManager][2stmgz7] Writing queue of size 1. IDs: item-resumed
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at StorageManager.setQueue (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:202:9)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/background/queue-manager.ts:134:13
+
+
+    console.log
+      [QueueManager][136604m] ADD SUCCESS: item-resumed. New queue IDs: item-resumed
+
+      at src/background/queue-manager.ts:135:21
+
+    console.debug
+      [RetryScheduler] Resuming retries for pending items...
+
+      at RetryScheduler.resumeRetries (src/background/retry-scheduler.ts:257:17)
+
+    console.debug
+      [RetryScheduler] Scheduling retry for item item-resumed (attempt 3/10, delay: 30000ms)
+
+      at RetryScheduler.scheduleRetry (src/background/retry-scheduler.ts:54:17)
+
+    console.debug
+      [RetryScheduler] Resumed retries for 1 items.
+
+      at RetryScheduler.resumeRetries (src/background/retry-scheduler.ts:270:21)
+
+PASS tests/integration/capture/fallback-extraction.test.ts
+  ● Console
+
+    console.debug
+      Fallback Chain: Starting Level 1 (Readability)...
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:44:17)
+
+    console.debug
+      Fallback Chain: Level 1 Success (11.6ms)
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:52:21)
+
+    console.debug
+      Fallback Chain: Starting Level 1 (Readability)...
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:44:17)
+
+    console.debug
+      Fallback Chain: Level 1 Success (5.1ms)
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:52:21)
+
+    console.debug
+      Fallback Chain: Starting Level 1 (Readability)...
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:44:17)
+
+    console.debug
+      Fallback Chain: Starting Level 2 (Simplified DOM)...
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:77:17)
+
+    console.debug
+      Fallback Chain: Starting Level 3 (Full Page Clean)...
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:117:17)
+
+    console.warn
+      Fallback L3 error: ReferenceError: NodeFilter is not defined
+          at removeElementsByPattern (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/extractors/fallback-extractor.ts:292:52)
+          at extractFullPageClean (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/extractors/fallback-extractor.ts:272:9)
+          at extractWithFallback (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/extractors/fallback-extractor.ts:118:24)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/fallback-extraction.test.ts:107:24)
+
+      280 |         }
+      281 |     } catch (error) {
+    > 282 |         console.warn('Fallback L3 error:', error);
+          |                 ^
+      283 |     }
+      284 |
+      285 |     return null;
+
+      at extractFullPageClean (src/lib/extractors/fallback-extractor.ts:282:17)
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:118:24)
+      at Object.<anonymous> (tests/integration/capture/fallback-extraction.test.ts:107:24)
+
+    console.debug
+      Fallback Chain: All extractions failed. Fallback to Level 4 (Smart Bookmark).
+
+      at extractWithFallback (src/lib/extractors/fallback-extractor.ts:153:13)
+
+    console.debug
+      Fallback L4: Created smart bookmark
+
+      at createSmartBookmark (src/lib/extractors/fallback-extractor.ts:325:17)
+
+PASS tests/integration/capture/article-flow.test.ts
+PASS tests/integration/capture/table-extraction.test.ts
+  ● Console
+
+    console.error
+      Table conversion failed: TypeError: scripts.forEach is not a function
+          at TableConverter.sanitizeElement (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/extractors/table-converter.ts:193:17)
+          at TableConverter.toHTML (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/extractors/table-converter.ts:81:14)
+          at Object.replacement (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/converters/markdown-converter.ts:72:62)
+          at TurndownService.replacementForNode (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:907:10)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:866:40
+          at NodeList.reduce (<anonymous>)
+          at TurndownService.process (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:859:17)
+          at TurndownService.turndown (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:771:26)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/converters/markdown-converter.ts:132:48
+          at convertToMarkdown (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/converters/markdown-converter.ts:137:11)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/table-extraction.test.ts:27:47)
+          at Promise.finally.completed (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-runner/build/index.js:343:7)
+
+      86 |                     return output;
+      87 |                 } catch (error) {
+    > 88 |                     console.error('Table conversion failed:', error);
+         |                             ^
+      89 |                     return '\n\n' + (table.outerHTML || '') + '\n\n';
+      90 |                 }
+      91 |             }
+
+      at Object.replacement (src/lib/converters/markdown-converter.ts:88:29)
+      at TurndownService.replacementForNode (node_modules/turndown/lib/turndown.cjs.js:907:10)
+      at node_modules/turndown/lib/turndown.cjs.js:866:40
+          at NodeList.reduce (<anonymous>)
+      at TurndownService.process (node_modules/turndown/lib/turndown.cjs.js:859:17)
+      at TurndownService.turndown (node_modules/turndown/lib/turndown.cjs.js:771:26)
+      at src/lib/converters/markdown-converter.ts:132:48
+      at convertToMarkdown (src/lib/converters/markdown-converter.ts:137:11)
+      at Object.<anonymous> (tests/integration/capture/table-extraction.test.ts:27:47)
+
+    console.error
+      Table conversion failed: TypeError: scripts.forEach is not a function
+          at TableConverter.sanitizeElement (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/extractors/table-converter.ts:193:17)
+          at TableConverter.toHTML (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/extractors/table-converter.ts:81:14)
+          at Object.replacement (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/converters/markdown-converter.ts:72:62)
+          at TurndownService.replacementForNode (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:907:10)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:866:40
+          at NodeList.reduce (<anonymous>)
+          at TurndownService.process (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:859:17)
+          at TurndownService.replacementForNode (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:902:25)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:866:40
+          at NodeList.reduce (<anonymous>)
+          at TurndownService.process (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:859:17)
+          at TurndownService.turndown (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/turndown/lib/turndown.cjs.js:771:26)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/converters/markdown-converter.ts:132:48
+          at convertToMarkdown (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/converters/markdown-converter.ts:137:11)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/table-extraction.test.ts:60:47)
+          at Promise.finally.completed (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1557:28)
+          at new Promise (<anonymous>)
+          at callAsyncCircusFn (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1497:10)
+          at _callCircusTest (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1007:40)
+          at _runTest (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:947:3)
+          at /mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:849:7
+          at _runTestsForDescribeBlock (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:862:11)
+          at _runTestsForDescribeBlock (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:857:11)
+          at run (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:761:3)
+          at runAndTransformResultsToJestFormat (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/jestAdapterInit.js:1918:21)
+          at jestAdapter (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-circus/build/runner.js:101:19)
+          at runTestInternal (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-runner/build/index.js:275:16)
+          at runTest (/mnt/Storage/Documents/Projects/AnyType-Clipper/node_modules/jest-runner/build/index.js:343:7)
+
+      86 |                     return output;
+      87 |                 } catch (error) {
+    > 88 |                     console.error('Table conversion failed:', error);
+         |                             ^
+      89 |                     return '\n\n' + (table.outerHTML || '') + '\n\n';
+      90 |                 }
+      91 |             }
+
+      at Object.replacement (src/lib/converters/markdown-converter.ts:88:29)
+      at TurndownService.replacementForNode (node_modules/turndown/lib/turndown.cjs.js:907:10)
+      at node_modules/turndown/lib/turndown.cjs.js:866:40
+          at NodeList.reduce (<anonymous>)
+      at TurndownService.process (node_modules/turndown/lib/turndown.cjs.js:859:17)
+      at TurndownService.replacementForNode (node_modules/turndown/lib/turndown.cjs.js:902:25)
+      at node_modules/turndown/lib/turndown.cjs.js:866:40
+          at NodeList.reduce (<anonymous>)
+      at TurndownService.process (node_modules/turndown/lib/turndown.cjs.js:859:17)
+      at TurndownService.turndown (node_modules/turndown/lib/turndown.cjs.js:771:26)
+      at src/lib/converters/markdown-converter.ts:132:48
+      at convertToMarkdown (src/lib/converters/markdown-converter.ts:137:11)
+      at Object.<anonymous> (tests/integration/capture/table-extraction.test.ts:60:47)
+
+PASS tests/integration/capture/article-metadata.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: iz85r8l
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: vzsdv6t
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.error
+      TypeError: chrome.storage.local.getBytesInUse is not a function
+          at StorageManager.getBytesInUse (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:137:43)
+          at StorageManager.checkQuota (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:144:33)
+          at StorageManager.set (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/storage/storage-manager.ts:106:14)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/article-metadata.test.ts:53:9)
+
+
+    console.debug
+      [BookmarkCaptureService] Performing health check on port 31009...
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:54:17)
+
+    console.log
+      [BookmarkCaptureService] Health check result: ONLINE
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:56:17)
+
+    console.log
+      [BookmarkCaptureService] Creating object: {
+        title: 'Article Title',
+        description: '# Article Content\n\nFull article text here.',
+        type_key: 'article',
+        source: 'https://example.com/article'
+      }
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:107:21)
+
+    console.error
+      Error fetching tags for property "tag": TypeError: this.apiClient.listTags is not a function
+          at TagService.fetchTagsWithFallback (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:82:51)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:69:31)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at BookmarkCaptureService.prepareProperties (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:200:38)
+          at BookmarkCaptureService.captureBookmark (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:112:38)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/article-metadata.test.ts:73:24)
+
+      116 |
+      117 |             // Log full error for diagnostic purposes
+    > 118 |             console.error(`Error fetching tags for property "${propertyId}":`, error);
+          |                     ^
+      119 |
+      120 |             if (isNotFoundError) {
+      121 |                 const fallbackPropertyId = propertyId === 'tag' ? 'tags' : 'tag';
+
+      at TagService.fetchTagsWithFallback (src/lib/tags/tag-service.ts:118:21)
+      at TagService.getTags (src/lib/tags/tag-service.ts:69:31)
+      at BookmarkCaptureService.prepareProperties (src/lib/capture/bookmark-capture-service.ts:200:38)
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:112:38)
+      at Object.<anonymous> (tests/integration/capture/article-metadata.test.ts:73:24)
+
+    console.error
+      Failed to fetch tags: TypeError: this.apiClient.listTags is not a function
+          at TagService.fetchTagsWithFallback (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:82:51)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:69:31)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at BookmarkCaptureService.prepareProperties (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:200:38)
+          at BookmarkCaptureService.captureBookmark (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:112:38)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/article-metadata.test.ts:73:24)
+
+      69 |             return await this.fetchTagsWithFallback(spaceId, propertyId, tagCache, objectTypeId);
+      70 |         } catch (error) {
+    > 71 |             console.error('Failed to fetch tags:', error);
+         |                     ^
+      72 |             // Rethrow to let UI handle it
+      73 |             throw error;
+      74 |         }
+
+      at TagService.getTags (src/lib/tags/tag-service.ts:71:21)
+      at BookmarkCaptureService.prepareProperties (src/lib/capture/bookmark-capture-service.ts:200:38)
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:112:38)
+      at Object.<anonymous> (tests/integration/capture/article-metadata.test.ts:73:24)
+
+    console.warn
+      [BookmarkCaptureService] Failed to resolve tags: TypeError: this.apiClient.listTags is not a function
+          at TagService.fetchTagsWithFallback (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:82:51)
+          at TagService.getTags (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/tags/tag-service.ts:69:31)
+          at processTicksAndRejections (node:internal/process/task_queues:105:5)
+          at BookmarkCaptureService.prepareProperties (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:200:38)
+          at BookmarkCaptureService.captureBookmark (/mnt/Storage/Documents/Projects/AnyType-Clipper/src/lib/capture/bookmark-capture-service.ts:112:38)
+          at Object.<anonymous> (/mnt/Storage/Documents/Projects/AnyType-Clipper/tests/integration/capture/article-metadata.test.ts:73:24)
+
+      218 |                 }
+      219 |             } catch (e) {
+    > 220 |                 console.warn('[BookmarkCaptureService] Failed to resolve tags:', e);
+          |                         ^
+      221 |             }
+      222 |         }
+      223 |
+
+      at BookmarkCaptureService.prepareProperties (src/lib/capture/bookmark-capture-service.ts:220:25)
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:112:38)
+      at Object.<anonymous> (tests/integration/capture/article-metadata.test.ts:73:24)
+
+    console.log
+      [BookmarkCaptureService] Updating properties: [ { key: 'source', text: 'https://example.com/article' } ]
+
+      at BookmarkCaptureService.captureBookmark (src/lib/capture/bookmark-capture-service.ts:115:25)
+
+PASS tests/integration/auth/challenge-flow.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: wo86grm
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: amcxyc8
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: htg7srx
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+PASS tests/integration/capture/tag-management.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: lvvzvbc
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: aswmfe0
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+PASS tests/integration/storage/quota-management.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: iizig52
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.warn
+      [StorageManager] Storage usage is high: 80% (4195304 / 5242880 bytes)
+
+      147 |
+      148 |         if (percentUsed > (this.QUOTA_WARNING_THRESHOLD * 100)) {
+    > 149 |             console.warn(`[StorageManager] Storage usage is high: ${Math.round(percentUsed)}% (${used} / ${limit} bytes)`);
+          |                     ^
+      150 |         }
+      151 |
+      152 |         return {
+
+      at StorageManager.checkQuota (src/lib/storage/storage-manager.ts:149:21)
+      at Object.<anonymous> (tests/integration/storage/quota-management.test.ts:54:27)
+
+    console.log
+      [StorageManager] Initialized singleton instance: 4f5all3
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: m9pcoc9
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+PASS tests/integration/storage/api-storage-integration.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: h1lx8ll
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: 59wx6kz
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: 9q6jhnr
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.error
+      [StorageManager] VALIDATION FAILED for key "settings": {
+        _errors: [],
+        theme: {
+          _errors: [ 'Invalid option: expected one of "light"|"dark"|"system"' ]
+        },
+        apiPort: { _errors: [ 'Invalid input: expected number, received undefined' ] }
+      }
+
+      69 |             const parsed = fieldSchema.safeParse(value);
+      70 |             if (!parsed.success) {
+    > 71 |                 console.error(`[StorageManager] VALIDATION FAILED for key "${key}":`, parsed.error.format());
+         |                         ^
+      72 |                 console.error(`[StorageManager] Failing object:`, JSON.stringify(value));
+      73 |                 console.error(`[StorageManager] Failing object:`, value);
+      74 |                 throw new Error(`Invalid value for storage key ${key}: ${parsed.error.message}`);
+
+      at StorageManager.set (src/lib/storage/storage-manager.ts:71:25)
+      at Object.<anonymous> (tests/integration/storage/api-storage-integration.test.ts:87:27)
+
+    console.error
+      [StorageManager] Failing object: {"invalidField":"bad"}
+
+      70 |             if (!parsed.success) {
+      71 |                 console.error(`[StorageManager] VALIDATION FAILED for key "${key}":`, parsed.error.format());
+    > 72 |                 console.error(`[StorageManager] Failing object:`, JSON.stringify(value));
+         |                         ^
+      73 |                 console.error(`[StorageManager] Failing object:`, value);
+      74 |                 throw new Error(`Invalid value for storage key ${key}: ${parsed.error.message}`);
+      75 |             }
+
+      at StorageManager.set (src/lib/storage/storage-manager.ts:72:25)
+      at Object.<anonymous> (tests/integration/storage/api-storage-integration.test.ts:87:27)
+
+    console.error
+      [StorageManager] Failing object: { invalidField: 'bad' }
+
+      71 |                 console.error(`[StorageManager] VALIDATION FAILED for key "${key}":`, parsed.error.format());
+      72 |                 console.error(`[StorageManager] Failing object:`, JSON.stringify(value));
+    > 73 |                 console.error(`[StorageManager] Failing object:`, value);
+         |                         ^
+      74 |                 throw new Error(`Invalid value for storage key ${key}: ${parsed.error.message}`);
+      75 |             }
+      76 |         }
+
+      at StorageManager.set (src/lib/storage/storage-manager.ts:73:25)
+      at Object.<anonymous> (tests/integration/storage/api-storage-integration.test.ts:87:27)
+
+PASS tests/integration/queue/queue-ui-flow.test.ts
+PASS tests/integration/queue/offline-queue.test.ts
+  ● Console
+
+    console.log
+      [StorageManager] Initialized singleton instance: z4l81z6
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: r98b923
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.log
+      [StorageManager][z4l81z6] Writing queue of size 0. IDs:
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.log
+      [QueueManager][r98b923] Cache populated from storage. Size: 0
+
+      at QueueManager.ensureQueue (src/background/queue-manager.ts:72:21)
+
+    console.log
+      [QueueManager][r98b923] ADD START: item-1. Current queue IDs:
+
+      at src/background/queue-manager.ts:97:21
+
+    console.log
+      [StorageManager][z4l81z6] Writing queue of size 1. IDs: item-1
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.log
+      [QueueManager][r98b923] ADD SUCCESS: item-1. New queue IDs: item-1
+
+      at src/background/queue-manager.ts:135:21
+
+    console.log
+      [StorageManager] Initialized singleton instance: on37eg4
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: 2cz53zc
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.log
+      [StorageManager][on37eg4] Writing queue of size 0. IDs:
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.log
+      [StorageManager] Initialized singleton instance: b0xwt5x
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: rcr2rfq
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.log
+      [QueueManager][rcr2rfq] Cache populated from storage. Size: 1
+
+      at QueueManager.ensureQueue (src/background/queue-manager.ts:72:21)
+
+    console.log
+      [StorageManager] Initialized singleton instance: qyxpa9a
+
+      at StorageManager.getInstance (src/lib/storage/storage-manager.ts:16:21)
+
+    console.log
+      [QueueManager] Initialized singleton instance: spkbbu8
+
+      at QueueManager.getInstance (src/background/queue-manager.ts:61:21)
+
+    console.log
+      [StorageManager][qyxpa9a] Writing queue of size 0. IDs:
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.log
+      [QueueManager][spkbbu8] Cache populated from storage. Size: 0
+
+      at QueueManager.ensureQueue (src/background/queue-manager.ts:72:21)
+
+    console.log
+      [QueueManager][spkbbu8] ADD START: item-2. Current queue IDs:
+
+      at src/background/queue-manager.ts:97:21
+
+    console.log
+      [StorageManager][qyxpa9a] Writing queue of size 1. IDs: item-2
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.log
+      [QueueManager][spkbbu8] ADD SUCCESS: item-2. New queue IDs: item-2
+
+      at src/background/queue-manager.ts:135:21
+
+    console.log
+      [StorageManager][qyxpa9a] Writing queue of size 1. IDs: item-2
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.log
+      [QueueManager][spkbbu8] Updated item-2: queued -> sending. Size: 1
+
+      at src/background/queue-manager.ts:236:25
+
+    console.log
+      [StorageManager][qyxpa9a] Writing queue of size 0. IDs:
+
+      at task (src/lib/storage/storage-manager.ts:82:25)
+
+    console.log
+      [QueueManager][spkbbu8] Deleted item item-2. New size: 0
+
+      at src/background/queue-manager.ts:211:25
+
+PASS tests/integration/deduplication/url-deduplication.test.ts
+  ● Console
+
+    console.log
+      [Deduplication] Original URL: https://example.com/article
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:52:21)
+
+    console.log
+      [Deduplication] Normalized URL: https://example.com/article
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:53:21)
+
+    console.log
+      [Deduplication] Space ID: space-1
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:54:21)
+
+    console.log
+      [Deduplication] Search request: {
+        "filters": {
+          "operator": "and",
+          "conditions": [
+            {
+              "property_key": "source",
+              "url": "https://example.com/article",
+              "condition": "eq"
+            }
+          ]
+        },
+        "types": [
+          "bookmark"
+        ],
+        "limit": 1
+      }
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:71:21)
+
+    console.log
+      [Deduplication] API URL: http://localhost:31009/v1/spaces/space-1/search
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:80:25)
+
+    console.log
+      [Deduplication] API response status: undefined
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:98:25)
+
+    console.log
+      [Deduplication] API response data: {
+        "data": [
+          {
+            "id": "existing-obj-1",
+            "name": "Existing Article",
+            "properties": [
+              {
+                "key": "source",
+                "url": "https://example.com/article"
+              },
+              {
+                "key": "created_date",
+                "date": 1767822054896
+              }
+            ]
+          }
+        ]
+      }
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:116:25)
+
+    console.log
+      [Deduplication] Found 1 results
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:117:25)
+
+    console.log
+      [Deduplication] Search took 0ms
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:118:25)
+
+    console.log
+      [Deduplication] Result 0: {
+        id: 'existing-obj-1',
+        name: 'Existing Article',
+        properties: [
+          { key: 'source', value: [Object] },
+          { key: 'created_date', value: [Object] }
+        ]
+      }
+
+      at src/lib/services/deduplication-service.ts:123:33
+          at Array.forEach (<anonymous>)
+
+    console.log
+      [Deduplication] Existing object: {
+        id: 'existing-obj-1',
+        name: 'Existing Article',
+        properties: [
+          { key: 'source', url: 'https://example.com/article' },
+          { key: 'created_date', date: 1767822054896 }
+        ]
+      }
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:135:29)
+
+    console.log
+      [Deduplication] Duplicate found: existing-obj-1 (0ms)
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:155:29)
+
+    console.log
+      [Deduplication] Original URL: https://new-site.com/article
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:52:21)
+
+    console.log
+      [Deduplication] Normalized URL: https://new-site.com/article
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:53:21)
+
+    console.log
+      [Deduplication] Space ID: space-1
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:54:21)
+
+    console.log
+      [Deduplication] Search request: {
+        "filters": {
+          "operator": "and",
+          "conditions": [
+            {
+              "property_key": "source",
+              "url": "https://new-site.com/article",
+              "condition": "eq"
+            }
+          ]
+        },
+        "types": [
+          "bookmark"
+        ],
+        "limit": 1
+      }
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:71:21)
+
+    console.log
+      [Deduplication] API URL: http://localhost:31009/v1/spaces/space-1/search
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:80:25)
+
+    console.log
+      [Deduplication] API response status: undefined
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:98:25)
+
+    console.log
+      [Deduplication] API response data: {
+        "data": []
+      }
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:116:25)
+
+    console.log
+      [Deduplication] Found 0 results
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:117:25)
+
+    console.log
+      [Deduplication] Search took 0ms
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:118:25)
+
+    console.log
+      [Deduplication] No duplicate found (0ms)
+
+      at DeduplicationService.searchByUrl (src/lib/services/deduplication-service.ts:162:29)
+
+PASS tests/integration/deduplication/append-mode.test.ts
+  ● Console
+
+    console.log
+      [AppendService] Appending to object obj-123 in space space-1
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:54:21)
+
+    console.log
+      [AppendService] Metadata: {
+        timestamp: '2024-01-01',
+        pageTitle: 'Test Page',
+        url: 'https://example.com',
+        captureType: 'article'
+      }
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:55:21)
+
+    console.log
+      [AppendService] Fetching object: http://localhost:31009/v1/spaces/space-1/objects/obj-123?format=md
+
+      at AppendService.fetchObjectContent (src/lib/services/append-service.ts:136:21)
+
+    console.log
+      [AppendService] Fetched object data: {
+        object: { id: 'obj-123', markdown: '# Original Content\n\nOriginal text.' }
+      }
+
+      at AppendService.fetchObjectContent (src/lib/services/append-service.ts:155:21)
+
+    console.log
+      [AppendService] Fetched existing content (34 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:59:21)
+
+    console.log
+      [AppendService] Formatted new content (110 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:63:21)
+
+    console.log
+      [AppendService] Updated content (146 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:67:21)
+
+    console.log
+      [AppendService] Updating object: http://localhost:31009/v1/spaces/space-1/objects/obj-123
+
+      at AppendService.updateObjectContent (src/lib/services/append-service.ts:191:21)
+
+    console.log
+      [AppendService] Update result: {
+        object: {
+          id: 'obj-123',
+          markdown: '# Original Content\n\nOriginal text.\n\nNew appended content.'
+        }
+      }
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:71:21)
+
+    console.log
+      [AppendService] Appending to object obj-456 in space space-1
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:54:21)
+
+    console.log
+      [AppendService] Metadata: {
+        timestamp: '2024-01-01',
+        pageTitle: 'Test Page',
+        url: 'https://example.com',
+        captureType: 'article'
+      }
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:55:21)
+
+    console.log
+      [AppendService] Fetching object: http://localhost:31009/v1/spaces/space-1/objects/obj-456?format=md
+
+      at AppendService.fetchObjectContent (src/lib/services/append-service.ts:136:21)
+
+    console.log
+      [AppendService] Fetched object data: { object: { id: 'obj-456', markdown: '# Article\n\nOriginal.' } }
+
+      at AppendService.fetchObjectContent (src/lib/services/append-service.ts:155:21)
+
+    console.log
+      [AppendService] Fetched existing content (20 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:59:21)
+
+    console.log
+      [AppendService] Formatted new content (97 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:63:21)
+
+    console.log
+      [AppendService] Updated content (119 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:67:21)
+
+    console.log
+      [AppendService] Updating object: http://localhost:31009/v1/spaces/space-1/objects/obj-456
+
+      at AppendService.updateObjectContent (src/lib/services/append-service.ts:191:21)
+
+    console.log
+      [AppendService] Update result: { object: { id: 'obj-456', markdown: 'Updated 1' } }
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:71:21)
+
+    console.log
+      [AppendService] Appending to object obj-456 in space space-1
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:54:21)
+
+    console.log
+      [AppendService] Metadata: {
+        timestamp: '2024-01-01',
+        pageTitle: 'Test Page',
+        url: 'https://example.com',
+        captureType: 'article'
+      }
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:55:21)
+
+    console.log
+      [AppendService] Fetching object: http://localhost:31009/v1/spaces/space-1/objects/obj-456?format=md
+
+      at AppendService.fetchObjectContent (src/lib/services/append-service.ts:136:21)
+
+    console.log
+      [AppendService] Fetched object data: { object: { id: 'obj-456', markdown: 'Updated 1' } }
+
+      at AppendService.fetchObjectContent (src/lib/services/append-service.ts:155:21)
+
+    console.log
+      [AppendService] Fetched existing content (9 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:59:21)
+
+    console.log
+      [AppendService] Formatted new content (97 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:63:21)
+
+    console.log
+      [AppendService] Updated content (108 chars)
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:67:21)
+
+    console.log
+      [AppendService] Updating object: http://localhost:31009/v1/spaces/space-1/objects/obj-456
+
+      at AppendService.updateObjectContent (src/lib/services/append-service.ts:191:21)
+
+    console.log
+      [AppendService] Update result: { object: { id: 'obj-456', markdown: 'Updated 2' } }
+
+      at AppendService.appendToObject (src/lib/services/append-service.ts:71:21)
+
+PASS tests/integration/capture/highlight-flow.test.ts
+
+Test Suites: 17 passed, 17 total
+Tests:       39 passed, 39 total
+Snapshots:   0 total
+Time:        3.353 s
+Ran all test suites.

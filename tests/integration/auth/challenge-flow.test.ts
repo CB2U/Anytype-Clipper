@@ -13,19 +13,22 @@ describe('Auth Flow Integration', () => {
         (global as any).chrome = {
             storage: {
                 local: {
-                    get: jest.fn((keys) => {
+                    get: jest.fn((keys, callback) => {
                         const res: any = {};
                         if (typeof keys === 'string') {
                             res[keys] = mockStorageData[keys];
                         } else if (Array.isArray(keys)) {
                             keys.forEach(k => res[k] = mockStorageData[k]);
                         } else if (keys === null || keys === undefined) {
+                            if (callback) callback({ ...mockStorageData });
                             return Promise.resolve({ ...mockStorageData });
                         }
+                        if (callback) callback(res);
                         return Promise.resolve(res);
                     }),
-                    set: jest.fn((data) => {
+                    set: jest.fn((data, callback) => {
                         Object.assign(mockStorageData, data);
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
                     getBytesInUse: jest.fn(() => Promise.resolve(JSON.stringify(mockStorageData).length)),
@@ -87,7 +90,7 @@ describe('Auth Flow Integration', () => {
         expect(apiKey).toBe('test-api-key-12345');
 
         // Step 3: Store API key
-        await storage.set('auth', { apiKey, timestamp: Date.now() });
+        await storage.set('auth', { apiKey, isAuthenticated: true });
 
         // Step 4: Verify storage
         const storedAuth = await storage.get('auth');
@@ -97,7 +100,7 @@ describe('Auth Flow Integration', () => {
 
     it('should validate API key on initialization', async () => {
         // Pre-populate storage with API key
-        await storage.set('auth', { apiKey: 'valid-key', timestamp: Date.now() });
+        await storage.set('auth', { apiKey: 'valid-key', isAuthenticated: true });
 
         // Mock validation endpoint
         (fetch as jest.Mock).mockResolvedValueOnce({
@@ -116,7 +119,7 @@ describe('Auth Flow Integration', () => {
     });
 
     it('should handle invalid API key', async () => {
-        await storage.set('auth', { apiKey: 'invalid-key', timestamp: Date.now() });
+        await storage.set('auth', { apiKey: 'invalid-key', isAuthenticated: true });
 
         // Mock 401 response
         (fetch as jest.Mock).mockResolvedValueOnce({

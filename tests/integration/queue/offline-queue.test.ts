@@ -14,36 +14,43 @@ describe('Queue Persistence Integration', () => {
         (global as any).chrome = {
             storage: {
                 local: {
-                    get: jest.fn((keys) => {
+                    get: jest.fn((keys, callback) => {
                         const res: any = {};
                         if (typeof keys === 'string') {
                             res[keys] = mockStorageData[keys];
                         } else if (Array.isArray(keys)) {
                             keys.forEach(k => res[k] = mockStorageData[k]);
                         } else if (keys === null || keys === undefined) {
-                            return Promise.resolve({ ...mockStorageData });
+                            // If keys is null or undefined, return all data
+                            Object.assign(res, mockStorageData);
                         }
+                        if (callback) callback(res);
                         return Promise.resolve(res);
                     }),
-                    set: jest.fn((data) => {
+                    set: jest.fn((data, callback) => {
                         Object.assign(mockStorageData, data);
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
                     getBytesInUse: jest.fn(() => Promise.resolve(JSON.stringify(mockStorageData).length)), // Rough estimate
-                    remove: jest.fn((keys) => {
+                    remove: jest.fn((keys, callback) => {
                         if (typeof keys === 'string') delete mockStorageData[keys];
                         else if (Array.isArray(keys)) keys.forEach(k => delete mockStorageData[k]);
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
-                    clear: jest.fn(() => {
-                        mockStorageData = {};
+                    clear: jest.fn((callback) => {
+                        Object.keys(mockStorageData).forEach(k => delete mockStorageData[k]);
+                        if (callback) callback();
                         return Promise.resolve();
                     })
-                }
+                },
+                onChanged: { addListener: jest.fn() }
             },
             runtime: {
                 lastError: null
-            }
+            },
+            alarms: { create: jest.fn(), clear: jest.fn() }
         };
 
         // Reset singletons

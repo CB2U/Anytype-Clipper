@@ -57,24 +57,33 @@ export async function convertToMarkdown(
             replacement: function (_content, node) {
                 const table = node as HTMLTableElement;
                 try {
+                    // Use a temporary property to prevent recursion if Turndown somehow re-enters
+                    if ((node as any)._processing) return _content;
+                    (node as any)._processing = true;
+
                     const result = TableClassifier.classify(table);
+                    let output: string;
+
                     switch (result.type) {
                         case TableType.Simple:
-                            return '\n\n' + TableConverter.toMarkdown(table) + '\n\n';
+                            output = '\n\n' + TableConverter.toMarkdown(table) + '\n\n';
+                            break;
                         case TableType.Complex:
-                            return '\n\n' + TableConverter.toHTML(table) + '\n\n';
+                            output = '\n\n' + TableConverter.toHTML(table) + '\n\n';
+                            break;
                         case TableType.Data:
-                            // New Logic: Always Markdown, optionally append JSON
-                            let output = '\n\n' + TableConverter.toMarkdown(table) + '\n\n';
-
+                            output = '\n\n' + TableConverter.toMarkdown(table) + '\n\n';
                             if (includeJSONForDataTables) {
                                 const json = TableConverter.toJSON(table);
                                 output += `\n\n**Data Table:**\n\n\`\`\`json\n${json}\n\`\`\`\n\n`;
                             }
-                            return output;
+                            break;
                         default:
-                            return '\n\n' + TableConverter.toHTML(table) + '\n\n';
+                            output = '\n\n' + TableConverter.toHTML(table) + '\n\n';
                     }
+
+                    delete (node as any)._processing;
+                    return output;
                 } catch (error) {
                     console.error('Table conversion failed:', error);
                     return '\n\n' + (table.outerHTML || '') + '\n\n';
@@ -112,19 +121,20 @@ export async function convertToMarkdown(
         });
 
         // Create timeout promise
+        let timeoutId: any;
         const timeoutPromise = new Promise<never>((_, reject) => {
-            setTimeout(() => reject(new Error('Markdown conversion timed out')), timeoutMs);
+            timeoutId = setTimeout(() => reject(new Error('Markdown conversion timed out')), timeoutMs);
         });
 
         // Create conversion promise
-        const conversionPromise = new Promise<string>((resolve, reject) => {
+        const conversionPromise = (async () => {
             try {
                 const result = turndownService.turndown(html);
-                resolve(result);
-            } catch (error) {
-                reject(error);
+                return result;
+            } finally {
+                if (timeoutId) clearTimeout(timeoutId);
             }
-        });
+        })();
 
         // Race them
         const markdown = await Promise.race([conversionPromise, timeoutPromise]);

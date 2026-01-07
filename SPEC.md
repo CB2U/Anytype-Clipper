@@ -11,6 +11,7 @@ It points to the spec folder for the current work and links to the product docs.
 
 ## Current Focus
 **Recent Completions:**
+- Completed [Epic 8.1: Integration Tests](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/spec.md) ✅
 - Completed [Epic 7.3: Notifications System](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/073-notifications/spec.md) ✅
 - Completed [Epic 7.2: Options Page](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/072-options-page/spec.md) ✅
 - Completed [Epic 7.1: Context Menu Integration](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md) ✅
@@ -20,8 +21,8 @@ It points to the spec folder for the current work and links to the product docs.
 
 **Epic:** 8.1 Integration Tests  
 **Folder:** `specs/081-integration-tests/`  
-**Status:** In Progress  
-**Next:** T1 - Configure Integration Test Infrastructure
+**Status:** Done ✅  
+**Next:** Epic 8.2 (E2E Test Suite)
 
 ### Quick Links
 - Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/spec.md)

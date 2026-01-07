@@ -8,4 +8,5 @@ export default {
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
     },
+    testTimeout: 10000,
 };

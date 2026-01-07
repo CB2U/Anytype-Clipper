@@ -13,17 +13,19 @@ describe('API-Storage Integration', () => {
         (global as any).chrome = {
             storage: {
                 local: {
-                    get: jest.fn((keys) => {
+                    get: jest.fn((keys, callback) => {
                         const res: any = {};
                         if (typeof keys === 'string') {
                             res[keys] = mockStorageData[keys];
                         } else if (Array.isArray(keys)) {
                             keys.forEach(k => res[k] = mockStorageData[k]);
                         }
+                        if (callback) callback(res);
                         return Promise.resolve(res);
                     }),
-                    set: jest.fn((data) => {
+                    set: jest.fn((data, callback) => {
                         Object.assign(mockStorageData, data);
+                        if (callback) callback();
                         return Promise.resolve();
                     }),
                     getBytesInUse: jest.fn(() => Promise.resolve(JSON.stringify(mockStorageData).length)),
@@ -59,7 +61,7 @@ describe('API-Storage Integration', () => {
         expect(data.object.id).toBeDefined();
 
         // Store validated data
-        await storage.set('lastCreatedObject', data.object);
+        await storage.set('lastCreatedObject' as any, data.object);
 
         expect(mockStorageData['lastCreatedObject']).toEqual({ id: 'obj-1', name: 'Test' });
     });
@@ -68,9 +70,9 @@ describe('API-Storage Integration', () => {
         const writes: string[] = [];
 
         // Simulate concurrent writes
-        const write1 = storage.set('test', { value: 1 }).then(() => writes.push('write1'));
-        const write2 = storage.set('test', { value: 2 }).then(() => writes.push('write2'));
-        const write3 = storage.set('test', { value: 3 }).then(() => writes.push('write3'));
+        const write1 = storage.set('test' as any, { value: 1 }).then(() => writes.push('write1'));
+        const write2 = storage.set('test' as any, { value: 2 }).then(() => writes.push('write2'));
+        const write3 = storage.set('test' as any, { value: 3 }).then(() => writes.push('write3'));
 
         await Promise.all([write1, write2, write3]);
 

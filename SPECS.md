@@ -4,7 +4,7 @@
 **Project:** Anytype Clipper Extension 
 **Version:** 1.0 
 **Status:** Active 
-**Last Updated:** 2026-01-04 
+**Last Updated:** 2026-01-07
 **PRD Reference:** PRD.md v2.0 
 **Constitution Reference:** constitution.md v1.0 
 **Roadmap Reference:** roadmap.md v1.0
@@ -87,7 +87,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | Roadmap Anchor | Epic Name                | Spec Folder                | Breakpoint | Status      | Next Task | Evidence | Target ACs                                                                    |
 | -------------- | ------------------------ | -------------------------- | ---------- | ----------- | --------- | -------- | ----------------------------------------------------------------------------- |
 | 7.0            | Popup UI                 | `specs/022-popup-ui/`      | BP6        | Done        | N/A       | -        | T1                                                                            |
-| 7.1            | Context Menu Integration | `specs/071-context-menu/`  | BP6        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md#evidence) | FR4.5, FR5.9, FR14.1, AC3                                                     |
+| 7.1            | Context Menu Integration | `specs/071-context-menu/`  | BP6        | In Progress | T17 - Resolve `StorageManager` Quota TypeError | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/071-context-menu/spec.md#evidence) | FR4.5, FR5.9, FR14.1, AC3                                                     |
 | 7.2            | Options Page             | `specs/072-options-page/`  | BP6        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/072-options-page/spec.md#evidence) | FR13.1, FR13.2, FR13.3, FR13.4, FR13.6, FR13.7, FR13.12, FR13.13, AC7, PRIV-4 |
 | 7.3            | Notifications System     | `specs/073-notifications/` | BP6        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/073-notifications/spec.md#evidence) | FR3.4, FR5.10, FR6.2, NFR4.3, NFR4.5, ERR-2, ERR-4                            |
 
@@ -97,7 +97,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | Roadmap Anchor | Epic Name                  | Spec Folder                    | Breakpoint | Status      | Next Task | Evidence | Target ACs                                                      |
 | -------------- | -------------------------- | ------------------------------ | ---------- | ----------- | --------- | -------- | --------------------------------------------------------------- |
 | 8.0            | Unit Test Suite            | `specs/080-unit-tests/`        | BP7        | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/080-unit-tests/spec.md#evidence) | NFR6.3, TEST-1, TEST-2, TEST-5, TEST-6 |
-| 8.1            | Integration Tests          | `specs/081-integration-tests/` | BP7        | In Progress | T1 - Configure Integration Test Infrastructure | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/spec.md#evidence) | TEST-3, TEST-6 |
+| 8.1            | Integration Tests          | `specs/081-integration-tests/` | BP7        | Done        | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/spec.md#evidence) | TEST-3, TEST-6 |
 | 8.2            | E2E Test Suite             | `specs/028-e2e-tests/`         | BP7        | Not Started | N/A | N/A | NFR6.4, TEST-4, TEST-6, AC1-AC20                                |
 | 8.3            | Manual Testing & Bug Fixes | `specs/029-manual-testing/`    | BP7        | Not Started | N/A | N/A | NFR1.1-NFR1.8, NFR4.6, NFR4.7, NFR5.1, NFR5.2, TEST-7, TEST-8   |
 | 8.4            | Documentation              | `specs/030-documentation/`     | BP7        | Not Started | N/A | N/A | NFR6.5, NFR6.6, DOC-1, DOC-2, DOC-3, DOC-4, DOC-5, DOC-6, DOC-7 |
@@ -230,8 +230,8 @@ specs/NNN-slug/
 
 - **Testing:** 0
 
-- **Done:** 18
-  **Completion:** 56% (18/32 complete)
+- **Done:** 19
+  **Completion:** 59% (19/32 complete)
   
   ### Breakpoint Progress
 
@@ -249,7 +249,7 @@ specs/NNN-slug/
 
 - **BP6 (UI & Integration):** 1/4 complete
 
-- **BP7 (Testing & Polish):** 0/5 complete
+- **BP7 (Testing & Polish):** 2/5 complete
 
 - **BP8 (MVP Release):** 0/2 complete
 

@@ -10,7 +10,6 @@ import {
     Settings,
     SettingsV1,
     ValidationResult,
-    ImageStrategy,
     CachedSpaces,
 } from '../../types/settings';
 import { DEFAULT_SETTINGS, SETTINGS_CONSTANTS } from '../../types/settings-constants';
@@ -217,7 +216,11 @@ export function calculateBackoffIntervals(maxAttempts: number): number[] {
 export async function loadCachedSpaces(): Promise<CachedSpaces | null> {
     try {
         const result = await chrome.storage.local.get('cachedSpaces');
-        return result.cachedSpaces || null;
+        const cachedStatus = result.cachedSpaces;
+        if (cachedStatus && typeof cachedStatus === 'object' && 'spaces' in cachedStatus) {
+            return cachedStatus as CachedSpaces;
+        }
+        return null;
     } catch (error) {
         console.error('[SettingsManager] Error loading cached Spaces:', error);
         return null;

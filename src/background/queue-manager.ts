@@ -232,6 +232,7 @@ export class QueueManager {
                 }
 
                 await this.storage.setQueue(queue);
+                this.cachedQueue = queue; // Update cache
                 console.log(`[QueueManager][${this.instanceId}] Updated ${id}: ${oldStatus} -> ${status}. Size: ${queue.length}`);
             }
         });
@@ -260,6 +261,7 @@ export class QueueManager {
                 item.timestamps.completed = Date.now();
 
                 await this.storage.setQueue(queue);
+                this.cachedQueue = queue; // Update cache
                 console.debug(`[QueueManager][${this.instanceId}] Marked item as failed (id: ${id})`);
             }
         });
@@ -278,13 +280,14 @@ export class QueueManager {
      */
     public async updateRetryCount(id: string, count: number): Promise<void> {
         return this.enqueueTask(async () => {
-            const queue = await this.storage.getQueue();
+            const queue = await this.ensureQueue();
             const index = queue.findIndex(item => item.id === id);
 
             if (index !== -1) {
                 queue[index].retryCount = count;
                 queue[index].timestamps.lastAttempt = Date.now();
                 await this.storage.setQueue(queue);
+                this.cachedQueue = queue; // Update cache
                 console.debug(`[QueueManager] Updated retry count (id: ${id}, count: ${count})`);
             }
         });
@@ -301,6 +304,7 @@ export class QueueManager {
             if (index !== -1) {
                 queue[index].error = error;
                 await this.storage.setQueue(queue);
+                this.cachedQueue = queue; // Update cache
                 console.debug(`[QueueManager][${this.instanceId}] Updated error message (id: ${id})`);
             }
         });

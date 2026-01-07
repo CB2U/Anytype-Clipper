@@ -1,3 +1,4 @@
+/** @jest-environment jsdom */
 import { QueueStatusSection } from '../../../src/popup/components/QueueStatusSection';
 import { QueueStatus, QueueItem } from '../../../src/types/queue';
 

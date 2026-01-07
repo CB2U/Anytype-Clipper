@@ -50,7 +50,7 @@ export class ImageDetector {
     /**
      * Estimate image size from URL or headers.
      */
-    static estimateImageSize(url: string): number | null {
+    static estimateImageSize(_url: string): number | null {
         // Simple heuristic: check if URL contains dimensions or size hints
         return null;
     }

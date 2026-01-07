@@ -13,6 +13,7 @@ import type { DuplicateResult, ExistingObject, UrlSearchRequest, UrlSearchRespon
  * DeduplicationService class for searching existing objects by URL
  */
 export class DeduplicationService {
+    private static instance: DeduplicationService;
     private readonly apiBaseUrl: string;
     private readonly timeout: number;
 
@@ -21,9 +22,19 @@ export class DeduplicationService {
      * @param apiBaseUrl - Base URL for Anytype API (e.g., "http://localhost:31009")
      * @param timeout - Search timeout in milliseconds (default: 1000ms)
      */
-    constructor(apiBaseUrl: string = 'http://localhost:31009', timeout: number = 1000) {
+    private constructor(apiBaseUrl: string = 'http://localhost:31009', timeout: number = 1000) {
         this.apiBaseUrl = apiBaseUrl;
         this.timeout = timeout;
+    }
+
+    /**
+     * Gets the singleton instance of DeduplicationService
+     */
+    public static getInstance(apiBaseUrl?: string, timeout?: number): DeduplicationService {
+        if (!DeduplicationService.instance) {
+            DeduplicationService.instance = new DeduplicationService(apiBaseUrl, timeout);
+        }
+        return DeduplicationService.instance;
     }
 
     /**
@@ -184,8 +195,4 @@ export class DeduplicationService {
     }
 }
 
-/**
- * Singleton instance of DeduplicationService
- * Can be configured with custom API base URL and timeout
- */
-export const deduplicationService = new DeduplicationService();
+export const deduplicationService = DeduplicationService.getInstance();

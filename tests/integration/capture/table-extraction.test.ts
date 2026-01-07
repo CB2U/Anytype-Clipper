@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
 function loadFixture(name: string): string {
-    return readFileSync(resolve(__dirname, '../fixtures/tables', name), 'utf-8');
+    return readFileSync(resolve(__dirname, '../../fixtures/tables', name), 'utf-8');
 }
 
 describe('Table Extraction Integration', () => {
@@ -37,7 +37,7 @@ describe('Table Extraction Integration', () => {
 
     it('should extract data table as JSON/CSV + HTML', async () => {
         const html = loadFixture('article-with-data-table.html');
-        const result = await convertToMarkdown(html);
+        const result = await convertToMarkdown(html, { includeJSONForDataTables: true });
 
         expect(result.success).toBe(true);
         const md = result.markdown || '';

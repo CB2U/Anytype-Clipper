@@ -165,7 +165,7 @@ export class AnytypeApiClient {
             name: String(title || `Untitled ${typeKeyStr.charAt(0).toUpperCase() + typeKeyStr.slice(1)}`),
             body: bodyContent.trim(),
             type_key: typeKeyStr,
-            source: params.source  // Add source URL for deduplication
+            source: params.source_url || (params.source as string)  // Add source URL for deduplication
         };
 
         const response = await this.post<CreateObjectResponse>(`/v1/spaces/${spaceId}/objects`, requestBody);

@@ -24,22 +24,34 @@ describe('Bookmark Metadata Integration', () => {
         (global as any).chrome = {
             storage: {
                 local: {
-                    get: jest.fn((keys) => {
+                    get: jest.fn((keys, callback) => {
                         const res: any = {};
                         if (typeof keys === 'string') {
                             res[keys] = mockStorage[keys];
                         } else if (Array.isArray(keys)) {
                             keys.forEach(k => res[k] = mockStorage[k]);
                         }
+                        if (callback) callback(res);
                         return Promise.resolve(res);
                     }),
-                    set: jest.fn((data) => {
+                    set: jest.fn((data, callback) => {
                         Object.assign(mockStorage, data);
-                        return Promise.resolve();
+                        if (callback) callback();
                     })
-                }
-            }
+                },
+                onChanged: { addListener: jest.fn() }
+            },
+            runtime: { lastError: null },
+            alarms: { create: jest.fn(), onAlarm: { addListener: jest.fn() } }
         };
+
+        // Reset singletons
+        (StorageManager as any).instance = undefined;
+        (BookmarkCaptureService as any).instance = undefined;
+
+        // Reset singletons
+        (StorageManager as any).instance = undefined;
+        (BookmarkCaptureService as any).instance = undefined;
 
         storage = StorageManager.getInstance();
         await storage.set('auth', { apiKey: 'test-key', isAuthenticated: true });
@@ -71,7 +83,7 @@ describe('Bookmark Metadata Integration', () => {
         expect(apiClient.createObject).toHaveBeenCalledWith(spaceId, expect.objectContaining({
             title: 'Test Title',
             type_key: 'bookmark',
-            source_url: 'https://example.com/canonical'
+            source: 'https://example.com/canonical'
         }));
     });
 });
