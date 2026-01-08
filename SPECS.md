@@ -100,7 +100,7 @@ This document serves as the **central index** for all specifications in the Anyt
 | 8.1            | Integration Tests          | `specs/081-integration-tests/` | BP7        | Done        | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/spec.md#evidence) | TEST-3, TEST-6 |
 | 8.2            | E2E Test Suite             | `specs/028-e2e-tests/`         | BP7        | Not Started | N/A | N/A | NFR6.4, TEST-4, TEST-6, AC1-AC20                                |
 | 8.3            | Manual Testing & Bug Fixes | `specs/029-manual-testing/`    | BP7        | Not Started | N/A | N/A | NFR1.1-NFR1.8, NFR4.6, NFR4.7, NFR5.1, NFR5.2, TEST-7, TEST-8   |
-| 8.4            | Documentation              | `specs/030-documentation/`     | BP7        | Not Started | N/A | N/A | NFR6.5, NFR6.6, DOC-1, DOC-2, DOC-3, DOC-4, DOC-5, DOC-6, DOC-7 |
+| 8.4            | Documentation              | `specs/084-documentation/`     | BP7        | Done        | N/A | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/084-documentation/spec.md#evidence) | NFR6.5, NFR6.6, DOC-1, DOC-2, DOC-3, DOC-4, DOC-5, DOC-6, DOC-7 |
 
 ### BP8: MVP Release (Week 17)
 

@@ -19,15 +19,15 @@ It points to the spec folder for the current work and links to the product docs.
 
 ## Active Specification
 
-**Epic:** 8.1 Integration Tests  
-**Folder:** `specs/081-integration-tests/`  
+**Epic:** 8.4 Documentation  
+**Folder:** `specs/084-documentation/`  
 **Status:** Done ✅  
-**Next:** Epic 8.2 (E2E Test Suite)
+**Next:** Epic 9.0 (Release Preparation)
 
 ### Quick Links
-- Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/spec.md)
-- Implementation Plan: [plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/plan.md)
-- Tasks: [tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/081-integration-tests/tasks.md)
+- Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/084-documentation/spec.md)
+- Implementation Plan: [plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/084-documentation/plan.md)
+- Tasks: [tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/084-documentation/tasks.md)
 
 ### Previous Epic
 - Epic 8.0: Unit Test Suite (Complete ✅ - 2026-01-05)
