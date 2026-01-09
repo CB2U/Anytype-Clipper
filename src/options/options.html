@@ -56,6 +56,40 @@
             <span id="spacesStatus" class="status"></span>
         </section>
 
+        <!-- Object Type Configuration Section -->
+        <section class="section">
+            <h2>Default Object Types</h2>
+            <p class="section-description">Configure which Object Type to use for each capture mode. The extension will
+                remember your last-used type for each mode.</p>
+
+            <div class="form-group">
+                <label for="defaultObjectTypeBookmark">Bookmark:</label>
+                <select id="defaultObjectTypeBookmark" aria-label="Default Object Type for bookmarks">
+                    <option value="">Loading types...</option>
+                </select>
+                <p class="help-text" id="lastUsedBookmark"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="defaultObjectTypeHighlight">Highlight:</label>
+                <select id="defaultObjectTypeHighlight" aria-label="Default Object Type for highlights">
+                    <option value="">Loading types...</option>
+                </select>
+                <p class="help-text" id="lastUsedHighlight"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="defaultObjectTypeArticle">Article:</label>
+                <select id="defaultObjectTypeArticle" aria-label="Default Object Type for articles">
+                    <option value="">Loading types...</option>
+                </select>
+                <p class="help-text" id="lastUsedArticle"></p>
+            </div>
+
+            <button id="refreshObjectTypes" class="secondary">Refresh Object Types</button>
+            <span id="objectTypesStatus" class="status"></span>
+        </section>
+
         <!-- Retry Behavior Section -->
         <section class="section">
             <h2>Retry Behavior</h2>

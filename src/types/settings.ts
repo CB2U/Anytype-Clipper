@@ -71,9 +71,89 @@ export interface SettingsV1 {
 }
 
 /**
+ * Icon types for Object Types
+ */
+export interface EmojiIcon {
+    format: 'emoji';
+    emoji: string;  // Unicode emoji
+}
+
+export interface FileIcon {
+    format: 'file';
+    file: string;   // File ID
+}
+
+export interface NamedIcon {
+    format: 'icon';
+    icon: string;   // Icon name from predefined set
+}
+
+export type Icon = EmojiIcon | FileIcon | NamedIcon | null;
+
+/**
+ * Type layout options from Anytype API
+ */
+export type TypeLayout = 'basic' | 'profile' | 'action' | 'note' | 'bookmark' | 'set' | 'collection' | 'participant';
+
+/**
+ * Object Type information from Anytype API
+ */
+export interface ObjectTypeInfo {
+    id: string;              // Unique type ID across spaces
+    key: string;             // Type key (e.g., "page", "bookmark", "research_paper")
+    name: string;            // Display name (e.g., "Page", "Bookmark", "Research Paper")
+    plural_name: string;     // Plural display name (e.g., "Pages", "Bookmarks")
+    icon: Icon;              // Icon (emoji, file, or named icon)
+    layout: TypeLayout;      // Layout type
+    archived: boolean;       // Whether the type is archived/deleted
+    object: string;          // Data model (always "type")
+}
+
+/**
+ * Settings Schema Version 2
+ * Adds Object Type configuration support
+ */
+export interface SettingsV2 extends Omit<SettingsV1, 'version'> {
+    version: 2;
+
+    /**
+     * Object Type configuration
+     */
+    objectTypes: {
+        /**
+         * Default Object Type key per capture mode
+         * Uses the 'key' field from ObjectTypeInfo (e.g., "page", "bookmark")
+         */
+        defaults: {
+            article: string;      // Default: "page"
+            highlight: string;    // Default: "note"
+            bookmark: string;     // Default: "bookmark"
+        };
+        /**
+         * Last-used Object Type key per capture mode
+         * null means no last-used type (use default)
+         */
+        lastUsed: {
+            article: string | null;
+            highlight: string | null;
+            bookmark: string | null;
+        };
+        /**
+         * Cached Object Types list for offline use
+         * Filtered to exclude archived types
+         */
+        cached: ObjectTypeInfo[];
+        /**
+         * Last fetch timestamp (milliseconds since epoch)
+         */
+        lastFetchedAt: number;
+    };
+}
+
+/**
  * Current settings type (alias for latest version)
  */
-export type Settings = SettingsV1;
+export type Settings = SettingsV2;
 
 /**
  * Validation helper types

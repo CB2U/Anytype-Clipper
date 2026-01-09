@@ -124,10 +124,8 @@ async function handleSelectionCapture(
 
     // Send message to content script to get full context
     // The existing highlight capture flow will handle this
-    // Send message to content script to get full context
-    // The existing highlight capture flow will handle this
     await chrome.tabs.sendMessage(tab.id!, {
-        command: 'CAPTURE_HIGHLIGHT',
+        type: 'CAPTURE_HIGHLIGHT',
         payload: {
             quote: selectionText,
             pageUrl: tab.url,

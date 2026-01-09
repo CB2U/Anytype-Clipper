@@ -68,38 +68,37 @@ export class BookmarkCaptureService {
             source: metadata.canonicalUrl,
         };
 
-        // If it's an article or note, include the content with safety limits
-        if (typeKey === 'article' || typeKey === 'note') {
-            let articleBody = '';
-
+        // If it's a page (article) or note (highlight), include the content with safety limits
+        if (typeKey === 'page' || typeKey === 'note') {
             if (isHighlightCapture && quote) {
-                console.log('[BookmarkCaptureService] Formatting quote as markdown blockquote');
-                // Format as markdown blockquote
-                articleBody = `> ${quote.replace(/\n/g, '\n> ')}`;
+                // For highlights, format the quote as markdown and put it in description
+                // This matches how articles work and ensures markdown rendering in Anytype
+                console.log('[BookmarkCaptureService] Formatting highlight quote as markdown blockquote');
 
-                // Add context if available (from metadata)
-                if (metadata.description) {
-                    articleBody += `\n\n**Context:** ${metadata.description}`;
-                }
+                // Format as markdown blockquote with > prefix on each line
+                const formattedQuote = quote.split('\n').map(line => `> ${line}`).join('\n');
+
+                // Put formatted quote in description field (like articles do)
+                createParams.description = formattedQuote;
             } else {
-                // Content is now pre-converted to Markdown in the content script
-                articleBody = metadata.content || '';
+                // For articles (pages), include the content
+                let articleBody = metadata.content || '';
 
                 // Fallback to textContent (stripped) if content is empty
                 if (!articleBody) {
                     articleBody = (metadata.textContent || '').replace(/<[^>]*>/g, '').trim();
                 }
-            }
 
-            // Safety: Anytype API might struggle with very large bodies. 
-            // Truncate to ~10MB (enough for text + several optimized images)
-            const MAX_BODY_SIZE = 10 * 1024 * 1024;
-            if (articleBody.length > MAX_BODY_SIZE) {
-                console.warn(`[BookmarkCaptureService] Content too large (${articleBody.length}), truncating.`);
-                articleBody = articleBody.substring(0, MAX_BODY_SIZE) + '\n\n... [Content Truncated]';
-            }
+                // Safety: Anytype API might struggle with very large bodies. 
+                // Truncate to ~10MB (enough for text + several optimized images)
+                const MAX_BODY_SIZE = 10 * 1024 * 1024;
+                if (articleBody.length > MAX_BODY_SIZE) {
+                    console.warn(`[BookmarkCaptureService] Content too large (${articleBody.length}), truncating.`);
+                    articleBody = articleBody.substring(0, MAX_BODY_SIZE) + '\n\n... [Content Truncated]';
+                }
 
-            createParams.description = articleBody || createParams.description;
+                createParams.description = articleBody || createParams.description;
+            }
         }
 
         try {
@@ -162,8 +161,8 @@ export class BookmarkCaptureService {
                 metadata: cleanMetadata,
                 notes: userNote,
                 tags,
-                // Content for article/note
-                content: (typeKey === 'article' || typeKey === 'note') ? (metadata.content || quote || '') : '',
+                // Content for page (article) or note (highlight)
+                content: (typeKey === 'page' || typeKey === 'note') ? (metadata.content || quote || '') : '',
                 // Additional fields for highlight if we want to support them in payload
                 quote: quote || '',
                 pageTitle: metadata.title || '',

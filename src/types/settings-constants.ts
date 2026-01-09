@@ -47,3 +47,30 @@ export const DEFAULT_SETTINGS: SettingsV1 = {
         mode: false,
     },
 };
+
+/**
+ * Built-in Object Type keys from Anytype
+ * These correspond to the 'key' field in the Type API response
+ */
+export const BUILT_IN_OBJECT_TYPE_KEYS = {
+    ARTICLE: 'page',
+    HIGHLIGHT: 'note',
+    BOOKMARK: 'bookmark',
+    NOTE: 'note',
+    TASK: 'task',
+} as const;
+
+/**
+ * Default Object Type configuration
+ * Used when initializing settings or migrating from v1
+ */
+export const DEFAULT_OBJECT_TYPES = {
+    article: BUILT_IN_OBJECT_TYPE_KEYS.ARTICLE,
+    highlight: BUILT_IN_OBJECT_TYPE_KEYS.HIGHLIGHT,
+    bookmark: BUILT_IN_OBJECT_TYPE_KEYS.BOOKMARK,
+} as const;
+
+/**
+ * Object Types cache expiry duration (24 hours in milliseconds)
+ */
+export const OBJECT_TYPES_CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000;

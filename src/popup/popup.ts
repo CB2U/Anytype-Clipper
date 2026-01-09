@@ -29,6 +29,9 @@ const mainElements = {
   btnSettings: document.getElementById('btn-settings') as HTMLButtonElement,
   btnDisconnect: document.getElementById('btn-disconnect') as HTMLButtonElement,
   spaceSelector: document.getElementById('space-selector') as HTMLSelectElement,
+  overrideObjectType: document.getElementById('override-object-type') as HTMLInputElement | null,
+  objectTypeSelector: document.getElementById('object-type-selector') as HTMLSelectElement,
+  objectTypeError: document.getElementById('object-type-error'),
   formContainer: document.getElementById('bookmark-form-placeholder'),
   queuePlaceholder: document.getElementById('queue-status-placeholder') as HTMLDivElement,
 
@@ -156,6 +159,114 @@ function persistSpaceSelection() {
     if (tagAutocomplete) {
       tagAutocomplete.setSpaceId(selectedId);
     }
+  }
+}
+
+// --- Object Type Management ---
+
+/**
+ * Load and populate Object Types dropdown
+ */
+async function loadObjectTypes() {
+  try {
+    const spaceId = mainElements.spaceSelector?.value;
+    if (!spaceId) {
+      console.warn('[Popup] Cannot load Object Types without spaceId');
+      return;
+    }
+
+    // Get Object Types from background (which will fetch from API or cache)
+    const response = await chrome.runtime.sendMessage({
+      type: 'CMD_GET_OBJECT_TYPES',
+      payload: { spaceId }
+    });
+
+    if (!response || !response.success) {
+      throw new Error(response?.error || 'Failed to fetch Object Types');
+    }
+
+    const objectTypes = response.data || [];
+    const isCached = !!response.cached;
+
+    // Clear and populate dropdown
+    if (mainElements.objectTypeSelector) {
+      mainElements.objectTypeSelector.innerHTML = '';
+      // Only enable dropdown if override checkbox is checked
+      const isOverrideChecked = mainElements.overrideObjectType?.checked || false;
+      mainElements.objectTypeSelector.disabled = !isOverrideChecked;
+
+      if (isCached && mainElements.objectTypeError) {
+        mainElements.objectTypeError.classList.remove('hidden');
+      } else if (mainElements.objectTypeError) {
+        mainElements.objectTypeError.classList.add('hidden');
+      }
+    }
+
+    if (objectTypes.length === 0) {
+      const option = document.createElement('option');
+      option.text = 'No types found';
+      mainElements.objectTypeSelector?.add(option);
+      if (mainElements.objectTypeSelector) mainElements.objectTypeSelector.disabled = true;
+      return;
+    }
+
+    // Populate dropdown with Object Types
+    objectTypes.forEach((type: any) => {
+      const option = document.createElement('option');
+      option.value = type.key;
+      // Show icon if available
+      const icon = type.icon?.emoji || '';
+      option.text = icon ? `${icon} ${type.name}` : type.name;
+      mainElements.objectTypeSelector?.add(option);
+    });
+
+    // Set default Object Type for current mode
+    await setDefaultObjectType();
+
+  } catch (error) {
+    console.error('[Popup] Failed to load Object Types:', error);
+    if (mainElements.objectTypeSelector) {
+      mainElements.objectTypeSelector.innerHTML = '<option disabled>Error loading types</option>';
+    }
+    if (mainElements.objectTypeError) {
+      mainElements.objectTypeError.classList.remove('hidden');
+    }
+  }
+}
+
+/**
+ * Set default Object Type based on current capture mode
+ */
+async function setDefaultObjectType() {
+  try {
+    // Determine capture mode
+    const isHighlight = !!currentHighlight;
+    const isArticle = mainElements.btnSaveArticle && !mainElements.btnSaveArticle.classList.contains('hidden');
+
+    let mode: 'article' | 'highlight' | 'bookmark';
+    if (isHighlight) {
+      mode = 'highlight';
+    } else if (isArticle) {
+      mode = 'article';
+    } else {
+      mode = 'bookmark';
+    }
+
+    // Get default Object Type from settings manager
+    const response = await chrome.runtime.sendMessage({
+      type: 'CMD_GET_DEFAULT_OBJECT_TYPE',
+      payload: { mode }
+    });
+
+    if (response && response.success && response.data) {
+      const defaultTypeKey = response.data;
+      if (mainElements.objectTypeSelector) {
+        mainElements.objectTypeSelector.value = defaultTypeKey;
+      }
+    }
+  } catch (error) {
+    console.warn('[Popup] Failed to set default Object Type:', error);
+    // Silently fail - will use first option
   }
 }
 
@@ -369,21 +480,58 @@ async function handleSave(isArticle: boolean = false, skipDeduplication: boolean
       currentMetadata.title = title;
     }
 
+    // Get selected Object Type
+    let selectedObjectType: string;
+
+    // Check if user wants to override default
+    const isOverriding = mainElements.overrideObjectType?.checked || false;
+
+    if (isOverriding && mainElements.objectTypeSelector?.value) {
+      // Use manual selection from dropdown
+      selectedObjectType = mainElements.objectTypeSelector.value;
+    } else {
+      // Use mode-specific default from settings
+      const mode = isHighlight ? 'highlight' : (isArticle ? 'article' : 'bookmark');
+      try {
+        const response = await chrome.runtime.sendMessage({
+          type: 'CMD_GET_DEFAULT_OBJECT_TYPE',
+          payload: { mode }
+        });
+        if (response && response.success && response.data) {
+          selectedObjectType = response.data;
+        } else {
+          // Fallback defaults
+          selectedObjectType = isArticle ? 'page' : (isHighlight ? 'note' : 'bookmark');
+        }
+      } catch (error) {
+        console.warn('[Popup] Failed to get default type:', error);
+        // Fallback defaults
+        selectedObjectType = isArticle ? 'page' : (isHighlight ? 'note' : 'bookmark');
+      }
+    }
+
     const payload: any = {
       spaceId,
       metadata: currentMetadata,
       userNote: note,
       tags: tags,
       isHighlightCapture: isHighlight,
-      skipDeduplication: skipDeduplication // Pass skipDeduplication flag
+      skipDeduplication: skipDeduplication, // Pass skipDeduplication flag
+      type_key: selectedObjectType // Use selected or overridden Object Type
     };
 
-    if (isArticle) {
-      payload.type_key = 'note';
+    // Remove the old override logic - no longer needed
+    // if (isArticle && !selectedObjectType) {
+    //   payload.type_key = 'page';
+    // }
+
+    // Add article content when saving as article
+    if (isArticle && currentMetadata?.content) {
+      payload.articleContent = currentMetadata.content;
+      payload.articleTextContent = currentMetadata.textContent;
     }
 
     if (isHighlight) {
-      payload.type_key = 'note';
       payload.quote = currentHighlight.quote;
       payload.contextBefore = currentHighlight.contextBefore;
       payload.contextAfter = currentHighlight.contextAfter;
@@ -411,6 +559,17 @@ async function handleSave(isArticle: boolean = false, skipDeduplication: boolean
         // Show custom 3-button duplicate dialog
         showDuplicateDialog(existing, createdDate, isArticle, skipDeduplication);
         return;
+      }
+
+      // Update last-used Object Type
+      try {
+        const mode = isHighlight ? 'highlight' : (isArticle ? 'article' : 'bookmark');
+        await chrome.runtime.sendMessage({
+          type: 'CMD_UPDATE_LAST_USED_OBJECT_TYPE',
+          payload: { mode, typeKey: selectedObjectType }
+        });
+      } catch (error) {
+        console.warn('[Popup] Failed to update last-used Object Type:', error);
       }
 
       // Normal success flow
@@ -659,7 +818,11 @@ async function handleAppend(objectId: string, isArticle: boolean) {
 
 
 // Listen for changes
-mainElements.spaceSelector?.addEventListener('change', persistSpaceSelection);
+mainElements.spaceSelector?.addEventListener('change', () => {
+  persistSpaceSelection();
+  // Reload Object Types when space changes
+  loadObjectTypes();
+});
 
 
 // Simple router
@@ -811,6 +974,8 @@ async function init() {
       switchView('main');
       loadSpaces();
       loadCurrentTab();
+      // Load Object Types after spaces are loaded
+      setTimeout(() => loadObjectTypes(), 100);
     } else {
       switchView('auth');
 
@@ -919,6 +1084,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   mainElements.btnSave?.addEventListener('click', () => handleSave(false));
   mainElements.btnSaveArticle?.addEventListener('click', handleSaveArticle);
+
+  // Object Type override checkbox
+  mainElements.overrideObjectType?.addEventListener('change', () => {
+    const isChecked = mainElements.overrideObjectType!.checked;
+    if (mainElements.objectTypeSelector) {
+      mainElements.objectTypeSelector.disabled = !isChecked;
+    }
+  });
 
   // Initialize tag autocomplete
   if (mainElements.inputTags && mainElements.tagContainer && mainElements.tagChips) {

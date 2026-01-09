@@ -140,6 +140,7 @@ Future enhancements for Epic 7.3 (Notifications System):
 | 10.8           | Multiple Highlights Per Page     | `specs/041-multi-highlights/`    | v1.1       | Not Started | FR4.6, FR4.7, FR4.8, FR4.9, AC17, US2 |
 | 10.9           | Screenshot Capture               | `specs/042-screenshot-capture/`  | v1.1       | Not Started | FR3.5, FR13.8                         |
 | 10.10          | Privacy Mode                     | `specs/043-privacy-mode/`        | v1.1       | Not Started | FR13.12, AC20, PRIV-3                 |
+| 10.11          | Configurable Object Types        | `specs/1011-configurable-types/`  | v1.1       | In Progress | T1 - Extend Settings Schema | FR2.9, FR2.10, FR2.11, FR2.12, FR13.1, NFR4.1, US-OT1, US-OT2 |
 
 ### Phase 3: Advanced Features (v1.2+)
 
@@ -347,6 +348,7 @@ This section tracks bug fixes, chores, and unplanned changes that are not part o
 | N/A            | Tag Management Integration  | `specs/035-tag-management/`   | Feature | P1       | Done        | None      | [Evidence](specs/035-tag-management/spec.md#evidence)                                                    | AC-U1, AC-U2, AC-U3, AC-U4, AC-U5 |
 | N/A            | Fix Highlight Save Function | `specs/036-fix-highlight-save/` | Bug     | P0       | Done        | N/A       | [Evidence](specs/036-fix-highlight-save/spec.md#evidence)                                                | AC-U1, AC-U2, AC-U3, AC-U4        |
 | N/A            | Highlight Tag Suggestions   | `specs/074-highlight-tag-suggestions/` | Bug     | P1       | Done        | N/A       | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/074-highlight-tag-suggestions/spec.md#evidence) | AC-U1, AC-U2, AC-U3               |
+| N/A            | Object Type Dropdown Disabled State Bug | `specs/1012-object-type-dropdown-bug/` | Bug     | P1       | Done | Complete | [Evidence](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/1012-object-type-dropdown-bug/spec.md#evidence) | AC-U1, AC-U2, AC-U3, AC-S1, AC-S2, AC-S3 |
 
 ---
 

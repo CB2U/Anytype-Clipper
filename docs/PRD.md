@@ -82,6 +82,10 @@ Users of Anytype Desktop currently lack a seamless way to capture web content in
 - **FR2.6:** Require user to select default Space on first use (no automatic fallback)
 - **FR2.7:** Support hierarchical organization: Space → Collection → Object
 - **FR2.8:** Quick-add to predefined collections from popup
+- **FR2.9:** Allow users to configure default Object Type for each capture mode (Article, Highlight, Bookmark)
+- **FR2.10:** Display Object Type selector dropdown in popup for on-the-fly selection during capture
+- **FR2.11:** Remember last-used Object Type per capture mode as default for next capture
+- **FR2.12:** Support custom Anytype Object Types beyond built-in types (Bookmark, Highlight, Article, Note, Task)
 
 ### FR3: Bookmark Capture
 
@@ -284,6 +288,7 @@ Users of Anytype Desktop currently lack a seamless way to capture web content in
 - **FR13.15:** Content script injection preference (on activation vs always)
 - **FR13.16:** Table preservation strategy preference
 - **FR13.17:** Exclude elements configuration (CSS selectors)
+- **FR13.18:** Configure default Object Type per capture mode (Article, Highlight, Bookmark)
 
 ### FR14: Browser Integration
 
@@ -577,6 +582,40 @@ Users of Anytype Desktop currently lack a seamless way to capture web content in
 - Can manually resume interrupted captures from popup
 - Failed captures automatically queued for retry
 - Clear error messages explain what happened
+
+---
+
+### US-OT1: Configure Default Object Types for Capture Modes
+
+**As a** knowledge worker who organizes different content types in specific ways,  
+**I want to** set default Object Types for each capture mode (Article, Highlight, Bookmark),  
+**So that** my captures are automatically organized according to my workflow without manual selection each time.
+
+**Acceptance:**
+- Can configure default Object Type for Articles in Settings (e.g., "Research Paper", "Blog Post", "Documentation")
+- Can configure default Object Type for Highlights in Settings (e.g., "Quote", "Insight", "Reference")
+- Can configure default Object Type for Bookmarks in Settings (e.g., "Bookmark", "Resource", "Tool")
+- Settings page shows dropdown for each capture mode with available Anytype Object Types
+- Extension remembers last-used Object Type per capture mode
+- Default Object Types are applied automatically when capturing content
+- Can override default by selecting different Object Type in popup
+
+---
+
+### US-OT2: Select Object Type On-the-Fly in Popup
+
+**As a** researcher capturing diverse content,  
+**I want to** select the Object Type in the popup before saving,  
+**So that** I can categorize content appropriately based on context without changing my default settings.
+
+**Acceptance:**
+- Popup displays Object Type selector dropdown alongside Space selector
+- Dropdown shows all available Anytype Object Types (built-in and custom)
+- Default Object Type for current capture mode is pre-selected
+- Can change Object Type before clicking "Save"
+- Last-used Object Type for this capture mode becomes the new default
+- Object Type selection works for all capture modes (Article, Highlight, Bookmark)
+- Custom Object Types created in Anytype appear in the dropdown
 
 ---
 

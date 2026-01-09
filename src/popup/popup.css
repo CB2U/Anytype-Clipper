@@ -166,6 +166,35 @@ select {
     padding-right: 32px;
 }
 
+/* Object Type Selector Styles */
+.help-text {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    cursor: help;
+    margin-left: 4px;
+}
+
+.field-error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background-color: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    color: #FCD34D;
+    margin-top: 4px;
+}
+
+.error-icon {
+    font-size: 14px;
+}
+
+.error-text {
+    flex: 1;
+}
+
 /* Buttons - T4 Refined */
 .form-actions {
     display: flex;

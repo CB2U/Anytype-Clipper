@@ -19,21 +19,22 @@ It points to the spec folder for the current work and links to the product docs.
 
 ## Active Specification
 
-**Epic:** 8.4 Documentation  
-**Folder:** `specs/084-documentation/`  
-**Status:** Done ✅  
-**Next:** Epic 9.0 (Release Preparation)
+**Bug Fix:** Object Type Dropdown Disabled State Bug  
+**Folder:** `specs/1012-object-type-dropdown-bug/`  
+**Status:** In Progress  
+**Next Task:** T1 - Fix Dropdown Disabled State in loadObjectTypes()
 
 ### Quick Links
-- Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/084-documentation/spec.md)
-- Implementation Plan: [plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/084-documentation/plan.md)
-- Tasks: [tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/084-documentation/tasks.md)
+- Specification: [spec.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/1012-object-type-dropdown-bug/spec.md)
+- Implementation Plan: [plan.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/1012-object-type-dropdown-bug/plan.md)
+- Tasks: [tasks.md](file:///mnt/Storage/Documents/Projects/AnyType-Clipper/specs/1012-object-type-dropdown-bug/tasks.md)
 
 ### Previous Epic
-- Epic 8.0: Unit Test Suite (Complete ✅ - 2026-01-05)
+- Epic 8.4: Documentation (Complete ✅ - 2026-01-07)
 
 ### Next Epic
-- Epic 8.2: E2E Test Suite (BP7)
+- Epic 9.0: Release Preparation (BP8)
+
 
 
 ## Notes

@@ -70,6 +70,26 @@
         </select>
       </div>
 
+      <div class="form-group">
+        <label for="object-type-selector">
+          Object Type
+          <span class="help-text" title="Choose how this content will be organized in Anytype">ℹ️</span>
+        </label>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label class="checkbox-label" style="margin: 0; font-size: 13px;">
+            <input type="checkbox" id="override-object-type" aria-label="Override default Object Type">
+            Override default
+          </label>
+          <select id="object-type-selector" aria-label="Select Object Type" disabled>
+            <option value="">Loading types...</option>
+          </select>
+        </div>
+        <div id="object-type-error" class="field-error hidden" role="alert">
+          <span class="error-icon">⚠️</span>
+          <span class="error-text">Using cached types (offline)</span>
+        </div>
+      </div>
+
       <div id="bookmark-form" style="display: flex; flex-direction: column; gap: 16px;">
         <div id="highlight-fields" class="hidden">
           <div class="form-group">

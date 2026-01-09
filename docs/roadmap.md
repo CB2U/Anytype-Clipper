@@ -1115,6 +1115,14 @@ Future enhancements for the notification system (Epic 7.3):
 - Privacy mode toggle in settings
 - **Targets:** FR13.12, AC20, PRIV-3
 
+#### Epic 10.11: Configurable Object Types
+- Configure default Object Type for each capture mode (Article, Highlight, Bookmark)
+- Object Type selector dropdown in popup for on-the-fly selection
+- Settings page integration for default Object Type configuration
+- Remember last-used Object Type per capture mode
+- Support for custom Anytype Object Types beyond built-in types
+- **Targets:** FR2.3, FR13.1, NFR4.1, US-OT1, US-OT2
+
 ---
 
 ### Phase 3: Advanced Features (v1.2+)

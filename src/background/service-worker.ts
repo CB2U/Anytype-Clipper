@@ -43,6 +43,14 @@ import { deduplicationService } from '../lib/services/deduplication-service';
 // Import append service
 import { AppendService } from '../lib/services/append-service';
 
+// Import settings manager functions for Object Types
+import {
+  setCachedObjectTypes,
+  getCachedObjectTypes,
+  getDefaultObjectType,
+  updateLastUsedObjectType
+} from '../lib/storage/settings-manager-v2';
+
 
 // T8: Register Alarm Listener for retries
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -95,57 +103,6 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-// Context menu click handler
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId === 'send-selection-to-anytype' && tab?.id) {
-    console.log('[Service Worker] Injecting highlight capture script');
-    try {
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: () => {
-          // Inline highlight capture logic
-          const selection = window.getSelection();
-          if (!selection || selection.rangeCount === 0 || !selection.toString().trim()) {
-            console.warn('[Highlight Capture] No valid selection');
-            return;
-          }
-
-          const quote = selection.toString();
-          const range = selection.getRangeAt(0);
-          const container = range.commonAncestorContainer;
-          const fullText = container.textContent || '';
-
-          // Extract context
-          const offset = fullText.indexOf(quote);
-          let contextBefore = '';
-          let contextAfter = '';
-
-          if (offset !== -1) {
-            contextBefore = fullText.substring(Math.max(0, offset - 50), offset).trim();
-            contextAfter = fullText.substring(offset + quote.length, Math.min(fullText.length, offset + quote.length + 50)).trim();
-          }
-
-          // Send message to background
-          chrome.runtime.sendMessage({
-            type: 'CMD_HIGHLIGHT_CAPTURED',
-            payload: {
-              quote,
-              contextBefore,
-              contextAfter,
-              url: window.location.href,
-              pageTitle: document.title,
-              timestamp: new Date().toISOString(),
-            }
-          });
-        }
-      });
-      console.log('[Service Worker] Script injected successfully');
-    } catch (error) {
-      console.error('[Service Worker] Script injection failed:', error);
-    }
-  }
-});
-
 // Update handleAsync to include CMD_HIGHLIGHT_CAPTURED
 const handleHighlightCaptured = async (payload: HighlightCapturedMessage['payload']) => {
   console.log('Highlight captured in background:', payload.quote);
@@ -192,36 +149,10 @@ const handleExtractMetadata = async () => {
   }
 };
 
-// T8: Quality Indicators
-function getQualityEmoji(quality: ExtractionQuality): string {
-  switch (quality) {
-    case ExtractionQuality.SUCCESS: return '🟢';
-    case ExtractionQuality.PARTIAL: return '🟡';
-    case ExtractionQuality.FALLBACK: return '🟠';
-    case ExtractionQuality.FAILURE: return '🔴';
-    default: return '⚪';
-  }
-}
-
-function getQualityMessage(result: ArticleExtractionResult): string {
-  const images = result.metadata.imageCount || 0;
-  const embedded = result.metadata.embeddedImageCount || 0;
-  const imageMsg = images > 0 ? ` and ${images} images (${embedded} embedded)` : '';
-
-  switch (result.quality) {
-    case ExtractionQuality.SUCCESS:
-      return `Article captured successfully (${result.metadata.wordCount} words${imageMsg})`;
-    case ExtractionQuality.PARTIAL:
-      return `Article captured (simplified version) - ${result.metadata.wordCount} words${imageMsg}`;
-    case ExtractionQuality.FALLBACK:
-      return 'Article extraction failed. Saved as smart bookmark.';
-    default:
-      return 'Extraction status unknown';
-  }
-}
 
 // T9: Manual Retry Logic
 const retryCountMap = new Map<number, number>(); // tabId -> retryCount
+
 
 const handleExtractArticle = async (targetTabId?: number) => {
   const startTime = performance.now();
@@ -269,8 +200,6 @@ const handleExtractArticle = async (targetTabId?: number) => {
     }
 
     const result = response as ArticleExtractionResult;
-    const qualityEmoji = getQualityEmoji(result.quality);
-    const message = getQualityMessage(result);
 
     // Store result
     await chrome.storage.local.set({
@@ -282,23 +211,6 @@ const handleExtractArticle = async (targetTabId?: number) => {
 
     // Clear retry count on success
     retryCountMap.delete(tabId);
-
-    // Show notification
-    const notificationOptions: chrome.notifications.NotificationOptions = {
-      type: 'basic',
-      iconUrl: 'icons/icon48.png',
-      title: `${qualityEmoji} Article Extracted`,
-      message: message,
-      priority: 2
-    };
-
-    // Add Retry button for FALLBACK quality (T9 prep)
-    if (result.quality === ExtractionQuality.FALLBACK) {
-      // Check retry count logic here later
-      notificationOptions.buttons = [{ title: 'Retry Extraction' }];
-    }
-
-    chrome.notifications.create(`extraction:${tabId}`, notificationOptions as any);
 
     return result;
   } catch (err) {
@@ -384,6 +296,46 @@ chrome.runtime.onMessage.addListener((
             console.warn('API Error in CMD_GET_SPACES:', e);
             throw e;
           }
+          break;
+        }
+
+        case 'CMD_GET_OBJECT_TYPES': {
+          const { spaceId } = message.payload;
+          console.log('[Service Worker] Fetching Object Types for space:', spaceId);
+          try {
+            const objectTypes = await apiClient.fetchObjectTypes(spaceId);
+            console.log('[Service Worker] Object Types fetched successfully:', objectTypes.length);
+
+            // Cache Object Types using settings manager
+            await setCachedObjectTypes(objectTypes);
+
+            sendResponse({ success: true, data: objectTypes });
+          } catch (e) {
+            // On error, try to use cached types
+            console.warn('[Service Worker] Object Types fetch failed, using cache:', e);
+            const cached = await getCachedObjectTypes();
+            if (cached && cached.length > 0) {
+              sendResponse({ success: true, data: cached, cached: true });
+            } else {
+              throw e;
+            }
+          }
+          break;
+        }
+
+        case 'CMD_GET_DEFAULT_OBJECT_TYPE': {
+          const { mode } = message.payload;
+          console.log('[Service Worker] Getting default Object Type for mode:', mode);
+          const defaultType = await getDefaultObjectType(mode);
+          sendResponse({ success: true, data: defaultType });
+          break;
+        }
+
+        case 'CMD_UPDATE_LAST_USED_OBJECT_TYPE': {
+          const { mode, typeKey } = message.payload;
+          console.log('[Service Worker] Updating last-used Object Type:', mode, typeKey);
+          await updateLastUsedObjectType(mode, typeKey);
+          sendResponse({ success: true });
           break;
         }
 

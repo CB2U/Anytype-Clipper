@@ -9,10 +9,16 @@
 import {
     Settings,
     SettingsV1,
+    SettingsV2,
     ValidationResult,
     CachedSpaces,
+    ObjectTypeInfo,
 } from '../../types/settings';
-import { DEFAULT_SETTINGS, SETTINGS_CONSTANTS } from '../../types/settings-constants';
+import {
+    DEFAULT_SETTINGS,
+    SETTINGS_CONSTANTS,
+    DEFAULT_OBJECT_TYPES,
+} from '../../types/settings-constants';
 
 /**
  * Load settings from storage
@@ -72,8 +78,8 @@ export function getDefaultSettings(): Settings {
 export function validateSettings(settings: any): ValidationResult {
     const errors: string[] = [];
 
-    // Check version
-    if (typeof settings.version !== 'number' || settings.version !== 1) {
+    // Check version - accept both v1 and v2
+    if (typeof settings.version !== 'number' || (settings.version !== 1 && settings.version !== 2)) {
         errors.push('Invalid or missing version');
     }
 
@@ -141,22 +147,55 @@ export function validateSettings(settings: any): ValidationResult {
 
 /**
  * Migrate settings from older versions
- * Currently only v1 exists, so this is a stub for future migrations
  */
 export function migrateSettings(settings: any): Settings {
     // Check version and migrate if needed
     if (settings.version === 1) {
-        return settings as SettingsV1;
+        console.log('[SettingsManager] Migrating settings from v1 to v2');
+        return migrateV1toV2(settings as SettingsV1);
     }
 
-    // Future: handle v1 -> v2 migration
-    // if (settings.version === 1) {
-    //   return migrateV1toV2(settings);
-    // }
+    if (settings.version === 2) {
+        return settings as SettingsV2;
+    }
 
     // Unknown version - return defaults
     console.warn('[SettingsManager] Unknown settings version, using defaults');
     return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+}
+
+/**
+ * Migrate settings from v1 to v2
+ * Adds Object Type configuration with built-in defaults
+ */
+export function migrateV1toV2(v1Settings: SettingsV1): SettingsV2 {
+    try {
+        const v2Settings: SettingsV2 = {
+            ...v1Settings,
+            version: 2,
+            objectTypes: {
+                defaults: {
+                    article: DEFAULT_OBJECT_TYPES.article,
+                    highlight: DEFAULT_OBJECT_TYPES.highlight,
+                    bookmark: DEFAULT_OBJECT_TYPES.bookmark,
+                },
+                lastUsed: {
+                    article: null,
+                    highlight: null,
+                    bookmark: null,
+                },
+                cached: [],
+                lastFetchedAt: 0,
+            },
+        };
+
+        console.log('[SettingsManager] Successfully migrated settings to v2');
+        return v2Settings;
+    } catch (error) {
+        console.error('[SettingsManager] Error during v1->v2 migration:', error);
+        // Fallback to defaults on migration error
+        return getDefaultSettingsV2();
+    }
 }
 
 /**
@@ -232,4 +271,155 @@ export async function loadCachedSpaces(): Promise<CachedSpaces | null> {
  */
 export async function saveCachedSpaces(cachedSpaces: CachedSpaces): Promise<void> {
     await chrome.storage.local.set({ cachedSpaces });
+}
+
+/**
+ * Get default settings v2
+ */
+export function getDefaultSettingsV2(): SettingsV2 {
+    const v1Defaults = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)) as SettingsV1;
+    return migrateV1toV2(v1Defaults);
+}
+
+// ============================================================================
+// Object Type Management Methods
+// ============================================================================
+
+/**
+ * Get default Object Type key for a capture mode
+ * Returns the configured default or last-used Object Type
+ * 
+ * @param mode - Capture mode (article, highlight, bookmark)
+ * @returns Object Type key (e.g., "page", "note", "bookmark")
+ */
+export async function getDefaultObjectType(mode: 'article' | 'highlight' | 'bookmark'): Promise<string> {
+    const settings = await loadSettings();
+
+    // Defensive check: if objectTypes field is missing, use built-in defaults
+    if (!settings.objectTypes || !settings.objectTypes.defaults || !settings.objectTypes.lastUsed) {
+        console.warn('[SettingsManager] objectTypes field missing, using built-in defaults');
+        return DEFAULT_OBJECT_TYPES[mode];
+    }
+
+    // Debug logging
+    console.log(`[SettingsManager] getDefaultObjectType(${mode}):`, {
+        lastUsed: settings.objectTypes.lastUsed[mode],
+        default: settings.objectTypes.defaults[mode],
+        builtInDefault: DEFAULT_OBJECT_TYPES[mode]
+    });
+
+    // IMPORTANT: We no longer use lastUsed because it can be polluted with incorrect values
+    // from previous bugs. Always use the configured default instead.
+    // Users can still override on a per-save basis using the "Override default" checkbox.
+
+    // Use configured default
+    const defaultType = settings.objectTypes.defaults[mode];
+    if (defaultType && typeof defaultType === 'string' && defaultType.length > 0) {
+        console.log(`[SettingsManager] Returning default: ${defaultType}`);
+        return defaultType;
+    }
+
+    // Final fallback to built-in defaults
+    console.warn(`[SettingsManager] Invalid default for mode ${mode}, using built-in default`);
+    return DEFAULT_OBJECT_TYPES[mode];
+}
+
+/**
+ * Set default Object Type key for a capture mode
+ * 
+ * @param mode - Capture mode (article, highlight, bookmark)
+ * @param typeKey - Object Type key to set as default
+ */
+export async function setDefaultObjectType(
+    mode: 'article' | 'highlight' | 'bookmark',
+    typeKey: string
+): Promise<void> {
+    if (!typeKey || typeof typeKey !== 'string') {
+        throw new Error(`Invalid Object Type key: ${typeKey}`);
+    }
+
+    const settings = await loadSettings();
+    settings.objectTypes.defaults[mode] = typeKey;
+    await saveSettings(settings);
+}
+
+/**
+ * Get last-used Object Type key for a capture mode
+ * 
+ * @param mode - Capture mode (article, highlight, bookmark)
+ * @returns Object Type key or null if never used
+ */
+export async function getLastUsedObjectType(mode: 'article' | 'highlight' | 'bookmark'): Promise<string | null> {
+    const settings = await loadSettings();
+    return settings.objectTypes.lastUsed[mode];
+}
+
+/**
+ * Update last-used Object Type key for a capture mode
+ * This is called when a user saves a capture with a specific Object Type
+ * 
+ * @param mode - Capture mode (article, highlight, bookmark)
+ * @param typeKey - Object Type key that was used
+ */
+export async function updateLastUsedObjectType(
+    mode: 'article' | 'highlight' | 'bookmark',
+    typeKey: string
+): Promise<void> {
+    if (!typeKey || typeof typeKey !== 'string') {
+        throw new Error(`Invalid Object Type key: ${typeKey}`);
+    }
+
+    const settings = await loadSettings();
+    settings.objectTypes.lastUsed[mode] = typeKey;
+    await saveSettings(settings);
+}
+
+/**
+ * Get cached Object Types
+ * 
+ * @returns Cached Object Types array (may be empty)
+ */
+export async function getCachedObjectTypes(): Promise<ObjectTypeInfo[]> {
+    const settings = await loadSettings();
+    return settings.objectTypes.cached;
+}
+
+/**
+ * Set cached Object Types
+ * Filters out archived types before caching
+ * 
+ * @param types - Object Types to cache
+ */
+export async function setCachedObjectTypes(types: ObjectTypeInfo[]): Promise<void> {
+    if (!Array.isArray(types)) {
+        throw new Error('Object Types must be an array');
+    }
+
+    const settings = await loadSettings();
+    // Filter out archived types
+    settings.objectTypes.cached = types.filter(type => !type.archived);
+    settings.objectTypes.lastFetchedAt = Date.now();
+    await saveSettings(settings);
+}
+
+/**
+ * Check if Object Types cache is stale (older than 24 hours)
+ * 
+ * @returns true if cache is stale or empty, false otherwise
+ */
+export async function isCacheStale(): Promise<boolean> {
+    const settings = await loadSettings();
+    const { cached, lastFetchedAt } = settings.objectTypes;
+
+    // Cache is stale if empty
+    if (cached.length === 0) {
+        return true;
+    }
+
+    // Cache is stale if older than 24 hours
+    const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
+    const now = Date.now();
+    const age = now - lastFetchedAt;
+
+    return age > CACHE_EXPIRY_MS;
 }

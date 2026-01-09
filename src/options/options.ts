@@ -24,6 +24,16 @@ const elements = {
     refreshSpaces: document.getElementById('refreshSpaces') as HTMLButtonElement,
     spacesStatus: document.getElementById('spacesStatus') as HTMLSpanElement,
 
+    // Object Types
+    defaultObjectTypeBookmark: document.getElementById('defaultObjectTypeBookmark') as HTMLSelectElement,
+    defaultObjectTypeHighlight: document.getElementById('defaultObjectTypeHighlight') as HTMLSelectElement,
+    defaultObjectTypeArticle: document.getElementById('defaultObjectTypeArticle') as HTMLSelectElement,
+    lastUsedBookmark: document.getElementById('lastUsedBookmark') as HTMLParagraphElement,
+    lastUsedHighlight: document.getElementById('lastUsedHighlight') as HTMLParagraphElement,
+    lastUsedArticle: document.getElementById('lastUsedArticle') as HTMLParagraphElement,
+    refreshObjectTypes: document.getElementById('refreshObjectTypes') as HTMLButtonElement,
+    objectTypesStatus: document.getElementById('objectTypesStatus') as HTMLSpanElement,
+
     // Retry Behavior
     maxAttempts: document.getElementById('maxAttempts') as HTMLInputElement,
     retrySchedule: document.getElementById('retrySchedule') as HTMLParagraphElement,
@@ -64,8 +74,11 @@ async function init() {
         // Load settings
         const settings = await loadSettings();
 
-        // Fetch Spaces
+        // Fetch Spaces FIRST (needed for Object Types)
         await fetchSpaces();
+
+        // THEN fetch Object Types (requires spaces to be cached)
+        await fetchObjectTypes();
 
         // Populate form with settings
         populateForm(settings);
@@ -117,6 +130,20 @@ function populateForm(settings: Settings) {
     if (elements.privacyMode) {
         elements.privacyMode.checked = settings.privacy.mode;
     }
+
+    // Object Types - populate defaults
+    if (elements.defaultObjectTypeBookmark) {
+        elements.defaultObjectTypeBookmark.value = settings.objectTypes.defaults.bookmark;
+    }
+    if (elements.defaultObjectTypeHighlight) {
+        elements.defaultObjectTypeHighlight.value = settings.objectTypes.defaults.highlight;
+    }
+    if (elements.defaultObjectTypeArticle) {
+        elements.defaultObjectTypeArticle.value = settings.objectTypes.defaults.article;
+    }
+
+    // Display last-used Object Types
+    displayLastUsedObjectTypes(settings);
 
     // Image settings (legacy from existing options page)
     const storageManager = StorageManager.getInstance();
@@ -203,6 +230,140 @@ function populateSpaceDropdowns(spaces: Array<{ id: string; name: string; icon?:
             option.textContent = space.name;
             dropdown.appendChild(option);
         });
+    });
+}
+
+/**
+ * Fetch Object Types from Anytype API
+ */
+async function fetchObjectTypes() {
+    try {
+        showObjectTypesStatus('Loading Object Types...', 'loading');
+
+        // Try to get a space ID from cached spaces
+        const cached = await loadCachedSpaces();
+        let spaceId: string | null = null;
+
+        if (cached && cached.spaces.length > 0) {
+            spaceId = cached.spaces[0].id;
+        } else {
+            // If no cached spaces, try to get from settings
+            const settings = await loadSettings();
+            const defaultSpaces = settings.defaultSpaces;
+            spaceId = defaultSpaces.bookmark || defaultSpaces.highlight || defaultSpaces.article || null;
+        }
+
+        if (!spaceId) {
+            // No space available - try to use cached Object Types from settings
+            console.warn('[Options] No space available, using cached Object Types');
+            const { getCachedObjectTypes } = await import('../lib/storage/settings-manager-v2');
+            const cachedTypes = await getCachedObjectTypes();
+
+            if (cachedTypes && cachedTypes.length > 0) {
+                populateObjectTypeDropdowns(cachedTypes);
+                showObjectTypesStatus('Using cached types', 'success');
+                return;
+            }
+
+            showObjectTypesStatus('No spaces available - please configure spaces first', 'error');
+            return;
+        }
+
+        // Fetch Object Types via service worker
+        const response = await chrome.runtime.sendMessage({
+            type: 'CMD_GET_OBJECT_TYPES',
+            payload: { spaceId }
+        });
+
+        if (!response || !response.success) {
+            throw new Error(response?.error || 'Failed to fetch Object Types');
+        }
+
+        const objectTypes = response.data || [];
+        if (objectTypes.length === 0) {
+            showObjectTypesStatus('No Object Types found', 'error');
+            return;
+        }
+
+        populateObjectTypeDropdowns(objectTypes);
+        showObjectTypesStatus('Object Types loaded', 'success');
+
+    } catch (error) {
+        console.error('[Options] Error fetching Object Types:', error);
+
+        // Try to use cached Object Types as final fallback
+        try {
+            const { getCachedObjectTypes } = await import('../lib/storage/settings-manager-v2');
+            const cachedTypes = await getCachedObjectTypes();
+
+            if (cachedTypes && cachedTypes.length > 0) {
+                populateObjectTypeDropdowns(cachedTypes);
+                showObjectTypesStatus('Using cached types (offline)', 'error');
+                return;
+            }
+        } catch (cacheError) {
+            console.error('[Options] Failed to load cached types:', cacheError);
+        }
+
+        showObjectTypesStatus('Failed to load Object Types', 'error');
+    }
+}
+
+/**
+ * Populate Object Type dropdowns
+ */
+function populateObjectTypeDropdowns(objectTypes: Array<any>) {
+    const dropdowns = [
+        elements.defaultObjectTypeBookmark,
+        elements.defaultObjectTypeHighlight,
+        elements.defaultObjectTypeArticle,
+    ];
+
+    dropdowns.forEach(dropdown => {
+        if (!dropdown) return;
+
+        // Store current value
+        const currentValue = dropdown.value;
+
+        // Clear existing options
+        dropdown.innerHTML = '';
+
+        // Add Object Type options
+        objectTypes.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type.key;
+            const icon = type.icon?.emoji || '';
+            option.textContent = icon ? `${icon} ${type.name}` : type.name;
+            dropdown.appendChild(option);
+        });
+
+        // Restore previous value if it exists
+        if (currentValue && Array.from(dropdown.options).some(opt => opt.value === currentValue)) {
+            dropdown.value = currentValue;
+        }
+    });
+}
+
+/**
+ * Display last-used Object Types
+ */
+function displayLastUsedObjectTypes(settings: Settings) {
+    const modes: Array<{ mode: 'bookmark' | 'highlight' | 'article', element: HTMLParagraphElement }> = [
+        { mode: 'bookmark', element: elements.lastUsedBookmark },
+        { mode: 'highlight', element: elements.lastUsedHighlight },
+        { mode: 'article', element: elements.lastUsedArticle },
+    ];
+
+    modes.forEach(({ mode, element }) => {
+        if (!element) return;
+
+        const lastUsed = settings.objectTypes.lastUsed[mode];
+        if (lastUsed) {
+            element.textContent = `Last used: ${lastUsed}`;
+            element.style.color = '#888';
+        } else {
+            element.textContent = '';
+        }
     });
 }
 
@@ -300,8 +461,10 @@ async function saveSettingsHandler() {
         showStatus('Saving settings...', 'loading');
 
         // Gather settings from form
+        const currentSettings = await loadSettings();
         const settings: Settings = {
-            version: 1,
+            ...currentSettings,
+            version: 2,
             defaultSpaces: {
                 bookmark: elements.defaultSpaceBookmark.value || null,
                 highlight: elements.defaultSpaceHighlight.value || null,
@@ -324,6 +487,16 @@ async function saveSettingsHandler() {
             },
             privacy: {
                 mode: elements.privacyMode.checked,
+            },
+            objectTypes: {
+                defaults: {
+                    bookmark: elements.defaultObjectTypeBookmark.value || 'bookmark',
+                    highlight: elements.defaultObjectTypeHighlight.value || 'note',
+                    article: elements.defaultObjectTypeArticle.value || 'page',
+                },
+                lastUsed: currentSettings.objectTypes.lastUsed,
+                cached: currentSettings.objectTypes.cached,
+                lastFetchedAt: currentSettings.objectTypes.lastFetchedAt,
             },
         };
 
@@ -392,6 +565,9 @@ async function confirmClearHandler() {
 function setupEventListeners() {
     // Refresh Spaces
     elements.refreshSpaces?.addEventListener('click', fetchSpaces);
+
+    // Refresh Object Types
+    elements.refreshObjectTypes?.addEventListener('click', fetchObjectTypes);
 
     // Max attempts change
     elements.maxAttempts?.addEventListener('input', () => {
@@ -467,6 +643,22 @@ function showConnectionStatus(message: string, type: 'success' | 'error' | 'load
     if (type !== 'loading') {
         setTimeout(() => {
             elements.connectionStatus.classList.remove('show');
+        }, 3000);
+    }
+}
+
+/**
+ * Show Object Types status message
+ */
+function showObjectTypesStatus(message: string, type: 'success' | 'error' | 'loading') {
+    if (!elements.objectTypesStatus) return;
+
+    elements.objectTypesStatus.textContent = message;
+    elements.objectTypesStatus.className = `status show ${type}`;
+
+    if (type !== 'loading') {
+        setTimeout(() => {
+            elements.objectTypesStatus.classList.remove('show');
         }, 3000);
     }
 }

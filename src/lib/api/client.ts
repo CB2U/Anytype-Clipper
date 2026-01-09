@@ -21,7 +21,10 @@ import {
     CreateTagRequestData,
     CreateTagResponse,
     ListPropertiesResponse,
+    ListTypesOptions,
+    ListTypesResponse,
 } from './types';
+import { ObjectTypeInfo } from '../../types/settings';
 
 /**
  * HTTP client for Anytype API
@@ -146,7 +149,9 @@ export class AnytypeApiClient {
         let bodyContent = '';
 
         if (params.quote) {
-            bodyContent += `> ${params.quote}\n\n`;
+            // Format quote as markdown blockquote, with > prefix on each line
+            const formattedQuote = params.quote.split('\n').map(line => `> ${line}`).join('\n');
+            bodyContent += `${formattedQuote}\n\n`;
             if (params.contextBefore || params.contextAfter) {
                 bodyContent += `*Context: ...${params.contextBefore || ''} **${params.quote}** ${params.contextAfter || ''}...*\n\n`;
             }
@@ -241,6 +246,68 @@ export class AnytypeApiClient {
      */
     async updateObject(spaceId: string, objectId: string, properties: any): Promise<UpdateObjectResponse> {
         return this.patch<UpdateObjectResponse>(`/v1/spaces/${spaceId}/objects/${objectId}`, { properties });
+    }
+
+    /**
+     * Fetches available Object Types for a space
+     * Automatically handles pagination to fetch all types
+     * Filters out archived types
+     * 
+     * @param spaceId - ID of the space
+     * @param options - Optional pagination and filter options
+     * @returns Array of Object Types (filtered to exclude archived)
+     */
+    async fetchObjectTypes(
+        spaceId: string,
+        options?: import('./types').ListTypesOptions
+    ): Promise<import('./types').ListTypesResponse['data']> {
+        try {
+            const allTypes: import('./types').ListTypesResponse['data'] = [];
+            let offset = options?.offset || 0;
+            const limit = options?.limit || 100;
+            let hasMore = true;
+
+            // Fetch all pages
+            while (hasMore) {
+                const endpoint = `/v1/spaces/${spaceId}/types`;
+                const params = new URLSearchParams();
+                params.append('offset', offset.toString());
+                params.append('limit', limit.toString());
+
+                // Add filters if provided
+                if (options?.filters) {
+                    Object.entries(options.filters).forEach(([key, value]) => {
+                        params.append(key, value);
+                    });
+                }
+
+                const response = await this.get<import('./types').ListTypesResponse>(
+                    `${endpoint}?${params.toString()}`,
+                    undefined,
+                    5000 // 5 second timeout
+                );
+
+                allTypes.push(...response.data);
+                hasMore = response.pagination.has_more;
+                offset += limit;
+
+                // Safety: prevent infinite loops
+                if (offset > 10000) {
+                    console.warn('[AnytypeApiClient] Stopped fetching types after 10000 results');
+                    break;
+                }
+            }
+
+            // Filter out archived types
+            const activeTypes = allTypes.filter(type => !type.archived);
+
+            console.log(`[AnytypeApiClient] Fetched ${activeTypes.length} active Object Types (${allTypes.length} total)`);
+            return activeTypes;
+        } catch (error) {
+            console.error('[AnytypeApiClient] Error fetching Object Types:', error);
+            // Return empty array on error - caller should use cached types
+            return [];
+        }
     }
 
     /**
